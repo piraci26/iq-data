@@ -1,36 +1,30 @@
 #!/usr/bin/env python3
 """IQ Algo reads worker.
 
-Watches the scan output (results.json / results_weekly.json / results_monthly.json),
-fingerprints each ticker's ENGINE STATE (signals, not prices), diffs against the
-previously persisted state, logs every state change to state/events.jsonl, and asks
-the LLM for a 2-3 sentence "read" in the IQ voice for every NEW or CHANGED ticker.
-Reads land in out/reads.json as {ticker: {read, updated_at, state_hash}}.
+Watches the IQ scan output (iq/scan.json), fingerprints each ticker's ENGINE
+STATE (signals, not prices), diffs against the previously persisted state, logs
+every state change to state/events.jsonl, and asks the LLM for a 2-3 sentence
+"read" in the IQ voice for every NEW or CHANGED ticker. Reads land in
+out/reads.json as {ticker: {read, updated_at, state_hash}}.
 
-DATA-SOURCE ASSUMPTIONS (verified against the live schema 2026-07-28):
-- The scan lists are FLIP lists, not state lists: a ticker sits in fvb_green only
-  while its IQ Bands regime flip is fresh on that timeframe's current bar. A ticker
-  can appear in one fvb_* list and one bxt_* list at the same time.
-- Field names are legacy: "fvb" = IQ Bands (trend regime), "bxt" = IQ Oscillator
-  (momentum). All user-facing text must use the IQ names, never fvb/bxt.
-- Per-row fields we rely on (feature-detected, all optional except sym):
-  sym, name, mcap, price, basis, bxt_today, bxt_yest, fvb_streak, bxt_streak,
-  ath, pct_to_ath, wk52_high, wk52_low, ath_30d, atl_30d.
-- Production data lives on GitHub Pages (https://piraci26.github.io/tht-data);
-  the local ~/tht-data checkout is a stale mirror. Default source is the URL;
-  set SCAN_BASE to a local directory only for offline dev.
+DATA SOURCE (the repo's own scanner, scanner.py -> docs/iq/scan.json):
+  {"updated_at": iso, "tickers": {SYM: {"name":.., "mcap":.., "price":..,
+      "d": {"bands": {...}, "osc": {...}, "structure": {...}},
+      "w": {...}, "m": {...}}}}
+  where each product block is (a possibly trimmed form of) the corresponding
+  engines/{bands,oscillator,structure}.py scan() result. ALL raw field access
+  is isolated in extract_ticker() — if the scanner's field names drift, that
+  one function is the only thing to fix.
 
-FINGERPRINT DESIGN:
-- Per ticker, per timeframe: {"bands": green|red|None, "osc": green|red|None,
-  "osc_sign": pos|neg|None}. Membership in a list == fresh flip on that side.
-- Deliberately EXCLUDED from the fingerprint: price, basis, bxt_today magnitude,
-  and rising/falling direction (all of these flicker intraday on the 5-minute
-  scan cadence and would spam events + LLM calls). They still appear in the
-  facts block handed to the LLM so reads can cite them.
-- If a timeframe fails to fetch on a pass, that timeframe's previous state is
-  carried forward unchanged (no false "dropped" events on network blips).
-- Removal (ticker leaves all lists) is logged to events.jsonl but does NOT
-  trigger an LLM read; the last read is kept in reads.json.
+FINGERPRINT DESIGN (state-defining fields only, never prices/values):
+- Per ticker, per timeframe:
+    bands regime (bull/bear), osc side (bull/bear) + stretched hi/lo flags,
+    structure direction (internal + major) + today's structure events.
+- Deliberately EXCLUDED: price, basis, wave magnitude, wave slope, flow value,
+  wave-vs-signal — these flicker on the scan cadence and would spam events +
+  LLM calls. They still appear in the facts payload handed to the LLM.
+- Removal (ticker leaves the scan universe) is logged to events.jsonl but does
+  NOT trigger an LLM read; the last read is kept in reads.json.
 
 LLM: OpenAI-compatible chat completions. Env-configurable so dev (Ollama) and
 prod (DeepInfra/Groq/Anthropic) are a pure env swap:
@@ -38,8 +32,10 @@ prod (DeepInfra/Groq/Anthropic) are a pure env swap:
   LLM_MODEL     default llama3.1:8b
   LLM_API_KEY   default "ollama"
   LLM_TIMEOUT   default 60 (seconds per request)
-  SCAN_BASE     default https://piraci26.github.io/tht-data (URL or local dir)
-  MAX_READS_PER_PASS  default 25 (mcap-desc priority; the rest retry next pass)
+  SCAN_BASE     default https://piraci26.github.io/iq-data (URL or local dir;
+                the worker appends /iq/scan.json; CI sets SCAN_BASE=docs to
+                read the scanner output produced earlier in the same job)
+  MAX_READS_PER_PASS  default 25 (changed-first, then mcap-desc; rest retry)
 
 Prompt text comes from ../prompts/read.txt when present; a built-in fallback
 keeps the worker functional if the prompts are missing. The prompts/ files are
@@ -79,7 +75,7 @@ READS_FILE = OUT_DIR / "reads.json"
 
 # .strip() everywhere: secrets pasted into CI/UI fields often carry a stray
 # trailing newline, which turns into a 401 that looks like a bad key.
-SCAN_BASE = os.environ.get("SCAN_BASE", "https://piraci26.github.io/tht-data").strip()
+SCAN_BASE = os.environ.get("SCAN_BASE", "https://piraci26.github.io/iq-data").strip()
 LLM_BASE_URL = os.environ.get("LLM_BASE_URL", "http://localhost:11434/v1").strip()
 LLM_MODEL = os.environ.get("LLM_MODEL", "llama3.1:8b").strip()
 LLM_API_KEY = os.environ.get("LLM_API_KEY", "ollama").strip()
@@ -87,28 +83,32 @@ LLM_TIMEOUT = float(os.environ.get("LLM_TIMEOUT", "60"))
 MAX_READS_PER_PASS = int(os.environ.get("MAX_READS_PER_PASS", "25"))
 FETCH_TIMEOUT = float(os.environ.get("FETCH_TIMEOUT", "30"))
 
-TIMEFRAME_FILES = {
-    "daily": "results.json",
-    "weekly": "results_weekly.json",
-    "monthly": "results_monthly.json",
-}
-TIMEFRAMES = list(TIMEFRAME_FILES.keys())
-LIST_KEYS = ("fvb_green", "fvb_red", "bxt_green", "bxt_red")
+SCAN_FILE = "iq/scan.json"
+
+# scan.json timeframe keys -> the names used in fingerprints, events, prompts
+TF_KEYS = {"daily": "d", "weekly": "w", "monthly": "m"}
+TIMEFRAMES = list(TF_KEYS.keys())
+
+# Fingerprint fields, in diff order (see extract_ticker for their meaning).
+FP_FIELDS = ("bands", "osc", "osc_hi", "osc_lo",
+             "struct", "struct_major", "struct_events")
 
 # Consecutive LLM failures before we stop trying for the rest of the pass.
 LLM_FAIL_LIMIT = 3
 
 FALLBACK_READ_PROMPT = """\
 You write short "reads" for the IQ Algo scanner (IQ Bands = trend regime,
-IQ Oscillator = momentum). Voice: professional trader shorthand. No hype, no
-emojis, no financial advice -- say "the scan shows X", never "you should buy".
+IQ Oscillator = momentum, IQ Structure = price action). Voice: professional
+trader shorthand. No hype, no emojis, no financial advice -- say "the scan
+shows X", never "you should buy".
 Vocabulary: trend regime (bullish/bearish, flips), momentum wave and signal,
-extremes/stretched, 52-week range, all-time high.
+money flow (buy side/sell side), stretched/extreme, confluence n/4, BOS,
+CHoCH, EQH/EQL sweep.
 Given the engine-state facts for one ticker, write a 2-3 sentence read that a
 trader can absorb in five seconds. Use ONLY the facts provided -- never invent
 signals, levels, or confluence counts that are not listed. Lead with the most
-significant signal. Mention the timeframe. Cite at most two numbers. Output
-only the read text, no preamble, no quotes."""
+significant signal; the daily timeframe is primary. Cite at most two numbers.
+Output only the read text, no preamble, no quotes."""
 
 
 def log(msg):
@@ -171,71 +171,158 @@ def chat(client, system, user, max_tokens=220, temperature=0.4):
 # --------------------------------------------------------------------------- scan loading
 
 
-def load_scan(timeframe):
-    """Load one timeframe's results file from SCAN_BASE (URL or local dir).
+def load_scan():
+    """Load iq/scan.json from SCAN_BASE (URL or local dir).
 
     Returns the parsed dict or None on any failure.
     """
-    name = TIMEFRAME_FILES[timeframe]
     try:
         if SCAN_BASE.startswith("http://") or SCAN_BASE.startswith("https://"):
-            url = SCAN_BASE.rstrip("/") + "/" + name
+            url = SCAN_BASE.rstrip("/") + "/" + SCAN_FILE
             req = urllib.request.Request(url, headers={"User-Agent": "iq-algo-reads-worker"})
             with urllib.request.urlopen(req, timeout=FETCH_TIMEOUT) as fh:
                 data = json.loads(fh.read().decode("utf-8"))
         else:
-            data = json.loads((Path(SCAN_BASE) / name).read_text(encoding="utf-8"))
+            data = json.loads((Path(SCAN_BASE) / SCAN_FILE).read_text(encoding="utf-8"))
     except Exception as exc:  # network truncation raises non-OSError types
         # (e.g. http.client.IncompleteRead); a bad fetch must never kill a pass
-        log("fetch failed for %s: %s" % (name, exc))
+        log("fetch failed for %s: %s" % (SCAN_FILE, exc))
         return None
-    if not isinstance(data, dict):
-        log("unexpected payload shape for %s (not a dict) -- skipping" % name)
+    if not isinstance(data, dict) or not isinstance(data.get("tickers"), dict):
+        log("unexpected payload shape for %s (no tickers dict) -- skipping" % SCAN_FILE)
         return None
     return data
 
 
-def _num(row, key):
-    v = row.get(key)
+# --------------------------------------------------------------------------- extraction
+#
+# EVERYTHING that touches raw scan.json field names lives in extract_ticker()
+# and the tiny helpers right above it. Scanner field drift = fix here only.
+
+def _num(v):
     return v if isinstance(v, (int, float)) and not isinstance(v, bool) else None
 
 
-def extract_current(scans):
-    """Build per-ticker fingerprints and facts from the fetched scans.
+def _sub(d, key):
+    """d[key] if it is a dict, else {} — tolerates missing product blocks."""
+    v = d.get(key) if isinstance(d, dict) else None
+    return v if isinstance(v, dict) else {}
+
+
+def _state_of(block):
+    """Engine outputs nest last-bar fields under "state" (oscillator,
+    structure) or keep them flat (bands). Accept either."""
+    inner = block.get("state")
+    return inner if isinstance(inner, dict) else block
+
+
+def _events_of(block, state):
+    """Prefer the engine's events_fired list; fall back to truthy keys of an
+    events dict. Checks both the outer block and the state level."""
+    for src in (block, state):
+        ev = src.get("events_fired")
+        if isinstance(ev, list):
+            return [e for e in ev if isinstance(e, str)]
+    for src in (block, state):
+        ev = src.get("events")
+        if isinstance(ev, dict):
+            return sorted(k for k, fired in ev.items() if fired)
+    return []
+
+
+def _dir_word(v):
+    """structure struct_dir: 1 -> bull, -1 -> bear, 0/None -> None."""
+    n = _num(v)
+    if n is None or n == 0:
+        return None
+    return "bull" if n > 0 else "bear"
+
+
+def extract_ticker(trow):
+    """Normalize ONE ticker row of scan.json into internal fields.
+
+    Returns {"meta": {name, mcap, price}, "tfs": {daily: {...}, ...}} using
+    only internal key names; fingerprints and the LLM payload are both built
+    from this, so scan.json field drift is a one-function fix.
+    """
+    norm = {"meta": {"name": trow.get("name"),
+                     "mcap": _num(trow.get("mcap")),
+                     "price": _num(trow.get("price"))},
+            "tfs": {}}
+    for tf, key in TF_KEYS.items():
+        tfrow = trow.get(key)
+        if not isinstance(tfrow, dict):
+            continue
+        bands = _state_of(_sub(tfrow, "bands"))
+        osc_block = _sub(tfrow, "osc")
+        osc = _state_of(osc_block)
+        st_block = _sub(tfrow, "structure")
+        st = _state_of(st_block)
+        if not (bands or osc or st):
+            continue
+
+        regime = bands.get("regime")
+        norm["tfs"][tf] = {
+            # IQ Bands (trend)
+            "regime": regime if regime in ("bull", "bear") else None,
+            "regime_age": _num(bands.get("regime_age")),
+            "flipped_today": bool(bands.get("flipped_today")),
+            "flip_strong": bool(bands.get("flip_strong")),
+            "prior_streak": _num(bands.get("prior_streak")),
+            "price_vs_basis_pct": _num(bands.get("price_vs_basis_pct")),
+            "noise": (bands.get("noise") or {}).get("verdict")
+                     if isinstance(bands.get("noise"), dict) else bands.get("noise"),
+            "vol_hot": bool(bands.get("vol_hot")),
+            # IQ Oscillator (momentum)
+            "osc_side": osc.get("side") if osc.get("side") in ("bull", "bear") else None,
+            "wave": _num(osc.get("wave")),
+            "wave_prev": _num(osc.get("wave_prev")),
+            "wave_slope": osc.get("wave_slope"),
+            "signal": _num(osc.get("signal")),
+            "wave_vs_signal": osc.get("wave_vs_signal"),
+            "flow_side": osc.get("flow_side"),
+            "stretched_hi": bool(osc.get("stretched_hi")),
+            "stretched_lo": bool(osc.get("stretched_lo")),
+            "osc_events": _events_of(osc_block, osc),
+            # IQ Structure (price action)
+            "struct_dir": _dir_word(st.get("struct_dir")),
+            "struct_dir_major": _dir_word(st.get("struct_dir_major")),
+            "struct_events": _events_of(st_block, st),
+        }
+    return norm
+
+
+def fingerprint_of(tf_norm):
+    """State-defining fields only (see module docstring)."""
+    return {
+        "bands": tf_norm["regime"],
+        "osc": tf_norm["osc_side"],
+        "osc_hi": tf_norm["stretched_hi"],
+        "osc_lo": tf_norm["stretched_lo"],
+        "struct": tf_norm["struct_dir"],
+        "struct_major": tf_norm["struct_dir_major"],
+        "struct_events": sorted(tf_norm["struct_events"]),
+    }
+
+
+def extract_current(scan):
+    """Build per-ticker fingerprints and facts from the fetched scan.
 
     Returns (fingerprints, facts, meta):
-      fingerprints: {sym: {tf: {"bands":.., "osc":.., "osc_sign":..}}}
-      facts:        {sym: {tf: {raw fields for the prompt}}}
-      meta:         {sym: {"name":.., "mcap":..}}
+      fingerprints: {sym: {tf: {state-defining fields}}}
+      facts:        {sym: {tf: normalized fields for the prompt}}
+      meta:         {sym: {"name":.., "mcap":.., "price":..}}
     """
     fingerprints, facts, meta = {}, {}, {}
-    for tf, data in scans.items():
-        for key in LIST_KEYS:
-            rows = data.get(key)
-            if not isinstance(rows, list):
-                continue
-            product, side = key.split("_")  # ("fvb"|"bxt", "green"|"red")
-            for row in rows:
-                if not isinstance(row, dict):
-                    continue
-                sym = row.get("sym")
-                if not sym:
-                    continue
-                fp = fingerprints.setdefault(sym, {}).setdefault(
-                    tf, {"bands": None, "osc": None, "osc_sign": None})
-                if product == "fvb":
-                    fp["bands"] = side
-                else:
-                    fp["osc"] = side
-                bxt = _num(row, "bxt_today")
-                if bxt is not None:
-                    fp["osc_sign"] = "pos" if bxt >= 0 else "neg"
-                facts.setdefault(sym, {})[tf] = row
-                m = meta.setdefault(sym, {})
-                if row.get("name"):
-                    m["name"] = row["name"]
-                if _num(row, "mcap") is not None:
-                    m["mcap"] = row["mcap"]
+    for sym, trow in scan["tickers"].items():
+        if not sym or not isinstance(trow, dict):
+            continue
+        norm = extract_ticker(trow)
+        if not norm["tfs"]:
+            continue
+        meta[sym] = norm["meta"]
+        facts[sym] = norm["tfs"]
+        fingerprints[sym] = {tf: fingerprint_of(n) for tf, n in norm["tfs"].items()}
     return fingerprints, facts, meta
 
 
@@ -276,89 +363,120 @@ def diff_fingerprints(old_fp, new_fp):
     for tf in TIMEFRAMES:
         o = old_fp.get(tf) or {}
         n = new_fp.get(tf) or {}
-        for field in ("bands", "osc", "osc_sign"):
+        for field in FP_FIELDS:
             ov, nv = o.get(field), n.get(field)
             if ov != nv:
                 changes.append({"field": "%s.%s" % (tf, field), "from": ov, "to": nv})
     return changes
 
 
-# --------------------------------------------------------------------------- facts -> prompt text
+# --------------------------------------------------------------------------- facts -> prompt payload
 
-SIDE_WORD = {"green": "bullish", "red": "bearish"}
+SIDE_WORD = {"bull": "bullish", "bear": "bearish"}
+
+STRUCT_EVENT_WORDS = {
+    "bos_up": "bullish BOS", "bos_dn": "bearish BOS",
+    "choch_up": "bullish CHoCH", "choch_dn": "bearish CHoCH",
+    "choch_up_plus": "bullish CHoCH+", "choch_dn_plus": "bearish CHoCH+",
+    "maj_bos_up": "major bullish BOS", "maj_bos_dn": "major bearish BOS",
+    "maj_choch_up": "major bullish CHoCH", "maj_choch_dn": "major bearish CHoCH",
+    "maj_choch_up_plus": "major bullish CHoCH+",
+    "maj_choch_dn_plus": "major bearish CHoCH+",
+    "tl_break_up": "trendline break to the upside",
+    "tl_break_dn": "trendline break to the downside",
+    "sweep_hi": "EQH sweep", "sweep_lo": "EQL sweep",
+}
+
+OSC_EVENT_WORDS = {
+    "flip_up": "bullish momentum flip", "flip_dn": "bearish momentum flip",
+    "turn_up": "wave turn up", "turn_dn": "wave turn down",
+    "rev_up": "reversal cross up", "rev_dn": "reversal cross down",
+    "dual_long": "dual confirmation long", "dual_short": "dual confirmation short",
+    "bull_div": "bullish divergence", "bear_div": "bearish divergence",
+    "h_bull_div": "hidden bullish divergence",
+    "h_bear_div": "hidden bearish divergence",
+    "enter_hi": "entered the overbought zone",
+    "enter_lo": "entered the oversold zone",
+    # deliberately dropped from the payload (noise on every wobble):
+    "turn_up_ungated": None, "turn_dn_ungated": None,
+}
 
 
-def render_facts(sym, fp, tf_facts, meta):
-    """Translate raw scan fields into IQ-vocabulary facts for the LLM."""
-    lines = []
-    name = meta.get("name") or sym
-    mcap = meta.get("mcap")
-    head = "TICKER: %s (%s)" % (sym, name)
-    if mcap is not None:
-        head += ", market cap $%.0fB" % mcap
-    lines.append(head)
+def _words(events, table):
+    out = []
+    for e in events:
+        w = table.get(e, e)  # unknown events pass through raw, never lost
+        if w:
+            out.append(w)
+    return out
 
+
+def confluence(n):
+    """The REAL bullish confluence count for one timeframe: bands regime bull
+    + osc side bull + wave above signal + money flow buying => n/4."""
+    score = int(n["regime"] == "bull")
+    score += int(n["osc_side"] == "bull")
+    score += int(n["wave_vs_signal"] == "above")
+    score += int((n["flow_side"] or "").upper() == "BUYING")
+    return "%d/4" % score
+
+
+def _prune(d):
+    """Drop None values and empty lists so the model never sees null fields
+    (prompt rule: if a field is missing, do not mention it)."""
+    return {k: v for k, v in d.items() if v is not None and v != []}
+
+
+def render_facts(sym, tf_facts, meta):
+    """Build the STATE payload (compact JSON) for the LLM, all three products
+    in IQ vocabulary, per timeframe, daily primary."""
+    payload = _prune({"sym": sym, "name": meta.get("name"),
+                      "mcap": meta.get("mcap"), "price": meta.get("price")})
     for tf in TIMEFRAMES:
-        state = fp.get(tf)
-        row = tf_facts.get(tf)
-        if not state or not row:
+        n = tf_facts.get(tf)
+        if not n:
             continue
-        lines.append("%s timeframe:" % tf.upper())
-
-        if state.get("bands"):
-            word = SIDE_WORD[state["bands"]]
-            streak = _num(row, "fvb_streak")
-            s = "- IQ Bands: trend regime flipped %s on this bar" % word
-            if streak:
-                s += " (prior %s regime lasted %d bars)" % (
-                    "bearish" if word == "bullish" else "bullish", int(streak))
-            lines.append(s + ".")
-        price, basis = _num(row, "price"), _num(row, "basis")
-        if price is not None and basis is not None:
-            rel = "above" if price >= basis else "below"
-            lines.append("- Price %.2f is %s the IQ Bands basis %.2f." % (price, rel, basis))
-
-        bxt, bxt_y = _num(row, "bxt_today"), _num(row, "bxt_yest")
-        if state.get("osc"):
-            word = SIDE_WORD[state["osc"]]
-            streak = _num(row, "bxt_streak")
-            s = "- IQ Oscillator: momentum signal flipped %s on this bar" % word
-            if streak:
-                s += " (prior opposite wave lasted %d bars)" % int(streak)
-            lines.append(s + ".")
-        if bxt is not None:
-            zone = "above zero" if bxt >= 0 else "below zero"
-            s = "- IQ Oscillator value %.1f (%s" % (bxt, zone)
-            if bxt_y is not None:
-                s += ", %s from %.1f" % ("rising" if bxt >= bxt_y else "falling", bxt_y)
-            lines.append(s + ").")
-
-        if state.get("bands") and state.get("osc") and state["bands"] == state["osc"]:
-            lines.append("- Confluence: trend and momentum flipped %s together on the %s."
-                         % (SIDE_WORD[state["bands"]], tf))
-
-        pct_ath = _num(row, "pct_to_ath")
-        if pct_ath is not None:
-            if pct_ath <= 2:
-                lines.append("- Extremes: within %.1f%% of the all-time high." % pct_ath)
-            else:
-                # pct_to_ath is UPSIDE REQUIRED to reach the ATH, not distance
-                # below it — "105% below" is impossible and confuses the model.
-                lines.append("- Needs +%.1f%% to reclaim the all-time high." % pct_ath)
-        lo, hi = _num(row, "wk52_low"), _num(row, "wk52_high")
-        if lo is not None and hi is not None:
-            lines.append("- 52-week range %.2f to %.2f." % (lo, hi))
-        ath30, atl30 = _num(row, "ath_30d"), _num(row, "atl_30d")
-        if ath30:
-            lines.append("- %d new all-time high(s) in the last 30 days." % int(ath30))
-        if atl30:
-            lines.append("- %d new all-time low(s) in the last 30 days." % int(atl30))
-    return "\n".join(lines)
+        # No resolved regime (engine warm-up) -> no trend block at all; a
+        # naked bars_in_regime with no side would invite hallucinated sides.
+        trend = {} if not (n["regime"] or n["flipped_today"]) else _prune({
+            "regime": SIDE_WORD.get(n["regime"]),
+            "flipped_today": n["flipped_today"],
+            "prior_opposite_bars": n["prior_streak"] if n["flipped_today"] else None,
+            "bars_in_regime": None if n["flipped_today"] else n["regime_age"],
+            "strong_flip": True if (n["flipped_today"] and n["flip_strong"]) else None,
+            "price_vs_basis_pct": n["price_vs_basis_pct"],
+            "noise": n["noise"].lower() if isinstance(n["noise"], str) else None,
+            "volume_hot": True if n["vol_hot"] else None,
+        })
+        momentum = _prune({
+            "side": SIDE_WORD.get(n["osc_side"]),
+            "wave": n["wave"], "wave_prev": n["wave_prev"],
+            "slope": n["wave_slope"],
+            "signal": n["signal"], "wave_vs_signal": n["wave_vs_signal"],
+            "stretched_high": True if n["stretched_hi"] else None,
+            "stretched_low": True if n["stretched_lo"] else None,
+            "events": _words(n["osc_events"], OSC_EVENT_WORDS),
+        })
+        structure = _prune({
+            "direction": SIDE_WORD.get(n["struct_dir"]),
+            "major_direction": SIDE_WORD.get(n["struct_dir_major"]),
+            "events_today": _words(n["struct_events"], STRUCT_EVENT_WORDS),
+        })
+        block = _prune({
+            "trend": trend or None,
+            "momentum": momentum or None,
+            "structure": structure or None,
+            "money_flow": (n["flow_side"] or "").lower() or None,
+            "confluence": confluence(n),
+        })
+        if block:
+            payload[tf] = block
+    return json.dumps(payload, separators=(",", ":"))
 
 
-def generate_read(client, sym, fp, tf_facts, meta):
+def generate_read(client, sym, tf_facts, meta):
     prompt = load_prompt("read.txt", FALLBACK_READ_PROMPT)
-    facts = render_facts(sym, fp, tf_facts, meta)
+    facts = render_facts(sym, tf_facts, meta)
     if "{{STATE_JSON}}" in prompt:
         # prompts/read.txt is a completion-style template ending in
         # "STATE:\n{{STATE_JSON}}\nREAD:" — fill the slot and send the whole
@@ -371,17 +489,12 @@ def generate_read(client, sym, fp, tf_facts, meta):
 
 
 def run_pass(client):
-    scans = {}
-    for tf in TIMEFRAMES:
-        data = load_scan(tf)
-        if data is not None:
-            scans[tf] = data
-    if not scans:
+    scan = load_scan()
+    if scan is None:
         log("no scan data reachable this pass -- nothing to do")
         return
 
-    fetched_tfs = set(scans.keys())
-    current_fp, facts, meta = extract_current(scans)
+    current_fp, facts, meta = extract_current(scan)
     old_state = load_json(STATE_FILE, {})
     if not isinstance(old_state, dict):
         old_state = {}
@@ -389,42 +502,32 @@ def run_pass(client):
     ts = now_iso()
     new_state = {}
     events = []
-    changed_syms = set()
 
     for sym in sorted(set(old_state) | set(current_fp)):
         old_entry = old_state.get(sym) or {}
         old_fp = old_entry.get("fingerprint") or {}
+        new_fp = current_fp.get(sym)
 
-        # Merge: fetched timeframes come from the scan; unfetched carry forward.
-        merged = {}
-        for tf in TIMEFRAMES:
-            if tf in fetched_tfs:
-                if sym in current_fp and tf in current_fp[sym]:
-                    merged[tf] = current_fp[sym][tf]
-            elif tf in old_fp:
-                merged[tf] = old_fp[tf]
-
-        if not merged:
-            # Ticker left every list: log the removal, drop the state entry.
+        if not new_fp:
+            # Ticker left the scan universe: log the removal, drop the entry.
             if old_fp:
                 events.append({"ts": ts, "ticker": sym,
                                "changes": diff_fingerprints(old_fp, {})})
             continue
 
-        changes = diff_fingerprints(old_fp, merged)
+        changes = diff_fingerprints(old_fp, new_fp)
         if changes:
             events.append({"ts": ts, "ticker": sym, "changes": changes})
-            changed_syms.add(sym)
         new_state[sym] = {
-            "fingerprint": merged,
-            "hash": fingerprint_hash(merged),
+            "fingerprint": new_fp,
+            "hash": fingerprint_hash(new_fp),
             "updated_at": ts if changes else old_entry.get("updated_at", ts),
         }
 
     append_events(events)
     atomic_write_json(STATE_FILE, new_state)
-    log("pass: %d tickers tracked, %d state changes, timeframes ok: %s"
-        % (len(new_state), len(events), ",".join(sorted(fetched_tfs))))
+    log("pass: %d tickers tracked, %d state changes (scan updated_at=%s)"
+        % (len(new_state), len(events), scan.get("updated_at")))
 
     # ---- reads: any ticker present in the current scan whose read is stale.
     reads = load_json(READS_FILE, {})
@@ -455,8 +558,8 @@ def run_pass(client):
     last_error = None
     for sym in queue:
         try:
-            text = generate_read(client, sym, new_state[sym]["fingerprint"],
-                                 facts.get(sym, {}), meta.get(sym, {}))
+            text = generate_read(client, sym, facts.get(sym, {}),
+                                 meta.get(sym, {}))
             if not text:
                 raise ValueError("empty completion")
             reads[sym] = {"read": text, "updated_at": now_iso(),

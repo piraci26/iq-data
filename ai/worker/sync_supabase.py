@@ -29,7 +29,7 @@ Also tolerated: a {"reads": {sym: {...}}} wrapper, a list of row objects, and
 
 Expected events.jsonl lines (what worker.py writes):
   {"ts": "2026-07-28T05:00:00+00:00", "ticker": "MSFT",
-   "changes": [{"field": "daily.bands", "from": null, "to": "red"}, ...]}
+   "changes": [{"field": "daily.bands", "from": null, "to": "bear"}, ...]}
 ("sym" is accepted in place of "ticker".)
 """
 

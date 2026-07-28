@@ -1,9 +1,9 @@
-name: IQ AI Reads
+name: IQ Scan + AI Reads
 
 on:
   schedule:
-    # GitHub throttles short crons heavily; 15 min nominal, expect 15-60 real.
-    - cron: "*/15 * * * *"
+    # GitHub throttles short crons heavily; 30 min nominal, expect 30-60 real.
+    - cron: "*/30 * * * *"
   workflow_dispatch:
 
 concurrency:
@@ -14,9 +14,9 @@ permissions:
   contents: write
 
 jobs:
-  reads:
+  scan-and-reads:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
         with:
@@ -27,22 +27,35 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Install dependencies
+        run: |
+          pip install -q -r ai/worker/requirements.txt
+          if [[ -f requirements.txt ]]; then pip install -q -r requirements.txt; fi
+
+      - name: Run scanner (writes docs/iq/scan.json; no API key needed)
+        env:
+          UNIVERSE_TOP: "500"
+          # 10y so monthly bands/oscillator clear their 33-bar warm-up.
+          BAR_RANGE: "10y"
+        run: |
+          python scanner.py --top "${UNIVERSE_TOP:-500}"
+
       - name: Generate AI reads
         env:
           # LLM_API_KEY repo secret (Groq key) required; step skips without it.
           LLM_API_KEY:  ${{ secrets.LLM_API_KEY }}
           LLM_BASE_URL: https://api.groq.com/openai/v1
           LLM_MODEL:    llama-3.3-70b-versatile
-          # Scan data is consumed READ-ONLY over public Pages; this repo never
-          # touches tht-data.
-          SCAN_BASE:    https://piraci26.github.io/tht-data
+          # The scanner just wrote docs/iq/scan.json in this same job — read
+          # it locally instead of round-tripping through Pages (which would
+          # lag one deploy behind).
+          SCAN_BASE:    docs
           MAX_READS_PER_PASS: "25"
         run: |
           if [[ -z "$LLM_API_KEY" ]]; then
-            echo "LLM_API_KEY not set, skipping"
+            echo "LLM_API_KEY not set, skipping reads"
             exit 0
           fi
-          pip install -q openai
           # Restore accumulated reads (fresh checkout has no ai/worker/out).
           mkdir -p ai/worker/out
           if [[ -f docs/ai/reads.json ]]; then cp docs/ai/reads.json ai/worker/out/reads.json; fi
@@ -54,9 +67,9 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if [[ -n "$(git status --porcelain docs/ ai/worker/state)" ]]; then
-            git add docs/ai ai/worker/state
-            git commit -m "reads @ $(date -u +'%Y-%m-%d %H:%M UTC') [actions]"
+          if [[ -n "$(git status --porcelain docs/iq docs/ai ai/worker/state)" ]]; then
+            git add docs/iq docs/ai ai/worker/state
+            git commit -m "scan+reads @ $(date -u +'%Y-%m-%d %H:%M UTC') [actions]"
             git push
           else
             echo "no changes"

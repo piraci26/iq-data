@@ -40,19 +40,49 @@ counts that are not in the log. Weigh the most recent changes heaviest; call
 out reversals (a flip that later flipped back) explicitly. Output only the
 answer."""
 
-# Raw fingerprint fields -> IQ vocabulary.
+# Raw fingerprint fields -> IQ vocabulary (matches worker.FP_FIELDS).
 FIELD_LABEL = {
     "bands": "IQ Bands trend regime",
-    "osc": "IQ Oscillator momentum signal",
-    "osc_sign": "IQ Oscillator zero line",
+    "osc": "IQ Oscillator momentum side",
+    "osc_hi": "IQ Oscillator stretched-high flag",
+    "osc_lo": "IQ Oscillator stretched-low flag",
+    "struct": "IQ Structure direction",
+    "struct_major": "IQ Structure major direction",
+    "struct_events": "IQ Structure events",
 }
 VALUE_WORD = {
-    "bands": {"green": "fresh bullish flip", "red": "fresh bearish flip",
-              None: "no fresh flip"},
-    "osc": {"green": "fresh bullish signal", "red": "fresh bearish signal",
-            None: "no fresh signal"},
-    "osc_sign": {"pos": "above zero", "neg": "below zero", None: "n/a"},
+    "bands": {"bull": "bullish", "bear": "bearish", None: "unresolved",
+              # legacy log lines (pre-2026-07-28 format) render sensibly too
+              "green": "fresh bullish flip", "red": "fresh bearish flip"},
+    "osc": {"bull": "bullish", "bear": "bearish", None: "unresolved",
+            "green": "fresh bullish signal", "red": "fresh bearish signal"},
+    "osc_hi": {True: "stretched high", False: "not stretched", None: "n/a"},
+    "osc_lo": {True: "stretched low", False: "not stretched", None: "n/a"},
+    "struct": {"bull": "bullish", "bear": "bearish", None: "unresolved"},
+    "struct_major": {"bull": "bullish", "bear": "bearish", None: "unresolved"},
+    # struct_events values are lists; handled by _value_words directly.
+    "struct_events": {None: "none"},
 }
+
+# Raw structure event names -> plain trader English (worker's table).
+try:
+    from worker import STRUCT_EVENT_WORDS
+except ImportError:  # keep the CLI usable even if worker internals move
+    STRUCT_EVENT_WORDS = {}
+
+
+def _value_words(key, val):
+    """One fingerprint value -> words. Lists (struct_events) are joined;
+    unknown scalars pass through as text rather than being dropped."""
+    if isinstance(val, list):
+        if not val:
+            return "none"
+        return ", ".join(str(STRUCT_EVENT_WORDS.get(e, e)) for e in val)
+    words = VALUE_WORD.get(key, {})
+    try:
+        return words.get(val, str(val))
+    except TypeError:  # unhashable future value
+        return str(val)
 
 
 def parse_since(text):
@@ -106,11 +136,10 @@ def render_change(change):
         return None
     tf, key = field.split(".", 1)
     label = FIELD_LABEL.get(key)
-    words = VALUE_WORD.get(key)
-    if not label or not words:
+    if not label:
         return None  # unknown future field; skip rather than guess
-    frm = words.get(change.get("from"), str(change.get("from")))
-    to = words.get(change.get("to"), str(change.get("to")))
+    frm = _value_words(key, change.get("from"))
+    to = _value_words(key, change.get("to"))
     return "%s %s: %s -> %s" % (tf, label, frm, to)
 
 

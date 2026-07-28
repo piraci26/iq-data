@@ -28,7 +28,7 @@ ollama serve            # skip if the Ollama app is already running
 ollama pull llama3.1:8b
 
 # 2. Install deps
-cd "/Users/kubakaszynski/Desktop/IQ ALGO/ai-stack/worker"
+cd ~/iq-data/ai/worker
 python3 -m pip install -r requirements.txt
 
 # 3. Single pass
@@ -54,14 +54,15 @@ Defaults (no env needed for dev): `LLM_BASE_URL=http://localhost:11434/v1`,
 | `LLM_MODEL` | `llama3.1:8b` | model name at that endpoint |
 | `LLM_API_KEY` | `ollama` | API key (any string for Ollama) |
 | `LLM_TIMEOUT` | `60` | seconds per LLM request |
-| `SCAN_BASE` | `https://piraci26.github.io/tht-data` | scan data source; a local dir path also works for offline dev |
-| `MAX_READS_PER_PASS` | `25` | LLM-read cap per pass (mcap-desc priority; rest retry next pass) |
+| `SCAN_BASE` | `https://piraci26.github.io/iq-data` | scan source; the worker appends `/iq/scan.json`; a local dir path also works |
+| `MAX_READS_PER_PASS` | `25` | LLM-read cap per pass (changed-first, then mcap-desc; rest retry next pass) |
 | `FETCH_TIMEOUT` | `30` | seconds per scan-file fetch |
 
-Note on `SCAN_BASE`: production scanning runs in GitHub Actions and publishes
-to GitHub Pages; the local `~/tht-data` checkout is a stale mirror. Keep the
-default URL unless deliberately testing offline
-(`SCAN_BASE=/Users/kubakaszynski/tht-data/docs`).
+Note on `SCAN_BASE`: production scanning (this repo's `scanner.py`) runs in
+the same GitHub Actions job right before the worker, so CI sets
+`SCAN_BASE=docs` to read the just-written `docs/iq/scan.json` instead of the
+one-deploy-behind Pages copy. Local dev: `SCAN_BASE=../../docs` from
+`ai/worker/`, or the Pages URL default.
 
 ## Swapping to production models
 
@@ -100,13 +101,15 @@ python3 whats_changed.py NVDA --since 24h
 
 ## Behavior notes
 
-- The scan lists are FLIP lists: a ticker appears only while its flip is fresh
-  on that timeframe's bar. Fingerprints cover list membership (IQ Bands side,
-  IQ Oscillator side) plus the oscillator's zero-line side, per timeframe.
-  Prices, basis, and oscillator magnitude are excluded from the fingerprint
-  (they flicker on the 5-minute cadence) but are still fed to the LLM as facts.
-- If a timeframe file fails to fetch, its previous state carries forward — no
-  false "dropped" events on network blips.
+- The source is this repo's own scanner output (`iq/scan.json`, timeframe
+  keys d/w/m). Fingerprints cover state-defining fields only, per timeframe:
+  IQ Bands regime, IQ Oscillator side + stretched hi/lo flags, IQ Structure
+  direction (internal + major) + today's structure events. Prices, basis,
+  wave magnitude/slope, and money-flow values are excluded from the
+  fingerprint (they flicker scan-to-scan) but are still fed to the LLM as
+  facts.
+- If the scan file fails to fetch, the pass is a no-op — previous state
+  carries forward, no false "dropped" events on network blips.
 - A ticker leaving all lists is logged to `events.jsonl` but gets no new LLM
   read; its last read stays in `out/reads.json`.
 - LLM down: the worker logs, skips reads, and keeps diffing state. Stale reads
