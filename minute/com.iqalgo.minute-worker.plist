@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.iqalgo.minute-worker</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/bin/python3</string>
+        <string>/Users/kubakaszynski/iq-data/minute/minute_worker.py</string>
+        <string>--loop</string>
+    </array>
+
+    <key>WorkingDirectory</key>
+    <string>/Users/kubakaszynski/iq-data/minute</string>
+
+    <!-- Long-lived looping worker: launchd restarts it whenever it exits. -->
+    <key>KeepAlive</key>
+    <true/>
+    <key>RunAtLoad</key>
+    <true/>
+
+    <!-- Back off 30s between respawns so a crash loop doesn't spin hot. -->
+    <key>ThrottleInterval</key>
+    <integer>30</integer>
+
+    <!-- Note: deliberately NO AbandonProcessGroup here. tv-keepalive needs it
+         because its script spawns a child (TradingView) that must outlive the
+         script. This worker IS the long-lived process; launchd should own its
+         process group so KeepAlive restarts work cleanly. Do not add it unless
+         the worker starts spawning children that must survive it. -->
+
+    <!-- Supabase sync credentials for the trend-iq SITE project
+         (zuhpyynilcqfgufexgli.supabase.co).
+
+         LEAVE EMPTY for local-only mode: the worker no-ops all Supabase
+         writes when these are unset or empty and keeps writing local files.
+
+         To enable sync: paste the URL + the service_role key from that
+         project's dashboard (Settings > API), then re-run install.sh so
+         launchd picks up the change.
+
+         NEVER paste the tht-data key (sb_secret_*, from ~/tht-data/.env)
+         here -- that key belongs to the friend's fmjz... project. -->
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>SUPABASE_URL</key>
+        <string></string>
+        <key>SUPABASE_SERVICE_KEY</key>
+        <string></string>
+    </dict>
+
+    <key>StandardOutPath</key>
+    <string>/Users/kubakaszynski/iq-data/minute/logs/minute-worker.out.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/kubakaszynski/iq-data/minute/logs/minute-worker.err.log</string>
+</dict>
+</plist>
