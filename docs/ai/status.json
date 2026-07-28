@@ -1,9 +1,9 @@
 {
  "base_url": "https://api.groq.com/openai/v1",
- "events": 228,
- "generated": 25,
- "last_error": null,
+ "events": 9,
+ "generated": 23,
+ "last_error": "AXP: RateLimitError: Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_01knq0mctde1pvxewm82b63ngy` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 98834, Requested 1415. Please try again in 3m35.136s. Need more tokens? Upgrade to Dev",
  "model": "llama-3.3-70b-versatile",
  "queued": 25,
- "ts": "2026-07-28T20:29:40+00:00"
+ "ts": "2026-07-28T21:47:13+00:00"
 }
