@@ -1,0 +1,63 @@
+name: IQ AI Reads
+
+on:
+  schedule:
+    # GitHub throttles short crons heavily; 15 min nominal, expect 15-60 real.
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: reads
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  reads:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Generate AI reads
+        env:
+          # LLM_API_KEY repo secret (Groq key) required; step skips without it.
+          LLM_API_KEY:  ${{ secrets.LLM_API_KEY }}
+          LLM_BASE_URL: https://api.groq.com/openai/v1
+          LLM_MODEL:    llama-3.3-70b-versatile
+          # Scan data is consumed READ-ONLY over public Pages; this repo never
+          # touches tht-data.
+          SCAN_BASE:    https://piraci26.github.io/tht-data
+          MAX_READS_PER_PASS: "25"
+        run: |
+          if [[ -z "$LLM_API_KEY" ]]; then
+            echo "LLM_API_KEY not set, skipping"
+            exit 0
+          fi
+          pip install -q openai
+          # Restore accumulated reads (fresh checkout has no ai/worker/out).
+          mkdir -p ai/worker/out
+          if [[ -f docs/ai/reads.json ]]; then cp docs/ai/reads.json ai/worker/out/reads.json; fi
+          python ai/worker/worker.py --once
+          cp ai/worker/out/reads.json docs/ai/reads.json
+          cp ai/worker/out/status.json docs/ai/status.json 2>/dev/null || true
+
+      - name: Commit + push if anything changed
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if [[ -n "$(git status --porcelain docs/ ai/worker/state)" ]]; then
+            git add docs/ai ai/worker/state
+            git commit -m "reads @ $(date -u +'%Y-%m-%d %H:%M UTC') [actions]"
+            git push
+          else
+            echo "no changes"
+          fi
