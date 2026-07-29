@@ -154,9 +154,10 @@ def chat(client, system, user, max_tokens=220, temperature=0.4):
     """One chat completion. Raises on failure; callers decide how to degrade.
 
     system may be None/empty for single-message completion-style prompts.
-    On a rate-limit error (provider daily/minute caps), retries once on
-    LLM_MODEL_FALLBACK — hosted free tiers cap per model, so a second model
-    keeps the pipeline flowing when the primary's budget is exhausted.
+    On a rate-limit error (provider daily/minute caps), walks the fallback
+    chain — LLM_MODEL_FALLBACK is a comma-separated list, since hosted free
+    tiers cap per model and a longer chain rides out burst limits a single
+    fallback cannot.
     """
     messages = []
     if system:
@@ -172,15 +173,20 @@ def chat(client, system, user, max_tokens=220, temperature=0.4):
         )
         return (resp.choices[0].message.content or "").strip().strip('"').strip()
 
-    try:
-        return _run(LLM_MODEL)
-    except Exception as exc:
-        fb = LLM_MODEL_FALLBACK
-        rate_limited = "429" in str(exc) or type(exc).__name__ == "RateLimitError"
-        if not fb or fb == LLM_MODEL or not rate_limited:
-            raise
-        log("rate-limited on %s -- falling back to %s" % (LLM_MODEL, fb))
-        return _run(fb)
+    chain = [LLM_MODEL]
+    for fb in LLM_MODEL_FALLBACK.split(","):
+        fb = fb.strip()
+        if fb and fb not in chain:
+            chain.append(fb)
+
+    for i, model in enumerate(chain):
+        try:
+            return _run(model)
+        except Exception as exc:
+            rate_limited = "429" in str(exc) or type(exc).__name__ == "RateLimitError"
+            if not rate_limited or i == len(chain) - 1:
+                raise
+            log("rate-limited on %s -- falling back to %s" % (model, chain[i + 1]))
 
 
 # --------------------------------------------------------------------------- scan loading
