@@ -46,6 +46,9 @@ jobs:
           LLM_API_KEY:  ${{ secrets.LLM_API_KEY }}
           LLM_BASE_URL: https://api.groq.com/openai/v1
           LLM_MODEL:    llama-3.3-70b-versatile
+          # Groq free-tier caps are per model+day; when the 70B budget is
+          # spent, the pass continues on the 8B instead of starving.
+          LLM_MODEL_FALLBACK: llama-3.1-8b-instant
           # The scanner just wrote docs/iq/scan.json in this same job — read
           # it locally instead of round-tripping through Pages (which would
           # lag one deploy behind).

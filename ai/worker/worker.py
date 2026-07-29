@@ -78,6 +78,7 @@ READS_FILE = OUT_DIR / "reads.json"
 SCAN_BASE = os.environ.get("SCAN_BASE", "https://piraci26.github.io/iq-data").strip()
 LLM_BASE_URL = os.environ.get("LLM_BASE_URL", "http://localhost:11434/v1").strip()
 LLM_MODEL = os.environ.get("LLM_MODEL", "llama3.1:8b").strip()
+LLM_MODEL_FALLBACK = os.environ.get("LLM_MODEL_FALLBACK", "").strip()
 LLM_API_KEY = os.environ.get("LLM_API_KEY", "ollama").strip()
 LLM_TIMEOUT = float(os.environ.get("LLM_TIMEOUT", "60"))
 MAX_READS_PER_PASS = int(os.environ.get("MAX_READS_PER_PASS", "25"))
@@ -153,19 +154,33 @@ def chat(client, system, user, max_tokens=220, temperature=0.4):
     """One chat completion. Raises on failure; callers decide how to degrade.
 
     system may be None/empty for single-message completion-style prompts.
+    On a rate-limit error (provider daily/minute caps), retries once on
+    LLM_MODEL_FALLBACK — hosted free tiers cap per model, so a second model
+    keeps the pipeline flowing when the primary's budget is exhausted.
     """
     messages = []
     if system:
         messages.append({"role": "system", "content": system})
     messages.append({"role": "user", "content": user})
-    resp = client.chat.completions.create(
-        model=LLM_MODEL,
-        messages=messages,
-        max_tokens=max_tokens,
-        temperature=temperature,
-    )
-    text = (resp.choices[0].message.content or "").strip()
-    return text.strip('"').strip()
+
+    def _run(model):
+        resp = client.chat.completions.create(
+            model=model,
+            messages=messages,
+            max_tokens=max_tokens,
+            temperature=temperature,
+        )
+        return (resp.choices[0].message.content or "").strip().strip('"').strip()
+
+    try:
+        return _run(LLM_MODEL)
+    except Exception as exc:
+        fb = LLM_MODEL_FALLBACK
+        rate_limited = "429" in str(exc) or type(exc).__name__ == "RateLimitError"
+        if not fb or fb == LLM_MODEL or not rate_limited:
+            raise
+        log("rate-limited on %s -- falling back to %s" % (LLM_MODEL, fb))
+        return _run(fb)
 
 
 # --------------------------------------------------------------------------- scan loading
