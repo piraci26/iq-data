@@ -16,7 +16,7 @@ permissions:
 jobs:
   scan-and-reads:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 32
     steps:
       - uses: actions/checkout@v4
         with:
@@ -39,6 +39,10 @@ jobs:
           BAR_RANGE: "10y"
         run: |
           python scanner.py --top "${UNIVERSE_TOP:-500}"
+
+      - name: Triple-signal scan (30m + 2H vs daily; writes docs/iq/signals.json)
+        run: |
+          python intraday.py
 
       - name: Generate AI reads
         env:
