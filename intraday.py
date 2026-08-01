@@ -68,9 +68,10 @@ def resample_2h(T, o, h, l, c, v):
     """Session-anchored 2H bars from 30m bars.
 
     Bars are grouped per trading day (a gap of >= 4h starts a new session)
-    and bucketed by elapsed time since that session's first bar.
+    and bucketed by elapsed time since that session's first bar. Returns the
+    bucket-start timestamps too, so flips can be dated.
     """
-    RO, RH, RL, RC, RV = [], [], [], [], []
+    T2, RO, RH, RL, RC, RV = [], [], [], [], [], []
     day_start = None
     cur_key = None
     for i in range(len(T)):
@@ -79,6 +80,7 @@ def resample_2h(T, o, h, l, c, v):
         key = (day_start, (T[i] - day_start) // 7200)
         if key != cur_key:
             cur_key = key
+            T2.append(T[i])
             RO.append(o[i]); RH.append(h[i]); RL.append(l[i])
             RC.append(c[i]); RV.append(v[i])
         else:
@@ -86,10 +88,20 @@ def resample_2h(T, o, h, l, c, v):
             RL[-1] = min(RL[-1], l[i])
             RC[-1] = c[i]
             RV[-1] += v[i]
-    return RO, RH, RL, RC, RV
+    return T2, RO, RH, RL, RC, RV
 
 
-def tf_state(engines):
+def flip_iso(T, age):
+    """UTC ISO time of the bar on which the current regime began."""
+    if age is None:
+        return None
+    i = len(T) - 1 - int(age)
+    if not (0 <= i < len(T)):
+        return None
+    return datetime.fromtimestamp(T[i], timezone.utc).isoformat(timespec="seconds")
+
+
+def tf_state(engines, T=None):
     """Compact per-timeframe cell for the feed."""
     b = engines.get("bands") or {}
     osc = (engines.get("osc") or {}).get("state") or {}
@@ -99,6 +111,7 @@ def tf_state(engines):
         "regime": b.get("regime"),
         "age": b.get("regime_age"),
         "flipped": bool(b.get("flipped_today")),
+        "flip_at": flip_iso(T, b.get("regime_age")) if T else None,
         "close": b.get("close"),
         "wave_side": osc.get("side"),
         "flow_side": osc.get("flow_side"),
@@ -137,9 +150,9 @@ def main(argv=None):
         checked += 1
         T, o, h, l, c, v = bars
 
-        m30 = tf_state(run_engines(o, h, l, c, v, with_structure=False))
-        r2 = resample_2h(T, o, h, l, c, v)
-        h2 = tf_state(run_engines(*r2, with_structure=False))
+        m30 = tf_state(run_engines(o, h, l, c, v, with_structure=False), T=T)
+        T2, r2o, r2h, r2l, r2c, r2v = resample_2h(T, o, h, l, c, v)
+        h2 = tf_state(run_engines(r2o, r2h, r2l, r2c, r2v, with_structure=False), T=T2)
         if not m30 or not h2:
             continue
 
@@ -153,6 +166,14 @@ def main(argv=None):
             ("1d", d_bands.get("regime_age") or 10 ** 9),
             key=lambda x: x[1],
         )
+        # The alignment exists since its youngest leg flipped; that flip bar's
+        # time is the signal's creation time (daily-youngest has no intraday
+        # timestamp, so it stays null and clients fall back to bar age).
+        completed_at = (
+            m30["flip_at"] if youngest[0] == "30m"
+            else h2["flip_at"] if youngest[0] == "2h"
+            else None
+        )
         triples.append({
             "sym": sym,
             "name": tk.get("name") or sym,
@@ -161,6 +182,7 @@ def main(argv=None):
             "fresh": youngest[1] <= FRESH_MAX_AGE,
             "youngest_tf": youngest[0],
             "youngest_age": youngest[1],
+            "completed_at": completed_at,
             "tfs": {
                 "m30": m30,
                 "h2": h2,
