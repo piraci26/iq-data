@@ -290,6 +290,40 @@ def atomic_write(path, obj):
     os.replace(tmp, path)
 
 
+def screener_row(sym, rec):
+    """Compact, filterable snapshot of one ticker for the search screener.
+
+    scan.json is ~4 MB — far too heavy for a browser search surface — so the
+    screener gets its own slim feed with just the fields worth filtering on.
+    """
+    row = {"sym": sym, "name": rec.get("name"),
+           "mcap": rec.get("mcap"), "price": rec.get("price")}
+    for tf in ("d", "w", "m"):
+        eng = rec.get(tf) or {}
+        b = eng.get("bands") or {}
+        osc = (eng.get("osc") or {}).get("state") or {}
+        if "error" in b or b.get("regime") not in ("bull", "bear"):
+            continue
+        row[tf] = {
+            "regime": b.get("regime"),
+            "age": b.get("regime_age"),
+            "flip": bool(b.get("flipped_today")),
+            "basis_pct": b.get("price_vs_basis_pct"),
+            "vol_z": b.get("vol_z"),
+            "hv": (b.get("hv") or {}).get("tag"),
+            "noise": (b.get("noise") or {}).get("verdict"),
+            "wave_side": osc.get("side"),
+            "wave_rel": osc.get("wave_vs_signal"),
+            "flow": osc.get("flow_side"),
+            "conf": osc.get("confluence"),
+        }
+    d_struct = ((rec.get("d") or {}).get("structure") or {})
+    fired = d_struct.get("events_fired") or []
+    if fired:
+        row["struct_events"] = fired
+    return row
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description="IQ Algo universe scanner")
     ap.add_argument("--top", type=int,
@@ -388,10 +422,16 @@ def main(argv=None):
     events_doc = {"updated_at": updated,
                   "count": len(events),
                   "events": events}
+    screener_doc = {"updated_at": updated,
+                    "count": len(tickers),
+                    "rows": [screener_row(s, r)
+                             for s, r in sorted(tickers.items())]}
     scan_path = os.path.join(out_dir, "scan.json")
     events_path = os.path.join(out_dir, "events.json")
+    screener_path = os.path.join(out_dir, "screener.json")
     atomic_write(scan_path, scan_doc)
     atomic_write(events_path, events_doc)
+    atomic_write(screener_path, screener_doc)
     print("wrote %s (%d tickers, %.1f KB) and %s (%d events) in %.0fs"
           % (scan_path, len(tickers),
              os.path.getsize(scan_path) / 1024.0,
