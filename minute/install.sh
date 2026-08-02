@@ -45,7 +45,20 @@ case "${1:-install}" in
     # time is written into the INSTALLED plist copy only — the repo copy
     # stays empty so the key can never be committed. URL defaults to the
     # trend-iq site project.
-    if [[ -n "${SUPABASE_SERVICE_KEY:-}" ]]; then
+    if [[ -n "${MINUTE_INGEST_TOKEN:-}" ]]; then
+      INGEST_URL="${MINUTE_INGEST_URL:-https://zuhpyynilcqfgufexgli.supabase.co/functions/v1/ingest-minute}"
+      /usr/bin/python3 - "$PLIST_DST" "$INGEST_URL" "$MINUTE_INGEST_TOKEN" <<'PY'
+import sys
+path, url, token = sys.argv[1], sys.argv[2], sys.argv[3]
+t = open(path).read()
+t = t.replace("<key>MINUTE_INGEST_URL</key>\n        <string></string>",
+              "<key>MINUTE_INGEST_URL</key>\n        <string>%s</string>" % url)
+t = t.replace("<key>MINUTE_INGEST_TOKEN</key>\n        <string></string>",
+              "<key>MINUTE_INGEST_TOKEN</key>\n        <string>%s</string>" % token)
+open(path, "w").write(t)
+print("Ingest sync enabled in installed plist (repo copy untouched).")
+PY
+    elif [[ -n "${SUPABASE_SERVICE_KEY:-}" ]]; then
       SUPA_URL="${SUPABASE_URL:-https://zuhpyynilcqfgufexgli.supabase.co}"
       /usr/bin/python3 - "$PLIST_DST" "$SUPA_URL" "$SUPABASE_SERVICE_KEY" <<'PY'
 import sys

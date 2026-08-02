@@ -35,8 +35,31 @@ import urllib.request
 _PRINTED_DISABLED_HINT = False
 
 
+def ingest_available():
+    """Low-privilege path: the worker holds only a dedicated ingest token;
+    the privileged write happens inside the ingest-minute edge function."""
+    return bool(os.environ.get("MINUTE_INGEST_URL")
+                and os.environ.get("MINUTE_INGEST_TOKEN"))
+
+
+def ingest(states, events, timeout=30):
+    url = os.environ["MINUTE_INGEST_URL"].strip()
+    token = os.environ["MINUTE_INGEST_TOKEN"].strip()
+    body = json.dumps({"states": states, "events": events}).encode("utf-8")
+    req = urllib.request.Request(url, data=body, method="POST",
+                                 headers={"Content-Type": "application/json",
+                                          "x-ingest-token": token})
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            return json.loads(resp.read().decode("utf-8"))
+    except urllib.error.HTTPError as e:
+        raise RuntimeError("ingest failed: %s %s"
+                           % (e.code,
+                              e.read().decode("utf-8", "replace")[:300])) from e
+
+
 def available():
-    return bool(os.environ.get("SUPABASE_URL")
+    return ingest_available() or bool(os.environ.get("SUPABASE_URL")
                 and os.environ.get("SUPABASE_SERVICE_KEY"))
 
 
@@ -44,7 +67,7 @@ def _disabled():
     global _PRINTED_DISABLED_HINT
     if not available():
         if not _PRINTED_DISABLED_HINT:
-            print("supa: SUPABASE_URL / SUPABASE_SERVICE_KEY not set -- "
+            print("supa: no MINUTE_INGEST_URL/TOKEN and no service key -- "
                   "Supabase writes skipped (local-only mode).",
                   file=sys.stderr)
             _PRINTED_DISABLED_HINT = True

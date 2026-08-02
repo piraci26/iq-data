@@ -351,8 +351,11 @@ def push_supabase(state_rows, event_rows, dry):
         supa._disabled()  # prints the one-time keyless hint
         return "off"
     try:
-        supa.upsert("minute_states", state_rows, on_conflict="sym")
-        supa.insert("minute_events", event_rows)
+        if supa.ingest_available():
+            supa.ingest(state_rows, event_rows)
+        else:
+            supa.upsert("minute_states", state_rows, on_conflict="sym")
+            supa.insert("minute_events", event_rows)
         return "ok(%d/%d)" % (len(state_rows), len(event_rows))
     except Exception as e:
         log("supabase push failed (continuing local-only): %s" % e)
