@@ -399,107 +399,365 @@
    "sym": "TSLA",
    "tf": "m1",
    "ts": "2026-07-28T19:21:00+00:00"
+  },
+  {
+   "engine": "osc",
+   "event": "osc:bull->bear",
+   "side": "short",
+   "sym": "TSLA",
+   "tf": "m1",
+   "ts": "2026-07-31T20:00:00+00:00"
+  },
+  {
+   "engine": "structure",
+   "event": "struct_major:bear->bull",
+   "side": "long",
+   "sym": "TSLA",
+   "tf": "m1",
+   "ts": "2026-07-31T20:00:00+00:00"
+  },
+  {
+   "engine": "bands",
+   "event": "bands:None->bull",
+   "side": "long",
+   "sym": "TSLA",
+   "tf": "m5",
+   "ts": "2026-07-31T20:00:00+00:00"
+  },
+  {
+   "engine": "osc",
+   "event": "osc:None->bull",
+   "side": "long",
+   "sym": "TSLA",
+   "tf": "m5",
+   "ts": "2026-07-31T20:00:00+00:00"
+  },
+  {
+   "engine": "osc",
+   "event": "osc_hi:None->False",
+   "side": null,
+   "sym": "TSLA",
+   "tf": "m5",
+   "ts": "2026-07-31T20:00:00+00:00"
+  },
+  {
+   "engine": "osc",
+   "event": "osc_lo:None->False",
+   "side": null,
+   "sym": "TSLA",
+   "tf": "m5",
+   "ts": "2026-07-31T20:00:00+00:00"
+  },
+  {
+   "engine": "bands",
+   "event": "bands:None->bull",
+   "side": "long",
+   "sym": "TSLA",
+   "tf": "m15",
+   "ts": "2026-07-31T20:00:00+00:00"
+  },
+  {
+   "engine": "osc",
+   "event": "osc:None->bull",
+   "side": "long",
+   "sym": "TSLA",
+   "tf": "m15",
+   "ts": "2026-07-31T20:00:00+00:00"
+  },
+  {
+   "engine": "osc",
+   "event": "osc_hi:None->False",
+   "side": null,
+   "sym": "TSLA",
+   "tf": "m15",
+   "ts": "2026-07-31T20:00:00+00:00"
+  },
+  {
+   "engine": "osc",
+   "event": "osc_lo:None->False",
+   "side": null,
+   "sym": "TSLA",
+   "tf": "m15",
+   "ts": "2026-07-31T20:00:00+00:00"
+  },
+  {
+   "engine": "triple",
+   "event": "short_term_triple_lock",
+   "side": "long",
+   "sym": "TSLA",
+   "tf": "triple",
+   "ts": "2026-08-02T14:47:27+00:00"
+  },
+  {
+   "engine": "osc",
+   "event": "osc:bull->bear",
+   "side": "short",
+   "sym": "NVDA",
+   "tf": "m1",
+   "ts": "2026-07-31T20:00:00+00:00"
+  },
+  {
+   "engine": "structure",
+   "event": "struct_major:None->bull",
+   "side": "long",
+   "sym": "NVDA",
+   "tf": "m1",
+   "ts": "2026-07-31T20:00:00+00:00"
+  },
+  {
+   "engine": "bands",
+   "event": "bands:None->bull",
+   "side": "long",
+   "sym": "NVDA",
+   "tf": "m5",
+   "ts": "2026-07-31T20:00:00+00:00"
+  },
+  {
+   "engine": "osc",
+   "event": "osc:None->bull",
+   "side": "long",
+   "sym": "NVDA",
+   "tf": "m5",
+   "ts": "2026-07-31T20:00:00+00:00"
+  },
+  {
+   "engine": "osc",
+   "event": "osc_hi:None->False",
+   "side": null,
+   "sym": "NVDA",
+   "tf": "m5",
+   "ts": "2026-07-31T20:00:00+00:00"
+  },
+  {
+   "engine": "osc",
+   "event": "osc_lo:None->False",
+   "side": null,
+   "sym": "NVDA",
+   "tf": "m5",
+   "ts": "2026-07-31T20:00:00+00:00"
+  },
+  {
+   "engine": "bands",
+   "event": "bands:None->bull",
+   "side": "long",
+   "sym": "NVDA",
+   "tf": "m15",
+   "ts": "2026-07-31T20:00:00+00:00"
+  },
+  {
+   "engine": "osc",
+   "event": "osc:None->bull",
+   "side": "long",
+   "sym": "NVDA",
+   "tf": "m15",
+   "ts": "2026-07-31T20:00:00+00:00"
+  },
+  {
+   "engine": "osc",
+   "event": "osc_hi:None->False",
+   "side": null,
+   "sym": "NVDA",
+   "tf": "m15",
+   "ts": "2026-07-31T20:00:00+00:00"
+  },
+  {
+   "engine": "osc",
+   "event": "osc_lo:None->False",
+   "side": null,
+   "sym": "NVDA",
+   "tf": "m15",
+   "ts": "2026-07-31T20:00:00+00:00"
+  },
+  {
+   "engine": "triple",
+   "event": "short_term_triple_lock",
+   "side": "long",
+   "sym": "NVDA",
+   "tf": "triple",
+   "ts": "2026-08-02T14:47:27+00:00"
+  },
+  {
+   "engine": "bands",
+   "event": "bands:bull->bear",
+   "side": "short",
+   "sym": "SPY",
+   "tf": "m1",
+   "ts": "2026-07-31T20:00:00+00:00"
+  },
+  {
+   "engine": "osc",
+   "event": "osc_lo:False->True",
+   "side": null,
+   "sym": "SPY",
+   "tf": "m1",
+   "ts": "2026-07-31T20:00:00+00:00"
+  },
+  {
+   "engine": "structure",
+   "event": "struct:bull->bear",
+   "side": "short",
+   "sym": "SPY",
+   "tf": "m1",
+   "ts": "2026-07-31T20:00:00+00:00"
+  },
+  {
+   "engine": "structure",
+   "event": "struct_major:bear->bull",
+   "side": "long",
+   "sym": "SPY",
+   "tf": "m1",
+   "ts": "2026-07-31T20:00:00+00:00"
+  },
+  {
+   "engine": "bands",
+   "event": "bands:None->bull",
+   "side": "long",
+   "sym": "SPY",
+   "tf": "m5",
+   "ts": "2026-07-31T20:00:00+00:00"
+  },
+  {
+   "engine": "osc",
+   "event": "osc:None->bull",
+   "side": "long",
+   "sym": "SPY",
+   "tf": "m5",
+   "ts": "2026-07-31T20:00:00+00:00"
+  },
+  {
+   "engine": "osc",
+   "event": "osc_hi:None->False",
+   "side": null,
+   "sym": "SPY",
+   "tf": "m5",
+   "ts": "2026-07-31T20:00:00+00:00"
+  },
+  {
+   "engine": "osc",
+   "event": "osc_lo:None->False",
+   "side": null,
+   "sym": "SPY",
+   "tf": "m5",
+   "ts": "2026-07-31T20:00:00+00:00"
+  },
+  {
+   "engine": "bands",
+   "event": "bands:None->bull",
+   "side": "long",
+   "sym": "SPY",
+   "tf": "m15",
+   "ts": "2026-07-31T20:00:00+00:00"
+  },
+  {
+   "engine": "osc",
+   "event": "osc:None->bull",
+   "side": "long",
+   "sym": "SPY",
+   "tf": "m15",
+   "ts": "2026-07-31T20:00:00+00:00"
+  },
+  {
+   "engine": "osc",
+   "event": "osc_hi:None->False",
+   "side": null,
+   "sym": "SPY",
+   "tf": "m15",
+   "ts": "2026-07-31T20:00:00+00:00"
+  },
+  {
+   "engine": "osc",
+   "event": "osc_lo:None->False",
+   "side": null,
+   "sym": "SPY",
+   "tf": "m15",
+   "ts": "2026-07-31T20:00:00+00:00"
   }
  ],
  "tickers": {
-  "AAPL": {
-   "bars": 352,
-   "fingerprint": {
-    "bands": "bull",
-    "osc": "bear",
-    "osc_hi": false,
-    "osc_lo": false,
-    "struct": "bull",
-    "struct_events": [],
-    "struct_major": "bear"
-   },
-   "hash": "f60b19135e21be07",
-   "last_bar": "2026-07-28T19:21:00+00:00",
-   "price": 339.37,
-   "state_updated_at": "2026-07-28T19:17:31+00:00"
-  },
-  "AMD": {
-   "bars": 352,
-   "fingerprint": {
-    "bands": "bull",
-    "osc": "bull",
-    "osc_hi": false,
-    "osc_lo": false,
-    "struct": "bull",
-    "struct_events": [],
-    "struct_major": null
-   },
-   "hash": "2754258dd50845fc",
-   "last_bar": "2026-07-28T19:21:00+00:00",
-   "price": 460.79,
-   "state_updated_at": "2026-07-28T19:17:31+00:00"
-  },
-  "MSFT": {
-   "bars": 352,
-   "fingerprint": {
-    "bands": "bear",
-    "osc": "bear",
-    "osc_hi": false,
-    "osc_lo": true,
-    "struct": "bear",
-    "struct_events": [],
-    "struct_major": "bear"
-   },
-   "hash": "52290b9e7916ea2c",
-   "last_bar": "2026-07-28T19:21:00+00:00",
-   "price": 393.605,
-   "state_updated_at": "2026-07-28T19:13:56+00:00"
-  },
   "NVDA": {
-   "bars": 352,
-   "fingerprint": {
-    "bands": "bull",
-    "osc": "bull",
-    "osc_hi": false,
-    "osc_lo": false,
-    "struct": "bull",
-    "struct_events": [],
-    "struct_major": null
+   "clocks": {
+    "m1": {
+     "age": 44,
+     "bars": 1951,
+     "last_bar": "2026-07-31T20:00:00+00:00",
+     "regime": "bull"
+    },
+    "m15": {
+     "age": 50,
+     "bars": 131,
+     "last_bar": "2026-07-31T20:00:00+00:00",
+     "regime": "bull"
+    },
+    "m5": {
+     "age": 43,
+     "bars": 391,
+     "last_bar": "2026-07-31T20:00:00+00:00",
+     "regime": "bull"
+    }
    },
-   "hash": "2754258dd50845fc",
-   "last_bar": "2026-07-28T19:21:00+00:00",
-   "price": 197.51,
-   "state_updated_at": "2026-07-28T19:22:31+00:00"
+   "price": 200.75,
+   "state_updated_at": "2026-08-02T14:47:27+00:00",
+   "triple": {
+    "side": "bull",
+    "since": "2026-08-02T14:47:27+00:00"
+   }
   },
   "SPY": {
-   "bars": 352,
-   "fingerprint": {
-    "bands": "bull",
-    "osc": "bear",
-    "osc_hi": false,
-    "osc_lo": false,
-    "struct": "bull",
-    "struct_events": [],
-    "struct_major": "bear"
+   "clocks": {
+    "m1": {
+     "age": 0,
+     "bars": 1951,
+     "last_bar": "2026-07-31T20:00:00+00:00",
+     "regime": "bear"
+    },
+    "m15": {
+     "age": 41,
+     "bars": 131,
+     "last_bar": "2026-07-31T20:00:00+00:00",
+     "regime": "bull"
+    },
+    "m5": {
+     "age": 49,
+     "bars": 391,
+     "last_bar": "2026-07-31T20:00:00+00:00",
+     "regime": "bull"
+    }
    },
-   "hash": "f60b19135e21be07",
-   "last_bar": "2026-07-28T19:21:00+00:00",
-   "price": 741.58,
-   "state_updated_at": "2026-07-28T19:13:56+00:00"
+   "price": 747.03,
+   "state_updated_at": "2026-08-02T14:47:27+00:00",
+   "triple": {
+    "side": null,
+    "since": "2026-08-02T14:47:27+00:00"
+   }
   },
   "TSLA": {
-   "bars": 352,
-   "fingerprint": {
-    "bands": "bull",
-    "osc": "bull",
-    "osc_hi": false,
-    "osc_lo": false,
-    "struct": "bull",
-    "struct_events": [
-     "choch_up"
-    ],
-    "struct_major": "bear"
+   "clocks": {
+    "m1": {
+     "age": 27,
+     "bars": 1951,
+     "last_bar": "2026-07-31T20:00:00+00:00",
+     "regime": "bull"
+    },
+    "m15": {
+     "age": 14,
+     "bars": 131,
+     "last_bar": "2026-07-31T20:00:00+00:00",
+     "regime": "bull"
+    },
+    "m5": {
+     "age": 47,
+     "bars": 391,
+     "last_bar": "2026-07-31T20:00:00+00:00",
+     "regime": "bull"
+    }
    },
-   "hash": "9a57eb7ed3e926f3",
-   "last_bar": "2026-07-28T19:21:00+00:00",
-   "price": 306.79,
-   "state_updated_at": "2026-07-28T19:22:31+00:00"
+   "price": 311.21,
+   "state_updated_at": "2026-08-02T14:47:27+00:00",
+   "triple": {
+    "side": "bull",
+    "since": "2026-08-02T14:47:27+00:00"
+   }
   }
  },
- "updated_at": "2026-07-28T19:22:31+00:00"
+ "updated_at": "2026-08-02T14:47:27+00:00"
 }

@@ -83,7 +83,8 @@ IQ_BASE_URL = "https://piraci26.github.io/iq-data/iq"
 DOCS_IQ = REPO_DIR / "docs" / "iq"
 
 YAHOO_1M_URL = ("https://query1.finance.yahoo.com/v8/finance/chart/"
-                "{sym}?range=1d&interval=1m{prepost}")
+                "{sym}?range=" + os.environ.get("YAHOO_1M_RANGE", "5d") +
+                "&interval=1m{prepost}")
 
 HOT_LIST_SIZE = int(os.environ.get("HOT_LIST_SIZE", "40"))
 HOT_REFRESH = float(os.environ.get("HOT_REFRESH", "900"))
@@ -94,6 +95,23 @@ SLEEP_CLOSED = float(os.environ.get("SLEEP_CLOSED", "300"))
 MIN_CYCLE = float(os.environ.get("MIN_CYCLE", "60"))
 RECENT_EVENTS_MAX = 200
 TF = "m1"
+
+# The short-term product runs on a FIXED retail-favorite list, not the
+# mcap-ranked hot list: the audience watches the same ~25 names every day.
+# Override with HOT_SYMBOLS="AAPL,TSLA,..." without touching code.
+RETAIL_25 = [
+    "SPY", "QQQ", "TSLA", "NVDA", "AAPL", "AMD", "PLTR", "META", "AMZN",
+    "MSFT", "GOOGL", "NFLX", "COIN", "HOOD", "SOFI", "MARA", "RIOT", "GME",
+    "AMC", "SMCI", "INTC", "MU", "F", "NIO", "BABA",
+]
+HOT_SYMBOLS = [s.strip().upper()
+               for s in os.environ.get("HOT_SYMBOLS", "").split(",")
+               if s.strip()]
+
+# Short-term clocks: 5m and 15m are epoch-bucket resamples of the 1m feed.
+# US regular session opens on a :30 boundary, so epoch alignment == session
+# alignment for both clocks.
+CLOCKS = (("m1", 60), ("m5", 300), ("m15", 900))
 
 log = aiw.log
 now_iso = aiw.now_iso
@@ -147,7 +165,12 @@ def _load_iq_doc(name):
 
 
 def build_hot_list(size=HOT_LIST_SIZE):
-    """Distinct event tickers (mcap-desc) + top-mcap fill, capped at size."""
+    """Fixed retail list (HOT_SYMBOLS env, else RETAIL_25). The legacy
+    event-driven mcap list below survives only as a fallback if both fixed
+    sources are emptied via env."""
+    fixed = HOT_SYMBOLS or RETAIL_25
+    if fixed:
+        return list(fixed)
     events_doc = _load_iq_doc("events.json") or {}
     scan_doc = _load_iq_doc("scan.json") or {}
     tickers = scan_doc.get("tickers") if isinstance(scan_doc, dict) else None
@@ -233,6 +256,27 @@ def fetch_minute(sym, retries=1):
 # --------------------------------------------------------------- fingerprint
 
 
+def resample_clock(ts, o, h, l, c, v, secs):
+    """Epoch-bucket OHLCV resample of the 1m arrays (last bucket = forming
+    bucket built only from confirmed 1m bars, matching the 1m clock's own
+    confirmed-bar policy)."""
+    RT, RO, RH, RL, RC, RV = [], [], [], [], [], []
+    cur = None
+    for i in range(len(ts)):
+        b = ts[i] - (ts[i] % secs)
+        if b != cur:
+            cur = b
+            RT.append(b)
+            RO.append(o[i]); RH.append(h[i]); RL.append(l[i])
+            RC.append(c[i]); RV.append(v[i])
+        else:
+            RH[-1] = max(RH[-1], h[i])
+            RL[-1] = min(RL[-1], l[i])
+            RC[-1] = c[i]
+            RV[-1] += v[i]
+    return RT, RO, RH, RL, RC, RV
+
+
 def fingerprint(engines_result):
     """Single-tf fingerprint via the ai worker's own extraction: wrap the
     minute engine output as a scan.json-shaped 'd' row so scanner field
@@ -259,7 +303,7 @@ _ENGINE_OF_FIELD = {"bands": "bands", "osc": "osc", "osc_hi": "osc",
 _TO_SIDE = {"bull": "long", "bear": "short"}
 
 
-def changes_to_events(sym, bar_iso, changes, price):
+def changes_to_events(sym, bar_iso, changes, price, tf=TF):
     """Fingerprint changes -> minute_events rows (also the live-tape shape).
 
     Scalar fields become one "field:from->to" row; side derives from the
@@ -276,13 +320,13 @@ def changes_to_events(sym, bar_iso, changes, price):
             old = set(change["from"]) if isinstance(change["from"], list) else set()
             new = set(to) if isinstance(to, list) else set()
             for name in sorted(new - old):
-                rows.append({"sym": sym, "ts": bar_iso, "tf": TF,
+                rows.append({"sym": sym, "ts": bar_iso, "tf": tf,
                              "engine": "structure", "event": name,
                              "side": scanner._event_side(name),
                              "payload": {"change": change, "price": price}})
             continue
         side = _TO_SIDE.get(to) if isinstance(to, str) else None
-        rows.append({"sym": sym, "ts": bar_iso, "tf": TF,
+        rows.append({"sym": sym, "ts": bar_iso, "tf": tf,
                      "engine": _ENGINE_OF_FIELD.get(field, "structure"),
                      "event": "%s:%s->%s" % (field, change["from"], to),
                      "side": side,
@@ -339,33 +383,91 @@ def run_cycle(hot, dry):
             skip += 1
             continue
         ts, o, h, l, c, v = fetched
-        eng = scanner.run_engines(o, h, l, c, v, with_structure=True)
-        fp = fingerprint(eng)
         price = round(c[-1], 4)
-        bar_iso = datetime.fromtimestamp(ts[-1], timezone.utc).isoformat(
-            timespec="seconds")
+        old_entry = old_state.get(sym) or {}
+        old_clocks = old_entry.get("clocks") or {}
+        # pre-multi-clock states stored one flat m1 fingerprint
+        if not old_clocks and old_entry.get("fingerprint"):
+            old_clocks = {"m1": {"fingerprint": old_entry["fingerprint"]}}
 
-        old_fp = (old_state.get(sym) or {}).get("fingerprint") or {}
-        changes = diff_fp(old_fp, fp)
-        if changes:
-            jsonl_rows.append({"ts": ts_now, "ticker": sym, "tf": TF,
-                               "bar": bar_iso, "price": price,
-                               "changes": changes})
-            event_rows += changes_to_events(sym, bar_iso, changes, price)
+        clocks_entry = {}
+        clocks_live = {}
+        regimes = {}
+        any_changes = False
+        for tf_name, secs in CLOCKS:
+            if secs == 60:
+                bt, bo, bh, bl, bc, bv = ts, o, h, l, c, v
+            else:
+                bt, bo, bh, bl, bc, bv = resample_clock(ts, o, h, l, c, v, secs)
+            if len(bc) < 40:
+                continue  # clock not warmed up yet
+            eng = scanner.run_engines(bo, bh, bl, bc, bv,
+                                      with_structure=(tf_name == "m1"))
+            fp = fingerprint(eng)
+            bar_iso = datetime.fromtimestamp(bt[-1], timezone.utc).isoformat(
+                timespec="seconds")
+            bands = eng.get("bands") or {}
+            regime = bands.get("regime")
+            if regime in ("bull", "bear"):
+                regimes[tf_name] = regime
 
-        entry = {"fingerprint": fp, "hash": aiw.fingerprint_hash(fp),
-                 "updated_at": ts_now if changes
-                 else (old_state.get(sym) or {}).get("updated_at", ts_now)}
+            old_fp = (old_clocks.get(tf_name) or {}).get("fingerprint") or {}
+            changes = diff_fp(old_fp, fp)
+            if changes:
+                any_changes = True
+                jsonl_rows.append({"ts": ts_now, "ticker": sym, "tf": tf_name,
+                                   "bar": bar_iso, "price": price,
+                                   "changes": changes})
+                event_rows += changes_to_events(sym, bar_iso, changes, price,
+                                                tf=tf_name)
+            clocks_entry[tf_name] = {"fingerprint": fp,
+                                     "hash": aiw.fingerprint_hash(fp)}
+            clocks_live[tf_name] = {"regime": regime,
+                                    "age": bands.get("regime_age"),
+                                    "bars": len(bc), "last_bar": bar_iso}
+
+        if not clocks_entry:
+            skip += 1
+            continue
+
+        # Short-term triple: all three clocks on one side, or nothing.
+        new_side = None
+        if len(regimes) == len(CLOCKS) and len(set(regimes.values())) == 1:
+            new_side = next(iter(regimes.values()))
+        old_triple = old_entry.get("triple") or {}
+        old_side = old_triple.get("side")
+        triple = {"side": new_side,
+                  "since": ts_now if new_side != old_side
+                  else old_triple.get("since", ts_now)}
+        if new_side != old_side:
+            any_changes = True
+            if new_side:
+                event_rows.append({"sym": sym, "ts": ts_now, "tf": "triple",
+                                   "engine": "triple",
+                                   "event": "short_term_triple_lock",
+                                   "side": _TO_SIDE.get(new_side),
+                                   "payload": {"regimes": regimes,
+                                               "price": price}})
+            else:
+                event_rows.append({"sym": sym, "ts": ts_now, "tf": "triple",
+                                   "engine": "triple",
+                                   "event": "short_term_triple_release",
+                                   "side": _TO_SIDE.get(old_side),
+                                   "payload": {"regimes": regimes,
+                                               "price": price}})
+
+        entry = {"clocks": clocks_entry, "triple": triple,
+                 "updated_at": ts_now if any_changes
+                 else old_entry.get("updated_at", ts_now)}
         new_state[sym] = entry
-        live_tickers[sym] = {"price": price, "bars": len(c),
-                             "last_bar": bar_iso, "fingerprint": fp,
-                             "hash": entry["hash"],
+        live_tickers[sym] = {"price": price,
+                             "clocks": clocks_live,
+                             "triple": triple,
                              "state_updated_at": entry["updated_at"]}
         state_rows.append({"sym": sym, "updated_at": ts_now,
-                           "payload": {"price": price, "bars": len(c),
-                                       "last_bar": bar_iso,
-                                       "fingerprint": fp,
-                                       "hash": entry["hash"]}})
+                           "payload": {"price": price,
+                                       "clocks": clocks_live,
+                                       "triple": triple}})
         ok += 1
 
     # Failure tolerance for the live view: a hot sym whose fetch failed this
