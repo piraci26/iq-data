@@ -40,6 +40,28 @@ case "${1:-install}" in
     launchctl bootout "$DOMAIN/$LABEL" 2>/dev/null || true
 
     cp "$PLIST_SRC" "$PLIST_DST"
+
+    # Secret injection: SUPABASE_SERVICE_KEY in the environment at install
+    # time is written into the INSTALLED plist copy only — the repo copy
+    # stays empty so the key can never be committed. URL defaults to the
+    # trend-iq site project.
+    if [[ -n "${SUPABASE_SERVICE_KEY:-}" ]]; then
+      SUPA_URL="${SUPABASE_URL:-https://zuhpyynilcqfgufexgli.supabase.co}"
+      /usr/bin/python3 - "$PLIST_DST" "$SUPA_URL" "$SUPABASE_SERVICE_KEY" <<'PY'
+import sys
+path, url, key = sys.argv[1], sys.argv[2], sys.argv[3]
+t = open(path).read()
+t = t.replace("<key>SUPABASE_URL</key>\n        <string></string>",
+              "<key>SUPABASE_URL</key>\n        <string>%s</string>" % url)
+t = t.replace("<key>SUPABASE_SERVICE_KEY</key>\n        <string></string>",
+              "<key>SUPABASE_SERVICE_KEY</key>\n        <string>%s</string>" % key)
+open(path, "w").write(t)
+print("Supabase sync enabled in installed plist (repo copy untouched).")
+PY
+    else
+      echo "SUPABASE_SERVICE_KEY not set -> local-only mode (no Supabase sync)."
+    fi
+
     launchctl bootstrap "$DOMAIN" "$PLIST_DST"
     launchctl kickstart -k "$DOMAIN/$LABEL"
 
