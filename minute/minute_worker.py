@@ -103,7 +103,14 @@ RETAIL_25 = [
     "SPY", "QQQ", "TSLA", "NVDA", "AAPL", "AMD", "PLTR", "META", "AMZN",
     "MSFT", "GOOGL", "NFLX", "COIN", "HOOD", "SOFI", "MARA", "RIOT", "GME",
     "AMC", "SMCI", "INTC", "MU", "F", "NIO", "BABA",
+    # Crypto majors trade around the clock; the loop scans them 24/7 and
+    # equities only while the US session is on.
+    "BTC-USD", "ETH-USD",
 ]
+
+
+def is_crypto(sym):
+    return sym.endswith("-USD")
 HOT_SYMBOLS = [s.strip().upper()
                for s in os.environ.get("HOT_SYMBOLS", "").split(",")
                if s.strip()]
@@ -536,16 +543,22 @@ def main(argv=None):
 
     open_logged = closed_logged = False
     while True:
-        if not market_open():
+        equities_on = market_open()
+        active = hot if equities_on else [s for s in hot if is_crypto(s)]
+        if not active:
             if not closed_logged:
-                log("market closed -- sleeping %.0fs between checks"
+                log("market closed, no 24/7 symbols -- sleeping %.0fs"
                     % SLEEP_CLOSED)
                 closed_logged, open_logged = True, False
             time.sleep(SLEEP_CLOSED)
             continue
-        if not open_logged:
-            log("market open -- entering minute cycles")
+        if equities_on and not open_logged:
+            log("market open -- full list minute cycles")
             open_logged, closed_logged = True, False
+        elif not equities_on and not closed_logged:
+            log("equities closed -- crypto-only cycles (%s)"
+                % ",".join(active))
+            closed_logged, open_logged = True, False
 
         if fixed is None and time.monotonic() - last_refresh >= HOT_REFRESH:
             fresh = build_hot_list()
@@ -558,7 +571,7 @@ def main(argv=None):
 
         started = time.monotonic()
         try:
-            run_cycle(hot, args.dry)
+            run_cycle(active, args.dry)
         except Exception as exc:  # the loop must survive anything
             log("cycle crashed: %s: %s" % (type(exc).__name__, exc))
         elapsed = time.monotonic() - started
