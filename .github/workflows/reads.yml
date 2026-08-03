@@ -16,7 +16,7 @@ permissions:
 jobs:
   scan-and-reads:
     runs-on: ubuntu-latest
-    timeout-minutes: 32
+    timeout-minutes: 50
     steps:
       - uses: actions/checkout@v4
         with:
@@ -34,7 +34,7 @@ jobs:
 
       - name: Run scanner (writes docs/iq/scan.json; no API key needed)
         env:
-          UNIVERSE_TOP: "500"
+          UNIVERSE_TOP: "1000"
           # 10y so monthly bands/oscillator clear their 33-bar warm-up.
           BAR_RANGE: "10y"
         run: |
