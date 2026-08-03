@@ -290,6 +290,13 @@ def atomic_write(path, obj):
     os.replace(tmp, path)
 
 
+def _r2(v):
+    try:
+        return round(float(v), 2)
+    except (TypeError, ValueError):
+        return None
+
+
 def screener_row(sym, rec):
     """Compact, filterable snapshot of one ticker for the search screener.
 
@@ -316,6 +323,16 @@ def screener_row(sym, rec):
             "wave_rel": osc.get("wave_vs_signal"),
             "flow": osc.get("flow_side"),
             "conf": osc.get("confluence"),
+            # Levels for the IQ Analyst page — every number an answer can
+            # cite must exist in this feed. r2() keeps the payload slim.
+            "close": _r2(b.get("close")),
+            "floor": _r2(b.get("thresh_lower")),
+            "ceiling": _r2(b.get("thresh_upper")),
+            "regime_lo": _r2(b.get("run_low")),
+            "regime_hi": _r2(b.get("run_high")),
+            "swing_hi": _r2(b.get("prev_high")),
+            "swing_lo": _r2(b.get("prev_low")),
+            "trail": _r2(b.get("trail")),
         }
     d_struct = ((rec.get("d") or {}).get("structure") or {})
     fired = d_struct.get("events_fired") or []
