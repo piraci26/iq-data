@@ -540,9 +540,9 @@
   "updated_at": "2026-08-12T21:02:35+00:00"
  },
  "BALL": {
-  "read": "BALL flipped bearish on the daily trend regime today, ending a forty-bar bullish stint, and printed a dual confirmation short in the same session. The daily wave is stretched into the oversold zone at -21.2 with money flow on the sell side, so the move is extended rather than fresh. The monthly backdrop is fully aligned at 4/4, following a strong bullish flip.",
-  "state_hash": "2e234ad14f71d5fc",
-  "updated_at": "2026-08-15T04:01:07+00:00"
+  "read": "<think>\nHere's a thinking process:\n\n1.  **Analyze User Input:**\n   - **Role:** IQ Analyst, automated read engine for IQ Algo.\n   - **Task:** Write exactly 2-3 sentences of plain text describing the ticker's current state based on the provided STATE payload.\n   - **Rules:**\n     - Ground every claim in the payload. No inventing.\n     - Sentence 1: Lead with freshest change (today's flip, newest structure event, or new extreme). If nothing changed today, open with standing regime and bars held.\n     - Vocabulary: Use specific terms (trend regime, momentum wave/signal, confluence, stretched/extreme, money flow, BOS/CHoCH, etc.).\n     - No advice, no predictions as certainty, no emojis/exclamations/hype.\n     - Output only the read.\n   - **Input STATE:**\n     - `sym`: \"BALL\"\n     - `price`: 61.82\n     - `daily`:\n       - `trend",
+  "state_hash": "6e4547d2114bcdbd",
+  "updated_at": "2026-08-15T10:11:26+00:00"
  },
  "BAM": {
   "read": "BAM has entered the overbought zone on the daily, fourteen bars into a bullish trend regime with confluence at 4/4. The daily wave is stretched into the overbought zone at 17.5628 with money flow on the buy side, so the move is extended rather than fresh. Weekly structure and regime are bearish, but the weekly wave is still above its signal, keeping that confluence at 2/4.",
@@ -645,9 +645,9 @@
   "updated_at": "2026-08-10T04:52:45+00:00"
  },
  "BLDR": {
-  "read": "<think>\nHere's a thinking process:\n\n1.  **Analyze User Input:**\n   - **Role:** IQ Analyst for IQ Algo (TradingView tools: IQ Bands, IQ Oscillator, IQ Structure)\n   - **Task:** Write exactly 2-3 sentences of plain text describing the ticker's current state based on the provided STATE payload.\n   - **Rules:**\n     - Ground every claim in the payload. No missing/null fields mentioned. No invented numbers/levels/dates/events.\n     - Sentence 1: Lead with freshest change (today's flip, newest structure event, new extreme). If nothing changed today, open with standing regime and bars held.\n     - Vocabulary: trend regime, momentum wave/signal, confluence n/4, stretched/extreme, money flow, BOS, CHoCH, EQH/EQL sweep, demand/supply zone.\n     - No advice, no predictions as certainty, no emojis/exclamations/hype.\n     - Output only the read.\n   - **Input STATE:**\n     ```json",
-  "state_hash": "802490015a43e7db",
-  "updated_at": "2026-08-15T09:45:46+00:00"
+  "read": "<think>\nHere's a thinking process:\n\n1.  **Analyze User Input:**\n   - **System Prompt:** Defines role (IQ Analyst), task (2-3 sentences plain text read from STATE payload), hard rules (ground in payload, sentence 1 leads with freshest change/standing regime + bars, specific vocabulary, no advice/predictions/hype, output only the read).\n   - **Input STATE:** JSON payload for \"BLDR\" (Builders FirstSource, Inc.).\n   - **Key Fields in STATE:**\n     - `sym`: \"BLDR\"\n     - `price`: 72.51\n     - `daily`:\n       - `trend`: regime \"bearish\", flipped_today false, bars_in_regime 26, price_vs_basis_pct -4.0485, noise \"trending\"\n       - `momentum`: side \"bullish\", wave 8.3887, wave_prev 8.4197, slope \"falling\", signal 7.291",
+  "state_hash": "b9248ddac135f94c",
+  "updated_at": "2026-08-15T10:13:39+00:00"
  },
  "BLK": {
   "read": "BLK remains in a bullish trend regime on the daily, sixteen bars in, with the price 8.85% above its basis and money flow on the buy side, supporting a confluence of 4/4. The daily wave is stretched high at 26.27, still rising and above its signal, while the weekly trend regime flipped bullish, ending a twenty-two bar bearish stint, with a dual confirmation long in momentum. The weekly and monthly trend regimes are bullish, but the monthly momentum wave is bearish and below its signal, with confluence at 2/4.",
@@ -730,9 +730,9 @@
   "updated_at": "2026-08-08T08:14:19+00:00"
  },
  "BSAC": {
-  "read": "BSAC has held its bullish trend regime for 43 bars, with a slight uptick in price, and the daily momentum wave has slipped below its signal, putting daily confluence at 2/4. The daily wave is falling (-6.3 from -1.7) with money flow on the buy side. The weekly backdrop is choppy but still bullish, with a rising weekly wave above its signal and money flow on the buy side, at 3/4 confluence.",
-  "state_hash": "4e052a60fa7b8586",
-  "updated_at": "2026-08-15T04:00:36+00:00"
+  "read": "<think>\nHere's a thinking process:\n\n1.  **Analyze User Input:**\n   - **Role:** IQ Analyst, automated read engine for IQ Algo.\n   - **Task:** Write exactly 2-3 sentences of plain text describing the ticker's current state based on the provided STATE payload.\n   - **Rules:**\n     - Ground every claim in the payload. No inventing.\n     - Sentence 1: Lead with freshest change (today's flip, newest structure event, new extreme). If nothing changed today, open with standing regime and bars held.\n     - Vocabulary: Use specific terms (trend regime, momentum wave/signal, confluence n/4, stretched/extreme, money flow, BOS, CHoCH, EQH/EQL sweep, demand/supply zone).\n     - No advice, no predictions as certainty, no hype, no emojis/exclamation marks.\n     - Output only the read.\n   - **Input STATE:**\n     ```json\n     {\n       \"sym\":\"BSAC\",\n       \"name\":",
+  "state_hash": "7111ffba57a2c611",
+  "updated_at": "2026-08-15T10:11:25+00:00"
  },
  "BSX": {
   "read": "BSX remains in a bullish trend regime for a seventh day, with the daily wave still rising at 40.0978 and above its signal, and money flow on the buy side, maintaining daily confluence at 4/4. The daily wave is stretched to the high side, and the price is nearly 10% above its basis. The weekly trend regime stays bearish, but the weekly momentum has flipped bullish, with a rising wave and money flow on the sell side, in a 45-bar bearish trend.",
@@ -1055,9 +1055,9 @@
   "updated_at": "2026-08-14T10:22:41+00:00"
  },
  "CNM": {
-  "read": "<think>\nHere's a thinking process:\n\n1.  **Analyze User Input:**\n   - **System Prompt:** Defines role (IQ Analyst), task (2-3 sentences plain text read), hard rules (ground in payload, lead with freshest change/standing regime, specific vocabulary, no advice/predictions, no emojis/hype, output only read).\n   - **Input STATE:** JSON payload for ticker \"CNM\" (Core & Main, Inc.)\n   - **Key Fields in STATE:**\n     - `sym`: \"CNM\"\n     - `price`: 45.98\n     - `daily`:\n       - `trend`: regime \"bearish\", flipped_today false, bars_in_regime 38, price_vs_basis_pct 0.6794, noise \"trending\"\n       - `momentum`: side \"bullish\", wave 22.4188, wave_prev 22.7279, slope \"falling\", signal 21.2771,",
-  "state_hash": "75ef42753972e701",
-  "updated_at": "2026-08-15T09:44:29+00:00"
+  "read": "<think>\nHere's a thinking process:\n\n1.  **Analyze User Input:**\n   - **Role:** IQ Analyst, automated read engine for IQ Algo (IQ Bands, IQ Oscillator, IQ Structure).\n   - **Task:** Write exactly 2-3 sentences of plain text describing the ticker's current state based on the provided STATE payload.\n   - **Rules:**\n     - Ground every claim in the payload. No missing/null fields mentioned. No invented numbers/levels/dates/events.\n     - Sentence 1: Lead with freshest change (today's flip, newest structure event, new extreme). If nothing changed today, open with standing regime and bars held.\n     - Vocabulary: Use specific terms (trend regime, momentum wave/signal, confluence n/4, stretched/extreme, money flow, BOS, CHoCH, EQH/EQL sweep, demand/supply zone).\n     - No advice, no predictions as certainty. Use \"scan shows\", \"momentum favors\", \"watch for\".\n     - No emojis, exclamation marks",
+  "state_hash": "19c7849ce09c6820",
+  "updated_at": "2026-08-15T10:13:37+00:00"
  },
  "CNP": {
   "read": "CNP is 11 bars into a bearish trend regime with choppy price action and a bearish momentum wave that is still above its signal, but the wave is stretched into a low. The daily structure is bearish, and money flow is on the sell side, putting daily confluence at 1/4. The weekly backdrop is trending with a bearish momentum wave below its signal, but the move is still in a bullish regime that has held for 95 bars.",
@@ -1340,9 +1340,9 @@
   "updated_at": "2026-08-14T20:49:57+00:00"
  },
  "DEO": {
-  "read": "<think>\nHere's a thinking process:\n\n1.  **Analyze User Input:**\n   - **Role:** IQ Analyst for IQ Algo (TradingView tools: IQ Bands, IQ Oscillator, IQ Structure)\n   - **Task:** Write exactly 2-3 sentences of plain text describing the ticker's current state based on the STATE payload.\n   - **Rules:**\n     - Ground every claim in the payload. No missing/null fields mentioned. No invented numbers/levels/dates/events.\n     - Sentence 1: Lead with freshest change (today's flip, newest structure event, new extreme). If nothing changed today, open with standing regime + bars held.\n     - Vocabulary: Use specific terms (trend regime, bullish/bearish, flipped, momentum wave/signal, confluence n/4, stretched/extreme, money flow, BOS, CHoCH, EQH/EQL sweep, demand/supply zone).\n     - No advice, no predictions as certainty. Use \"scan shows\", \"momentum favors\", \"watch for\".\n     -",
-  "state_hash": "b262d436f28be0b1",
-  "updated_at": "2026-08-15T08:53:55+00:00"
+  "read": "DEO flipped bullish on the weekly trend regime today, ending a 166-bar bearish stint, and saw a dual confirmation long in the weekly momentum with money flow on the buy side, putting weekly confluence at 4/4. The daily backdrop is still bullish with confluence at 3/4, but the daily wave is stretched into the overbought zone at 29.3 with money flow on the buy side, so the move is extended rather than fresh. The monthly trend regime remains bearish, thirty-four bars into its regime with confluence at 1/4.",
+  "state_hash": "bef84f52c75119a6",
+  "updated_at": "2026-08-15T10:11:02+00:00"
  },
  "DG": {
   "read": "DG is six bars into a bullish trend regime with confluence at 1/4. The daily momentum has flipped bearish with a stretched low at -5.3 and money flow on the sell side, but the weekly momentum favors a bullish move with a bullish momentum flip event.",
@@ -2090,9 +2090,9 @@
   "updated_at": "2026-08-04T20:33:35+00:00"
  },
  "GSAT": {
-  "read": "GSAT has held a bullish trend regime for four days, with a 3.73% price gain above its basis. The daily wave is stretched into a high at 29.4, above its signal, and money flow is on the buy side, maintaining daily confluence at 4/4. The weekly trend regime is also bullish, but the weekly wave has turned bearish, slipping below its signal and reducing confluence to 2/4.",
-  "state_hash": "a95efa319e355096",
-  "updated_at": "2026-08-08T06:04:09+00:00"
+  "read": "<think>\nHere's a thinking process:\n\n1.  **Analyze User Input:**\n   - **Role:** IQ Analyst, automated read engine for IQ Algo.\n   - **Task:** Write exactly 2-3 sentences of plain text describing the ticker's current state based on the provided STATE payload.\n   - **Input Payload:** JSON for \"GSAT\" (Globalstar, Inc.) with daily, weekly, and monthly data.\n   - **Hard Rules:**\n     1. Ground every claim in the payload. No missing/null fields mentioned. No invented numbers/levels/dates/events.\n     2. Sentence 1: Lead with freshest change (today's flip, newest structure event, new extreme). If nothing changed today, open with standing regime and bars held.\n     3. Vocabulary: Use specific terms (trend regime, momentum wave/signal, confluence n/4, stretched/extreme, money flow, BOS, CHoCH, EQH/EQL sweep, demand/supply zone).\n     4. No advice, no",
+  "state_hash": "ed32690f69a8ae91",
+  "updated_at": "2026-08-15T10:11:56+00:00"
  },
  "GWRE": {
   "read": "GWRE is 25 bars into a bullish trend regime on the daily, with confluence at 4/4. The daily wave has entered the overbought zone at 18.84 with money flow on the buy side, so the move is extended rather than fresh. The weekly backdrop is still bullish at 3/4, but the monthly trend regime has flipped to bearish, with the monthly wave below its signal at -28.13.",
@@ -2110,9 +2110,9 @@
   "updated_at": "2026-08-08T02:27:07+00:00"
  },
  "HAL": {
-  "read": "HAL is 42 bars into a bearish trend regime on the daily, with confluence at 2/4, but the daily momentum wave is rising and above its signal, indicating a bullish bias. The daily money flow is on the sell side, and the move is not fresh as the wave is still above the signal. The monthly backdrop is fully aligned at 4/4, five bars into its bullish regime.",
-  "state_hash": "ae7ce894ffd2bf05",
-  "updated_at": "2026-08-12T00:06:00+00:00"
+  "read": "<think>\nHere's a thinking process:\n\n1.  **Analyze User Input:**\n   - **System Prompt:** Defines role (IQ Analyst), task (2-3 sentences plain text read from STATE payload), hard rules (ground in payload, lead with freshest change/standing regime, specific vocabulary, no advice/predictions, no emojis/hype, output only the read).\n   - **Input STATE:** JSON payload for HAL (Halliburton Company).\n   - **Key Fields in STATE:**\n     - `sym`: \"HAL\"\n     - `price`: 34.42\n     - `daily`:\n       - `trend`: regime \"bearish\", flipped_today false, bars_in_regime 45, price_vs_basis_pct 2.9509, noise \"trending\"\n       - `momentum`: side \"bullish\", wave 20.6201, wave_prev 17.8006, slope \"rising\", signal 16.4174, wave_vs_signal",
+  "state_hash": "b07f7ba44e633bf3",
+  "updated_at": "2026-08-15T10:13:40+00:00"
  },
  "HALO": {
   "read": "HALO remains in a bullish trend regime on the daily, sixty-one bars in, with the price 29.71% above its basis and volume running hot. The daily momentum wave is stretched into the overbought zone at 26.40, rising and above its signal, as money flow stays on the buy side, maintaining daily confluence at 4/4. The weekly and monthly backdrops are also fully aligned, with both trend regimes and momentum waves bullish, and money flow on the buy side.",
@@ -2180,9 +2180,9 @@
   "updated_at": "2026-08-11T08:54:07+00:00"
  },
  "HLT": {
-  "read": "HLT printed a bullish CHoCH and trendline break to the upside on the daily, 23 bars into a bearish trend regime but with a bullish momentum flip, putting confluence at 3/4. The daily wave is rising and above its signal with money flow on the buy side. The weekly backdrop is bearish with a stretched low and selling money flow, dropping confluence to 1/4.",
-  "state_hash": "36fddeaf8ad670a4",
-  "updated_at": "2026-08-15T09:43:45+00:00"
+  "read": "HLT printed a bullish CHoCH and a trendline break to the upside on the daily, twenty bars into a bearish trend regime with confluence at 1/4. The daily wave is still above its signal but rising from a deeper trough (-0.2337 from -6.1162) with money flow on the sell side, so the move is not fresh. Weekly trend regime and structure remain bullish, but the weekly wave is stretched into the oversold zone at -12.25 with money flow on the sell side.",
+  "state_hash": "94bbf914b70a8d05",
+  "updated_at": "2026-08-15T10:11:01+00:00"
  },
  "HMC": {
   "read": "HMC is 62 bars into a bullish trend regime with daily confluence at 3/4, but weekly momentum has turned bullish today, flipping the regime and entering the overbought zone with a stretched high. The weekly wave is above its signal and money flow is on the buy side, boosting weekly confluence to 4/4. Monthly trend remains bearish, but momentum has turned up with a wave turn up event.",
@@ -2210,9 +2210,9 @@
   "updated_at": "2026-08-14T23:49:33+00:00"
  },
  "HPQ": {
-  "read": "HPQ has held a bullish trend regime for thirteen days with choppy noise, and its daily wave continues to rise above its signal with money flow on the buy side, maintaining daily confluence at 4/4. The daily wave has stretched into a high, but the weekly backdrop is also bullish with rising momentum and buying money flow, keeping weekly confluence at 4/4. The monthly trend regime is bearish, fifteen bars in, with a rising wave above its signal but selling money flow, putting monthly confluence at 1/4.",
-  "state_hash": "b262d436f28be0b1",
-  "updated_at": "2026-08-11T00:25:12+00:00"
+  "read": "<think>\nHere's a thinking process:\n\n1.  **Analyze User Input:**\n   - **Role:** IQ Analyst, automated read engine for IQ Algo.\n   - **Task:** Write exactly 2-3 sentences of plain text describing the ticker's current state based on the provided STATE payload.\n   - **Rules:**\n     - Ground every claim in the payload. No missing/null fields mentioned. No invented numbers/levels/dates/events.\n     - Sentence 1: Lead with freshest change (today's flip, newest structure event, new extreme). If nothing changed today, open with standing regime and bars held.\n     - Vocabulary: Use specific terms (trend regime, momentum wave/signal, confluence n/4, stretched/extreme, money flow, BOS, CHoCH, EQH/EQL sweep, demand/supply zone).\n     - No advice, no predictions as certainty. Use \"scan shows\", \"momentum favors\", \"watch for\".\n     - No emojis, exclamation marks, hype words.\n     - Output only the",
+  "state_hash": "5b742c4f2f62b725",
+  "updated_at": "2026-08-15T10:13:52+00:00"
  },
  "HQY": {
   "read": "HQY printed a major bullish CHoCH on the daily, 97 bars into a bullish trend regime with confluence at 4/4. The daily wave is rising, above its signal, and money flow is on the buy side, with the move showing a price increase of 11.59% versus its basis. Weekly momentum is stretched into a high, but the regime and confluence remain fully aligned at 4/4.",
@@ -2225,9 +2225,9 @@
   "updated_at": "2026-08-11T04:41:50+00:00"
  },
  "HSBC": {
-  "read": "HSBC remains in a bullish trend regime on the daily, forty-two bars in, with a trendline break to the downside occurring today. The daily wave is stretched into the oversold zone at -14.6723, with money flow on the sell side, and confluence at 1/4. The weekly and monthly backdrops are bullish, with the weekly confluence at 4/4, 187 bars into its regime, and the monthly also at 4/4, forty-three bars into its bullish trend.",
-  "state_hash": "34f2b3902dbe94bd",
-  "updated_at": "2026-08-15T08:50:27+00:00"
+  "read": "HSBC is 39 bars into its bullish daily trend regime, with a trendline break to the downside occurring today. The daily momentum wave is bearish and falling at -9.8822, below its signal, while money flow remains on the buy side, resulting in a daily confluence of 2/4. The weekly and monthly backdrops are both bullish, with the weekly regime holding for 187 bars and the monthly regime holding for 43 bars, both with confluence at 4/4 and money flow on the buy side.",
+  "state_hash": "dc26e974db6b6b78",
+  "updated_at": "2026-08-15T10:11:00+00:00"
  },
  "HSIC": {
   "read": "HSIC has held a bullish trend regime for fifty-one bars, with a price increase of 4.02% versus its basis, and is now seeing a bullish momentum flip and dual confirmation long. The daily wave is rising above its signal with money flow on the buy side, putting daily confluence at 4/4. The weekly backdrop is also fully aligned at 4/4, with a stretched high in the weekly wave, thirty-eight bars into its bullish regime.",
@@ -2255,9 +2255,9 @@
   "updated_at": "2026-08-15T04:04:07+00:00"
  },
  "HUM": {
-  "read": "HUM flipped bullish on the monthly trend regime today, ending a twenty-nine-bar bearish stint, but daily trend regime remains bearish for tenth consecutive day. The daily wave is still above its signal with money flow on the sell side, putting daily confluence at 1/4. Weekly momentum has slipped below its signal, dropping that confluence to 3/4, despite overall bullish structure.",
-  "state_hash": "b6ff0a5166d62a67",
-  "updated_at": "2026-08-15T09:43:46+00:00"
+  "read": "HUM flipped bullish on the monthly trend regime today, ending a twenty-nine-bar bearish stint, and confirmed a long with a dual confirmation event. The daily wave is still above its signal with money flow on the sell side, putting daily confluence at 1/4, while the weekly wave has slipped below its signal, dropping that confluence to 3/4.",
+  "state_hash": "bdbe576fcd0a1144",
+  "updated_at": "2026-08-15T10:11:02+00:00"
  },
  "HUT": {
   "read": "HUT 26 bars into a bearish trend regime on the daily, the price has dropped 18.8% from its basis, and printed a bearish CHoCH in the same session. The daily wave is below its signal, with money flow on the sell side, keeping confluence at 0/4. The weekly trend is bullish, but the wave has flipped bearish, with a bearish momentum flip, and money flow is on the buy side, with confluence at 2/4, while the monthly backdrop is fully aligned at 4/4, nineteen bars into its bullish regime.",
@@ -2380,9 +2380,9 @@
   "updated_at": "2026-08-08T02:28:17+00:00"
  },
  "IONS": {
-  "read": "IONS is 25 bars into a bearish trend regime on the daily, with the momentum wave stretching high into the overbought zone at 15.99 and above its signal, but money flow is on the sell side, keeping daily confluence at 2/4. The weekly backdrop is bearish, with a falling wave below its signal and stretched low, dropping confluence to 0/4, while the monthly view remains bullish, but the wave is below its signal, with money flow on the buy side, putting monthly confluence at 3/4.",
-  "state_hash": "897e75911e530684",
-  "updated_at": "2026-08-14T21:58:32+00:00"
+  "read": "<think>\nHere's a thinking process:\n\n1.  **Analyze User Input:**\n   - **System Prompt:** Defines role (IQ Analyst), task (2-3 sentences plain text read from STATE payload), hard rules (ground in payload, lead with freshest change/standing regime, specific vocabulary, no advice/predictions, no emojis/hype, output only the read).\n   - **Input STATE:** JSON payload for \"IONS\" (Ionis Pharmaceuticals, Inc.).\n   - **Key Fields in STATE:**\n     - `sym`: \"IONS\"\n     - `price`: 57.24\n     - `daily`:\n       - `trend`: regime \"bearish\", flipped_today false, bars_in_regime 23, price_vs_basis_pct -9.21, noise \"trending\"\n       - `momentum`: side \"bullish\", wave 12.96, wave_prev 10.89, slope \"rising\", signal 9.45, wave_vs_signal \"above\"\n       -",
+  "state_hash": "f940b5b0e8c3f4e9",
+  "updated_at": "2026-08-15T10:12:42+00:00"
  },
  "IOT": {
   "read": "IOT remains in a bullish trend regime on the daily, eight bars in with confluence at 4/4, and its daily momentum wave continues to rise, now at 10.2684 and above its signal. The weekly backdrop is also bullish, four bars into its regime with confluence at 4/4, although the weekly wave is stretched high at 22.0689. The monthly trend regime stays bearish, five bars in, providing a broader context to the daily and weekly bullishness.",
@@ -2455,9 +2455,9 @@
   "updated_at": "2026-08-10T08:07:49+00:00"
  },
  "JBL": {
-  "read": "JBL is two bars into a bullish trend regime, which has held since the flip, and the daily momentum wave is stretched into the high at 26.3, above its signal with money flow on the buy side. The daily structure is bearish, but the major direction remains bullish. The weekly momentum wave is stretched into the low at -15.2, below its signal with money flow on the buy side, and the monthly momentum wave turned down after a brief rally.",
-  "state_hash": "42888e7fd8ca3afd",
-  "updated_at": "2026-08-15T09:43:49+00:00"
+  "read": "JBL is two bars into a bullish trend regime, which has been trending upwards at 9.7% vs. its basis. The daily momentum wave is stretched high at 28.6, above its signal and indicating a strong bullish move, with confluence at 4/4 and money flow on the buy side. The weekly momentum wave, however, has slipped below its signal, dropping weekly confluence to 2/4.",
+  "state_hash": "628c3867738be684",
+  "updated_at": "2026-08-15T10:11:10+00:00"
  },
  "JBS": {
   "read": "JBS has held a bullish trend regime for ten bars, with price trending 6.75% above its basis and volume hot, while the daily momentum wave is below its signal, indicating a potential reversal. The daily structure is bullish, with money flow on the buy side and confluence at 3/4. The weekly trend regime is bearish, eleven bars in, with the weekly momentum wave above its signal, putting weekly confluence at 1/4.",
@@ -2635,9 +2635,9 @@
   "updated_at": "2026-08-07T11:12:47+00:00"
  },
  "LECO": {
-  "read": "<think>\nHere's a thinking process:\n\n1.  **Analyze User Input:**\n   - **Role:** IQ Analyst, automated read engine for IQ Algo\n   - **Task:** Write exactly 2-3 sentences of plain text describing the ticker's current state based on the STATE payload.\n   - **Hard Rules:**\n     1. Ground every claim in STATE. No missing/null fields mentioned. No invented numbers/levels/dates/events.\n     2. Sentence 1 leads with freshest change (today's flip, newest structure event, new extreme). If nothing changed today, open with standing regime and bars held.\n     3. Vocabulary: trend regime, flipped, momentum wave/signal, confluence n/4, stretched/extreme, money flow, BOS, CHoCH, EQH/EQL sweep, demand/supply zone.\n     4. No advice, no predictions as certainty. Use neutral phrasing.\n     5. No emojis, exclamation marks, hype words.\n     6. Output only the read.",
-  "state_hash": "f0d0bca35b90988e",
-  "updated_at": "2026-08-15T09:44:05+00:00"
+  "read": "<think>\nHere's a thinking process:\n\n1.  **Analyze User Input:**\n   - **Role:** IQ Analyst for IQ Algo (TradingView tools: IQ Bands, IQ Oscillator, IQ Structure)\n   - **Task:** Write exactly 2-3 sentences of plain text describing the ticker's current state based on the STATE payload.\n   - **Payload:** Covers daily, weekly, monthly. Daily is primary. Weekly/monthly only as one-clause context.\n   - **Hard Rules:**\n     1. Ground every claim in STATE. No missing/null fields mentioned. No invented numbers/levels/dates/events.\n     2. Sentence 1 leads with freshest change (today's flip, newest structure event, new extreme). If nothing changed today, open with standing regime + bars held.\n     3. Vocabulary: trend regime, flipped, momentum wave/signal, confluence n/4, stretched/extreme, money flow, BOS, CHoCH, EQH/EQL sweep, demand/supply zone.\n     4.",
+  "state_hash": "a95efa319e355096",
+  "updated_at": "2026-08-15T10:11:27+00:00"
  },
  "LEN": {
   "read": "LEN remains in a bearish daily trend regime, twenty-four bars now, with choppy price action and money flow on the sell side. The daily momentum wave is above its signal, but the weekly and monthly backdrops are both bearish with the monthly wave below its signal at -25.3367, putting monthly confluence at 1/4.",
@@ -2695,9 +2695,9 @@
   "updated_at": "2026-08-12T21:02:15+00:00"
  },
  "LLYVA": {
-  "read": "<think>\nHere's a thinking process:\n\n1.  **Analyze User Input:**\n   - **System Prompt:** Defines the role (IQ Analyst), task (2-3 sentences plain text read from STATE payload), hard rules (ground in payload, lead with freshest change/standing regime, specific vocabulary, no advice/predictions/hype/emojis, output only the read).\n   - **Input STATE:** JSON payload for ticker \"LLYVA\" (Liberty Live Holdings, Inc. - S).\n   - **Payload Details:**\n     - `sym`: \"LLYVA\"\n     - `price`: 104.99\n     - `daily`:\n       - `trend`: regime \"bullish\", flipped_today false, bars_in_regime 11, price_vs_basis_pct 5.116, noise \"choppy\", volume_hot true\n       - `momentum`: side \"bullish\", wave 9.6971, wave_prev 5.1959, slope \"rising\",",
-  "state_hash": "5b061c9c60e44f86",
-  "updated_at": "2026-08-15T09:44:08+00:00"
+  "read": "LLYVA is eleven bars into a bullish trend regime, with a bullish momentum wave above its signal and money flow on the buy side, putting daily confluence at 4/4. The daily structure is also bullish, with a major direction that aligns with the trend. However, the weekly momentum has flipped bearish, with a wave below its signal and a bearish momentum event, dropping weekly confluence to 2/4.",
+  "state_hash": "ed32690f69a8ae91",
+  "updated_at": "2026-08-15T10:13:35+00:00"
  },
  "LLYVK": {
   "read": "LLYVK is 7 bars into a bullish trend regime on the daily, with daily confluence at 4/4 as it prints a bullish momentum flip and dual confirmation long. The daily wave is rising and above its signal, with money flow on the buy side. The weekly trend regime remains bullish, twenty-four bars in, but the weekly wave has turned down and is now below its signal, dropping confluence to 3/4.",
@@ -2945,9 +2945,9 @@
   "updated_at": "2026-08-11T22:06:16+00:00"
  },
  "MOD": {
-  "read": "<think>\nHere's a thinking process:\n\n1.  **Analyze User Input:**\n   - **System Prompt:** Defines role (IQ Analyst), task (2-3 sentence read from STATE payload), hard rules (ground in payload, lead with freshest change/standing regime, specific vocabulary, no advice/predictions, no emojis/hype, output only read).\n   - **Input STATE:** JSON payload for MOD (Modine Manufacturing Company).\n   - **Key Fields in STATE:**\n     - `sym`: MOD\n     - `price`: 209.5\n     - `daily`:\n       - `trend`: regime bearish, flipped_today false, bars_in_regime 30, price_vs_basis_pct -8.52%, noise trending\n       - `momentum`: side bullish, wave 1.18, wave_prev -4.27, slope rising, signal -5.43, wave_vs_signal above, events: [\"bullish momentum flip\"]\n       - `structure`: direction bearish, major_direction bullish",
-  "state_hash": "ae7ce894ffd2bf05",
-  "updated_at": "2026-08-15T09:44:07+00:00"
+  "read": "<think>\nHere's a thinking process:\n\n1.  **Analyze User Input:**\n   - **Role:** IQ Analyst for IQ Algo (TradingView tools: IQ Bands, IQ Oscillator, IQ Structure)\n   - **Task:** Write exactly 2-3 sentences of plain text describing the ticker's current state based on the provided STATE payload.\n   - **Rules:**\n     - Ground every claim in the payload. No missing/null fields mentioned. No invented numbers/levels/dates/events.\n     - Sentence 1: Lead with freshest change (today's flip, newest structure event, new extreme). If nothing changed today, open with standing regime and bars held.\n     - Vocabulary: trend regime, momentum wave/signal, confluence n/4, stretched/extreme, money flow, BOS, CHoCH, EQH/EQL sweep, demand/supply zone. Use glossary if provided (none provided, but I'll stick to the listed terms).\n     - No advice, no predictions as certainty. Use \"scan shows\", \"momentum favors",
+  "state_hash": "e5012a787002a68b",
+  "updated_at": "2026-08-15T10:12:20+00:00"
  },
  "MOH": {
   "read": "MOH has held a bearish trend regime for fifteen bars, with price now 1.1% below its basis, and the daily wave is still above its signal at -5.1, indicating a rising slope with money flow on the sell side, putting daily confluence at 1/4. The weekly backdrop is trending with a bullish regime, twenty-four bars into its 12.3% price gain, but the weekly wave has slipped below its signal, dropping that confluence to 3/4, with the monthly trend regime bearish for nineteen bars, 29.5% below its basis.",
@@ -3190,9 +3190,9 @@
   "updated_at": "2026-08-07T20:30:11+00:00"
  },
  "NVMI": {
-  "read": "NVMI flipped bearish on the weekly trend regime today, ending a fifty-nine-bar bullish stint, and the daily wave is now above its signal with money flow on the buy side, putting daily confluence at 2/4, despite the daily structure still being bullish. The daily wave is rising at 4.78, a flip from yesterday's negative momentum, while the daily structure saw a bullish CHoCH event. The monthly backdrop is still bullish, but with a wave turn down, and confluence at 3/4.",
-  "state_hash": "4dc484b5c9b54c12",
-  "updated_at": "2026-08-15T04:53:55+00:00"
+  "read": "<think>\nHere's a thinking process:\n\n1.  **Analyze User Input:**\n   - **System Prompt:** Defines role (IQ Analyst), task (2-3 sentences plain text read from STATE payload), hard rules (ground in payload, lead with freshest change/standing regime, specific vocabulary, no advice/predictions, no emojis/hype, output only read).\n   - **Input STATE:** JSON payload for \"NVMI\" (Nova Ltd.)\n   - **Key Fields in STATE:**\n     - Daily: trend bearish (30 bars, flipped_today: false), momentum bullish (wave 7.5, rising, above signal), structure bearish (major bullish), money_flow selling, confluence 2/4\n     - Weekly: trend bearish (flipped_today: true, prior_opposite_bars: 59, strong_flip: true), momentum bearish (wave -24.2, falling, below signal, stretched_low: true, events: dual confirmation short), money_flow selling, confluence 0/4",
+  "state_hash": "ae7ce894ffd2bf05",
+  "updated_at": "2026-08-15T10:11:43+00:00"
  },
  "NVO": {
   "read": "NVO remains in a bearish trend regime on the daily, four bars in, with the wave turning up and a reversal cross up, though still below its signal at -24.0315. The daily structure direction is bearish, and money flow is on the sell side, contributing to daily confluence at 0/4. The weekly backdrop shows a bullish trend regime, also four bars in, with money flow on the buy side and confluence at 3/4.",
@@ -3385,9 +3385,9 @@
   "updated_at": "2026-07-30T16:33:30+00:00"
  },
  "PB": {
-  "read": "<think>\nHere's a thinking process:\n\n1.  **Analyze User Input:**\n   - **Role:** IQ Analyst for IQ Algo (TradingView tools: IQ Bands, IQ Oscillator, IQ Structure)\n   - **Task:** Write exactly 2-3 sentences of plain text describing the ticker's current state based on the provided STATE payload.\n   - **Rules:**\n     - Ground every claim in the payload. No missing/null fields mentioned. No invented numbers/levels/dates/events.\n     - Sentence 1: Lead with freshest change (today's flip, newest structure event, new extreme). If nothing changed today, open with standing regime and bars held.\n     - Vocabulary: Use specific terms (trend regime, momentum wave/signal, confluence n/4, stretched/extreme, money flow, BOS, CHoCH, EQH/EQL sweep, demand/supply zone).\n     - No advice, no predictions as certainty, use cautious language.\n     - No emojis, exclamation marks, hype words.\n     - Output ONLY the",
-  "state_hash": "afae3c3f84377eb7",
-  "updated_at": "2026-08-15T09:44:17+00:00"
+  "read": "<think>\nHere's a thinking process:\n\n1.  **Analyze User Input:**\n   - **Role:** IQ Analyst, automated read engine for IQ Algo.\n   - **Task:** Write exactly 2-3 sentences of plain text describing the ticker's current state based on the provided STATE payload.\n   - **Payload:** JSON containing daily, weekly, and monthly data for \"PB\" (Prosperity Bancshares, Inc.).\n   - **Hard Rules:**\n     1. Ground every claim in the payload. No missing/null fields mentioned. No invented numbers/levels/dates/events.\n     2. Sentence 1 leads with freshest change (today's flip, newest structure event, new extreme). If nothing changed today, open with standing regime and bars held.\n     3. Vocabulary: trend regime, momentum wave/signal, confluence n/4, stretched/extreme, money flow, BOS, CHoCH, EQH/EQL sweep, demand/supply zone. Use glossary if provided (none provided, stick to standard terms).",
+  "state_hash": "f74d4e046621f7e2",
+  "updated_at": "2026-08-15T10:13:36+00:00"
  },
  "PBA": {
   "read": "PBA is three bars into a bearish trend regime on the daily, with a choppy noise level and confluence at 0/4. The daily wave turned up but remains below its signal at -21.8, with money flow on the sell side. The weekly and monthly backdrops are bullish, with the monthly wave above its signal and confluence at 4/4.",
@@ -3585,9 +3585,9 @@
   "updated_at": "2026-08-11T07:25:04+00:00"
  },
  "PSO": {
-  "read": "PSO remains in a bearish trend regime on the daily, two bars in, with a stretched low in momentum and money flow on the sell side, putting confluence at 0/4. The daily wave is below its signal, while the weekly trend is bullish and trending, with a confluence of 3/4, but the weekly momentum wave has turned down and is below its signal.",
-  "state_hash": "23b81bacc526adb8",
-  "updated_at": "2026-08-15T04:55:03+00:00"
+  "read": "<think>\nHere's a thinking process:\n\n1.  **Analyze User Input:**\n   - **Role:** IQ Analyst for IQ Algo (TradingView tools: IQ Bands, IQ Oscillator, IQ Structure)\n   - **Task:** Write exactly 2-3 sentences of plain text describing the ticker's current state based on the provided STATE payload.\n   - **Hard Rules:**\n     1. Ground every claim in the payload. No missing/null fields mentioned. No invented numbers/levels/dates/events.\n     2. Sentence 1 leads with the freshest change (today's flip, newest structure event, or new extreme). If nothing changed today, open with the standing regime and how many bars it has held.\n     3. Vocabulary: trend regime, momentum wave/signal, confluence n/4, stretched/extreme, money flow, BOS, CHoCH, EQH/EQL sweep, demand/supply zone. Use glossary if provided (none provided, but I'll stick to the listed terms).\n     4. No advice",
+  "state_hash": "c4ad4272f80eef11",
+  "updated_at": "2026-08-15T10:12:30+00:00"
  },
  "PSX": {
   "read": "PSX remains in a bullish trend regime for the 25th consecutive bar, with a bullish momentum flip and dual confirmation long on the daily, and 4/4 confluence. The daily wave is rising and above its signal, with money flow on the buy side. The weekly and monthly backdrops are also fully aligned at 4/4, with Phillips 66 trending higher across all time frames.",
@@ -3740,9 +3740,9 @@
   "updated_at": "2026-08-11T08:56:34+00:00"
  },
  "RIO": {
-  "read": "RIO has held a bullish trend regime for ten bars, with a 1.55% price gain above its basis, and is still trending. The daily wave is below its signal at -22.2, and money flow is on the buy side, putting daily confluence at 3/4. The weekly momentum has turned bearish, with a stretched low and a wave turn up event, but monthly structure and regime stay bullish, with confluence at 4/4.",
-  "state_hash": "f058b088dee2ef45",
-  "updated_at": "2026-08-15T08:51:26+00:00"
+  "read": "RIO remains in a bullish trend regime for the seventh consecutive day, with daily confluence at 3/4. The daily wave is stretched into the overbought zone at 22.4, but its slope is falling and below its signal, indicating a potential reversal. The weekly trend regime is also bullish, but the wave has slipped below its signal, dropping weekly confluence to 1/4.",
+  "state_hash": "628c3867738be684",
+  "updated_at": "2026-08-15T10:11:00+00:00"
  },
  "RIOT": {
   "read": "RIOT is 25 bars into a bearish trend regime, with a price decline of 10.15% from its basis. The daily momentum wave is still above its signal, but the weekly momentum has flipped bearish, with the wave below its signal and a bearish momentum event, while the monthly backdrop remains bullish with confluence at 4/4.",
@@ -3900,9 +3900,9 @@
   "updated_at": "2026-08-08T08:16:27+00:00"
  },
  "SBAC": {
-  "read": "SBAC flipped bullish on the daily trend regime today, ending a sixty-two-bar bearish stint, and confirmed the move with a dual confirmation long event. The daily wave is stretched into new high ground at 20.0459 with money flow on the buy side, putting daily confluence at 4/4. However, the weekly trend regime is bearish, six bars into its regime with confluence at 0/4, and the monthly backdrop is also bearish, forty-five bars into its regime with confluence at 0/4.",
-  "state_hash": "fc0467c2ce802a73",
-  "updated_at": "2026-08-15T04:52:27+00:00"
+  "read": "SBAC is six bars into a bearish trend regime on the daily, with confluence at 3/4 due to a bullish momentum wave still above its signal. However, the daily wave is stretched into the overbought zone, and the weekly and monthly trends remain bearish, with confluence at 0/4 and 0/4 respectively, as the weekly and monthly waves have slipped below their signals.",
+  "state_hash": "d07f7f12f45a41c3",
+  "updated_at": "2026-08-15T10:11:24+00:00"
  },
  "SBUX": {
   "read": "SBUX remains in a bullish trend regime on the daily, thirty-four bars in, with the price 3.46% above its basis and a choppy noise condition. The daily momentum wave is rising and above its signal at 7.82, with money flow on the buy side and daily confluence at 4/4. The weekly and monthly backdrops are also bullish, with the monthly regime just two bars old and its momentum wave already above its signal.",
@@ -4030,9 +4030,9 @@
   "updated_at": "2026-08-10T12:14:12+00:00"
  },
  "SNN": {
-  "read": "<think>\nHere's a thinking process:\n\n1.  **Analyze User Input:**\n   - **Role:** IQ Analyst, automated read engine for IQ Algo.\n   - **Task:** Write exactly 2-3 sentences of plain text describing the ticker's current state based on the provided STATE payload.\n   - **Rules:**\n     - Ground every claim in the payload. No missing/null fields mentioned. No invented numbers/levels/dates/events.\n     - Sentence 1: Lead with freshest change (today's flip, newest structure event, new extreme). If nothing changed today, open with standing regime and bars held.\n     - Vocabulary: Use specific terms (trend regime, momentum wave/signal, confluence n/4, stretched/extreme, money flow, BOS, CHoCH, EQH/EQL sweep, demand/supply zone).\n     - No advice, no predictions as certainty. Use \"scan shows\", \"momentum favors\", \"watch for\".\n     - No emojis, exclamation marks, hype words.\n     - Output ONLY the",
-  "state_hash": "fa26611f029633aa",
-  "updated_at": "2026-08-15T09:44:06+00:00"
+  "read": "<think>\nHere's a thinking process:\n\n1.  **Analyze User Input:**\n   - **Role:** IQ Analyst, automated read engine for IQ Algo.\n   - **Task:** Write exactly 2-3 sentences of plain text describing the ticker's current state based on the provided STATE payload.\n   - **Rules:**\n     - Ground every claim in the payload. No inventing.\n     - Sentence 1: Lead with freshest change (today's flip, newest structure event, new extreme). If nothing changed today, open with standing regime and bars held.\n     - Vocabulary: Use specific terms (trend regime, momentum wave/signal, confluence n/4, stretched/extreme, money flow, BOS, CHoCH, EQH/EQL sweep, demand/supply zone).\n     - No advice, no predictions as certainty, no emojis/exclamations/hype.\n     - Output only the read.\n   - **Input STATE:**\n     ```json\n     {\n       \"sym\": \"SNN\",\n       \"name\":",
+  "state_hash": "43664f3485dff869",
+  "updated_at": "2026-08-15T10:11:30+00:00"
  },
  "SNOW": {
   "read": "SNOW flipped bullish on the daily trend regime 67 bars ago, with a price gain of 16.83% vs its basis. The daily wave is below its signal at 20.13, with money flow on the buy side, putting daily confluence at 3/4. The weekly backdrop is fully aligned at 4/4, with a stretched high in the weekly wave.",
@@ -4205,9 +4205,9 @@
   "updated_at": "2026-07-29T22:40:36+00:00"
  },
  "SYRE": {
-  "read": "SYRE has held a bullish trend regime for 211 bars, with the price trending upwards by 4.6% against its basis. The daily momentum wave is still below its signal, but the weekly and monthly momentum waves are both below their signals, with weekly confluence at 3/4 and monthly confluence at 4/4, indicating a buying environment across all time frames.",
-  "state_hash": "afae3c3f84377eb7",
-  "updated_at": "2026-08-14T04:32:04+00:00"
+  "read": "<think>\nHere's a thinking process:\n\n1.  **Analyze User Input:**\n   - **Role:** IQ Analyst, automated read engine for IQ Algo.\n   - **Task:** Write exactly 2-3 sentences of plain text describing the ticker's current state based on the provided STATE payload.\n   - **Hard Rules:**\n     1. Ground every claim in the payload. No missing/null fields mentioned. No invented numbers/levels/dates/events.\n     2. Sentence 1 leads with the freshest change (today's flip, newest structure event, or new extreme). If nothing changed today, open with the standing regime and how many bars it has held.\n     3. Vocabulary: trend regime, momentum wave/signal, confluence n/4, stretched/extreme, money flow, BOS, CHoCH, EQH/EQL sweep, demand/supply zone.\n     4. No advice, no predictions as certainty. Use \"scan shows\", \"momentum favors\", \"watch for\".\n     5. No emojis,",
+  "state_hash": "f74d4e046621f7e2",
+  "updated_at": "2026-08-15T10:13:38+00:00"
  },
  "SYY": {
   "read": "SYY has seen a bearish momentum flip on the daily, 52 bars into a bullish trend regime, with confluence at 1/4. The daily wave is below its signal (-1.96 from 0.32) and the money flow is on the sell side, while the weekly and monthly backdrops remain fully aligned at 4/4, both showing bullish momentum with rising waves above their signals.",
@@ -4390,9 +4390,9 @@
   "updated_at": "2026-08-15T08:53:07+00:00"
  },
  "TRU": {
-  "read": "TRU is 31 bars into a bullish trend regime, with a price increase of 3.19% vs. its basis. The daily momentum wave is below its signal, falling from -4.52 to -6.21, and money flow is on the buy side, but confluence is only at 2/4. The weekly trend regime is bearish, but the weekly momentum wave is above its signal, with money flow on the buy side and confluence at 3/4.",
-  "state_hash": "2e9f0a6f8fe31574",
-  "updated_at": "2026-08-13T17:57:20+00:00"
+  "read": "<think>\nHere's a thinking process:\n\n1.  **Analyze User Input:**\n   - **Role:** IQ Analyst for IQ Algo (TradingView tools: IQ Bands, IQ Oscillator, IQ Structure)\n   - **Task:** Write exactly 2-3 sentences of plain text describing the ticker's current state based on the provided STATE payload.\n   - **Rules:**\n     - Ground every claim in the payload. No missing/null fields mentioned. No invented numbers/levels/dates/events.\n     - Sentence 1: Lead with freshest change (today's flip, newest structure event, new extreme). If nothing changed today, open with standing regime + bars held.\n     - Vocabulary: Use specific terms (trend regime, flipped, momentum wave/signal, confluence n/4, stretched/extreme, money flow, BOS, CHoCH, EQH/EQL sweep, demand/supply zone).\n     - No advice, no predictions as certainty, no emojis/exclamations/hype words.\n     - Output ONLY the read. No preamble/labels",
+  "state_hash": "4fa3603e7b324d45",
+  "updated_at": "2026-08-15T10:11:28+00:00"
  },
  "TRV": {
   "read": "TRV has held a bullish trend regime for 43 bars, with daily momentum in a bearish wave (-18.3) below its signal, and money flow on the sell side, placing daily confluence at 1/4. The weekly structure and regime remain bullish, with a rising wave above its signal and buying money flow, putting weekly confluence at 4/4, 140 bars into its trend.",
@@ -4935,9 +4935,9 @@
   "updated_at": "2026-08-06T14:29:59+00:00"
  },
  "ZION": {
-  "read": "ZION has held a bullish trend regime for 43 bars, with choppy price action, and the daily momentum wave is still above its signal despite printing a bearish wave. The daily structure remains bullish, but money flow is on the sell side with confluence at 2/4. The weekly and monthly backdrops are fully aligned at 3/4 and 4/4, respectively, with the weekly momentum wave below its signal.",
-  "state_hash": "afae3c3f84377eb7",
-  "updated_at": "2026-08-10T12:11:23+00:00"
+  "read": "<think>\nHere's a thinking process:\n\n1.  **Analyze User Input:**\n   - **Role:** IQ Analyst, automated read engine for IQ Algo.\n   - **Task:** Write exactly 2-3 sentences of plain text describing the ticker's current state based on the provided STATE payload.\n   - **Rules:**\n     - Ground every claim in the payload. No inventing.\n     - Sentence 1: Lead with freshest change (today's flip, newest structure event, or new extreme). If nothing changed today, open with standing regime + bars held.\n     - Vocabulary: Use specific terms (trend regime, momentum wave/signal, confluence n/4, stretched/extreme, money flow, BOS, CHoCH, EQH/EQL sweep, demand/supply zone, etc.).\n     - No advice, no predictions as certainty.\n     - No emojis, exclamation marks, hype words.\n     - Output ONLY the read.\n   - **Input STATE:**\n     ```json\n     {\n       \"sym\":\"ZION",
+  "state_hash": "6e91573c78eeb3e8",
+  "updated_at": "2026-08-15T10:12:08+00:00"
  },
  "ZM": {
   "read": "ZM is four bars into its bullish trend regime with confluence at 4/4, having entered the overbought zone on a stretched high daily wave of 21.9. The daily momentum favors a continuation of the bullish trend, but weekly momentum is bearish with the wave below its signal, dropping that confluence to 2/4.",
