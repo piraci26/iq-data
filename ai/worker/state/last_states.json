@@ -10664,17 +10664,19 @@
  "EQR": {
   "fingerprint": {
    "daily": {
-    "bands": "bear",
-    "osc": "bear",
+    "bands": "bull",
+    "osc": "bull",
     "osc_hi": false,
-    "osc_lo": true,
-    "struct": "bear",
-    "struct_events": [],
+    "osc_lo": false,
+    "struct": "bull",
+    "struct_events": [
+     "tl_break_dn"
+    ],
     "struct_major": "bull"
    },
    "monthly": {
     "bands": "bear",
-    "osc": "bear",
+    "osc": "bull",
     "osc_hi": false,
     "osc_lo": false,
     "struct": null,
@@ -10684,15 +10686,15 @@
    "weekly": {
     "bands": "bull",
     "osc": "bull",
-    "osc_hi": false,
+    "osc_hi": true,
     "osc_lo": false,
     "struct": null,
     "struct_events": [],
     "struct_major": null
    }
   },
-  "hash": "5cf3b9e9ce9971ed",
-  "updated_at": "2026-08-03T03:30:10+00:00"
+  "hash": "de7967662dec12b7",
+  "updated_at": "2026-08-18T19:04:47+00:00"
  },
  "EQT": {
   "fingerprint": {
