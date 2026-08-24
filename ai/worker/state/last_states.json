@@ -37,7 +37,7 @@
    "daily": {
     "bands": "bull",
     "osc": "bull",
-    "osc_hi": true,
+    "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
     "struct_events": [],
@@ -62,8 +62,8 @@
     "struct_major": null
    }
   },
-  "hash": "3deface69e410756",
-  "updated_at": "2026-08-12T18:51:25+00:00"
+  "hash": "3c61f9d3a909a7b9",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "AAL": {
   "fingerprint": {
@@ -139,8 +139,10 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [],
-    "struct_major": "bull"
+    "struct_events": [
+     "maj_choch_dn"
+    ],
+    "struct_major": "bear"
    },
    "monthly": {
     "bands": "bull",
@@ -161,8 +163,8 @@
     "struct_major": null
    }
   },
-  "hash": "b86c10d77c79e42f",
-  "updated_at": "2026-08-24T01:32:26+00:00"
+  "hash": "2506d6dbefa60eeb",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "AAPL": {
   "fingerprint": {
@@ -436,7 +438,7 @@
     "bands": "bear",
     "osc": "bear",
     "osc_hi": false,
-    "osc_lo": true,
+    "osc_lo": false,
     "struct": "bear",
     "struct_events": [],
     "struct_major": "bull"
@@ -460,8 +462,8 @@
     "struct_major": null
    }
   },
-  "hash": "bb64e2d4a2cb7a14",
-  "updated_at": "2026-08-24T01:32:26+00:00"
+  "hash": "01cd4d69e018a178",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "ADI": {
   "fingerprint": {
@@ -500,7 +502,7 @@
   "fingerprint": {
    "daily": {
     "bands": "bear",
-    "osc": "bull",
+    "osc": "bear",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
@@ -526,8 +528,8 @@
     "struct_major": null
    }
   },
-  "hash": "545183a97194f516",
-  "updated_at": "2026-08-20T20:18:58+00:00"
+  "hash": "4a93368c46f457dd",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "ADP": {
   "fingerprint": {
@@ -605,9 +607,7 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [
-     "bos_dn"
-    ],
+    "struct_events": [],
     "struct_major": "bull"
    },
    "monthly": {
@@ -629,8 +629,8 @@
     "struct_major": null
    }
   },
-  "hash": "69046c7dc25cf855",
-  "updated_at": "2026-08-24T01:32:26+00:00"
+  "hash": "6608e8934bc4fa38",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "AEG": {
   "fingerprint": {
@@ -669,7 +669,7 @@
   "fingerprint": {
    "daily": {
     "bands": "bear",
-    "osc": "bull",
+    "osc": "bear",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
@@ -695,8 +695,8 @@
     "struct_major": null
    }
   },
-  "hash": "fe768f1ead506ea0",
-  "updated_at": "2026-08-20T20:18:58+00:00"
+  "hash": "dddc5dbc043ff242",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "AEM": {
   "fingerprint": {
@@ -968,7 +968,7 @@
   "fingerprint": {
    "daily": {
     "bands": "bear",
-    "osc": "bear",
+    "osc": "bull",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
@@ -994,8 +994,8 @@
     "struct_major": null
    }
   },
-  "hash": "9682611810fbd07d",
-  "updated_at": "2026-08-21T05:52:56+00:00"
+  "hash": "5756d1a8d0e4a01a",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "AGI": {
   "fingerprint": {
@@ -1071,7 +1071,9 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [],
+    "struct_events": [
+     "bos_dn"
+    ],
     "struct_major": "bull"
    },
    "monthly": {
@@ -1093,8 +1095,8 @@
     "struct_major": null
    }
   },
-  "hash": "6608e8934bc4fa38",
-  "updated_at": "2026-08-21T05:52:56+00:00"
+  "hash": "69046c7dc25cf855",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "AHR": {
   "fingerprint": {
@@ -1104,9 +1106,7 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
-    "struct_events": [
-     "tl_break_up"
-    ],
+    "struct_events": [],
     "struct_major": "bull"
    },
    "monthly": {
@@ -1128,8 +1128,8 @@
     "struct_major": null
    }
   },
-  "hash": "0e268a321b395766",
-  "updated_at": "2026-08-21T20:14:40+00:00"
+  "hash": "d6529f8b7e85db58",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "AIG": {
   "fingerprint": {
@@ -1203,7 +1203,7 @@
     "bands": "bull",
     "osc": "bear",
     "osc_hi": false,
-    "osc_lo": true,
+    "osc_lo": false,
     "struct": "bull",
     "struct_events": [],
     "struct_major": "bull"
@@ -1227,8 +1227,8 @@
     "struct_major": null
    }
   },
-  "hash": "6e4547d2114bcdbd",
-  "updated_at": "2026-08-24T01:32:26+00:00"
+  "hash": "afae3c3f84377eb7",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "AJG": {
   "fingerprint": {
@@ -1271,7 +1271,10 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [],
+    "struct_events": [
+     "bos_dn",
+     "tl_break_dn"
+    ],
     "struct_major": "bull"
    },
    "monthly": {
@@ -1293,8 +1296,8 @@
     "struct_major": null
    }
   },
-  "hash": "6608e8934bc4fa38",
-  "updated_at": "2026-08-24T01:32:26+00:00"
+  "hash": "0902bdd49180d791",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "ALAB": {
   "fingerprint": {
@@ -1434,7 +1437,7 @@
     "bands": "bear",
     "osc": "bear",
     "osc_hi": false,
-    "osc_lo": false,
+    "osc_lo": true,
     "struct": "bear",
     "struct_events": [],
     "struct_major": "bear"
@@ -1458,8 +1461,8 @@
     "struct_major": null
    }
   },
-  "hash": "46447ef64f4f5102",
-  "updated_at": "2026-08-20T20:18:58+00:00"
+  "hash": "ead0d0ac5a2f8465",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "ALKS": {
   "fingerprint": {
@@ -1766,9 +1769,7 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
-    "struct_events": [
-     "bos_up"
-    ],
+    "struct_events": [],
     "struct_major": "bear"
    },
    "monthly": {
@@ -1790,8 +1791,8 @@
     "struct_major": null
    }
   },
-  "hash": "80a988d85e67a9a0",
-  "updated_at": "2026-08-21T20:44:33+00:00"
+  "hash": "4fa3603e7b324d45",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "AMD": {
   "fingerprint": {
@@ -1832,7 +1833,7 @@
     "bands": "bear",
     "osc": "bear",
     "osc_hi": false,
-    "osc_lo": false,
+    "osc_lo": true,
     "struct": "bull",
     "struct_events": [],
     "struct_major": "bull"
@@ -1856,8 +1857,8 @@
     "struct_major": null
    }
   },
-  "hash": "18b8bdfc74aee5b7",
-  "updated_at": "2026-08-21T20:44:33+00:00"
+  "hash": "2e234ad14f71d5fc",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "AMG": {
   "fingerprint": {
@@ -2943,7 +2944,7 @@
   "fingerprint": {
    "daily": {
     "bands": "bull",
-    "osc": "bull",
+    "osc": "bear",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
@@ -2969,8 +2970,8 @@
     "struct_major": null
    }
   },
-  "hash": "5b061c9c60e44f86",
-  "updated_at": "2026-08-19T07:55:02+00:00"
+  "hash": "afae3c3f84377eb7",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "ATO": {
   "fingerprint": {
@@ -2980,10 +2981,7 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [
-     "bos_dn",
-     "tl_break_dn"
-    ],
+    "struct_events": [],
     "struct_major": "bull"
    },
    "monthly": {
@@ -3005,8 +3003,8 @@
     "struct_major": null
    }
   },
-  "hash": "e70171bc8b277be0",
-  "updated_at": "2026-08-21T20:44:33+00:00"
+  "hash": "b86c10d77c79e42f",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "ATR": {
   "fingerprint": {
@@ -3210,7 +3208,7 @@
   "fingerprint": {
    "daily": {
     "bands": "bull",
-    "osc": "bear",
+    "osc": "bull",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
@@ -3236,8 +3234,8 @@
     "struct_major": null
    }
   },
-  "hash": "927919cac968986d",
-  "updated_at": "2026-08-04T20:31:30+00:00"
+  "hash": "92a7d13294cc68a1",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "AXON": {
   "fingerprint": {
@@ -3346,7 +3344,9 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [],
+    "struct_events": [
+     "bos_dn"
+    ],
     "struct_major": "bull"
    },
    "monthly": {
@@ -3368,8 +3368,8 @@
     "struct_major": null
    }
   },
-  "hash": "6608e8934bc4fa38",
-  "updated_at": "2026-08-24T01:32:26+00:00"
+  "hash": "69046c7dc25cf855",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "AYI": {
   "fingerprint": {
@@ -3441,7 +3441,7 @@
   "fingerprint": {
    "daily": {
     "bands": "bear",
-    "osc": "bull",
+    "osc": "bear",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
@@ -3467,8 +3467,8 @@
     "struct_major": null
    }
   },
-  "hash": "b503245cbb352508",
-  "updated_at": "2026-08-21T20:44:33+00:00"
+  "hash": "37bd82caefb9e1b2",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "B": {
   "fingerprint": {
@@ -3574,7 +3574,7 @@
  "BALL": {
   "fingerprint": {
    "daily": {
-    "bands": "bear",
+    "bands": "bull",
     "osc": "bear",
     "osc_hi": false,
     "osc_lo": false,
@@ -3601,8 +3601,8 @@
     "struct_major": null
    }
   },
-  "hash": "18b8bdfc74aee5b7",
-  "updated_at": "2026-08-20T20:18:58+00:00"
+  "hash": "afae3c3f84377eb7",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "BAM": {
   "fingerprint": {
@@ -3676,7 +3676,7 @@
     "bands": "bull",
     "osc": "bear",
     "osc_hi": false,
-    "osc_lo": false,
+    "osc_lo": true,
     "struct": "bull",
     "struct_events": [],
     "struct_major": "bull"
@@ -3700,8 +3700,8 @@
     "struct_major": null
    }
   },
-  "hash": "8ee905ca90bd2232",
-  "updated_at": "2026-08-18T20:46:50+00:00"
+  "hash": "0dbb25a85a85dff3",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "BBIO": {
   "fingerprint": {
@@ -3843,7 +3843,9 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
-    "struct_events": [],
+    "struct_events": [
+     "bos_up"
+    ],
     "struct_major": "bull"
    },
    "monthly": {
@@ -3865,8 +3867,8 @@
     "struct_major": null
    }
   },
-  "hash": "afae3c3f84377eb7",
-  "updated_at": "2026-08-13T21:00:12+00:00"
+  "hash": "3c950e97dfcdd9eb",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "BCS": {
   "fingerprint": {
@@ -4171,7 +4173,7 @@
     "bands": "bull",
     "osc": "bear",
     "osc_hi": false,
-    "osc_lo": true,
+    "osc_lo": false,
     "struct": "bull",
     "struct_events": [],
     "struct_major": "bear"
@@ -4195,8 +4197,8 @@
     "struct_major": null
    }
   },
-  "hash": "5541a08857ab3ec8",
-  "updated_at": "2026-08-19T20:12:10+00:00"
+  "hash": "15e9662de6810f93",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "BKNG": {
   "fingerprint": {
@@ -4268,7 +4270,7 @@
   "fingerprint": {
    "daily": {
     "bands": "bear",
-    "osc": "bull",
+    "osc": "bear",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
@@ -4294,8 +4296,8 @@
     "struct_major": null
    }
   },
-  "hash": "b9248ddac135f94c",
-  "updated_at": "2026-08-21T05:52:56+00:00"
+  "hash": "5f86ebf682646fe6",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "BLK": {
   "fingerprint": {
@@ -4338,8 +4340,10 @@
     "osc_hi": true,
     "osc_lo": false,
     "struct": "bull",
-    "struct_events": [],
-    "struct_major": "bear"
+    "struct_events": [
+     "maj_choch_up"
+    ],
+    "struct_major": "bull"
    },
    "monthly": {
     "bands": null,
@@ -4360,8 +4364,8 @@
     "struct_major": null
    }
   },
-  "hash": "bac2eeaff8f28d3d",
-  "updated_at": "2026-08-21T20:14:40+00:00"
+  "hash": "c4aeb5c019390fc9",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "BMO": {
   "fingerprint": {
@@ -4534,7 +4538,7 @@
     "bands": "bear",
     "osc": "bear",
     "osc_hi": false,
-    "osc_lo": false,
+    "osc_lo": true,
     "struct": "bear",
     "struct_events": [],
     "struct_major": "bear"
@@ -4558,8 +4562,8 @@
     "struct_major": null
    }
   },
-  "hash": "37bd82caefb9e1b2",
-  "updated_at": "2026-08-21T20:14:40+00:00"
+  "hash": "cc6a23d747ba82dc",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "BOKF": {
   "fingerprint": {
@@ -4899,7 +4903,9 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
-    "struct_events": [],
+    "struct_events": [
+     "bos_up"
+    ],
     "struct_major": "bear"
    },
    "monthly": {
@@ -4921,8 +4927,8 @@
     "struct_major": null
    }
   },
-  "hash": "4d9a08d959d67baa",
-  "updated_at": "2026-08-21T20:14:40+00:00"
+  "hash": "91b71932331a63c6",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "BTI": {
   "fingerprint": {
@@ -5262,9 +5268,7 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
-    "struct_events": [
-     "tl_break_dn"
-    ],
+    "struct_events": [],
     "struct_major": "bear"
    },
    "monthly": {
@@ -5286,8 +5290,8 @@
     "struct_major": null
    }
   },
-  "hash": "1132e1a7f0beae66",
-  "updated_at": "2026-08-21T20:14:40+00:00"
+  "hash": "aca353a71027dc2d",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "CAH": {
   "fingerprint": {
@@ -5594,9 +5598,7 @@
     "osc_hi": false,
     "osc_lo": true,
     "struct": "bull",
-    "struct_events": [
-     "tl_break_dn"
-    ],
+    "struct_events": [],
     "struct_major": "bull"
    },
    "monthly": {
@@ -5618,8 +5620,8 @@
     "struct_major": null
    }
   },
-  "hash": "ecf6542f1862976f",
-  "updated_at": "2026-08-21T20:14:40+00:00"
+  "hash": "9f4f7489fc3871b0",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "CCEP": {
   "fingerprint": {
@@ -5627,7 +5629,7 @@
     "bands": "bull",
     "osc": "bear",
     "osc_hi": false,
-    "osc_lo": true,
+    "osc_lo": false,
     "struct": "bull",
     "struct_events": [],
     "struct_major": "bull"
@@ -5651,8 +5653,8 @@
     "struct_major": null
    }
   },
-  "hash": "a27eacc0d2a3c4b2",
-  "updated_at": "2026-08-17T01:29:26+00:00"
+  "hash": "f74d4e046621f7e2",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "CCI": {
   "fingerprint": {
@@ -5860,7 +5862,9 @@
     "osc_hi": false,
     "osc_lo": true,
     "struct": "bull",
-    "struct_events": [],
+    "struct_events": [
+     "tl_break_dn"
+    ],
     "struct_major": "bull"
    },
    "monthly": {
@@ -5882,8 +5886,8 @@
     "struct_major": null
    }
   },
-  "hash": "05941f71cab3d102",
-  "updated_at": "2026-08-20T20:18:58+00:00"
+  "hash": "0c36332dbb314760",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "CEG": {
   "fingerprint": {
@@ -5959,9 +5963,7 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [
-     "sweep_hi"
-    ],
+    "struct_events": [],
     "struct_major": "bull"
    },
    "monthly": {
@@ -5983,8 +5985,8 @@
     "struct_major": null
    }
   },
-  "hash": "48d4534b89be6f74",
-  "updated_at": "2026-08-21T20:44:33+00:00"
+  "hash": "e7443464602e6e42",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "CFG": {
   "fingerprint": {
@@ -6192,10 +6194,7 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [
-     "bos_dn",
-     "tl_break_dn"
-    ],
+    "struct_events": [],
     "struct_major": "bear"
    },
    "monthly": {
@@ -6217,8 +6216,8 @@
     "struct_major": null
    }
   },
-  "hash": "0dd540864d59b195",
-  "updated_at": "2026-08-24T01:32:26+00:00"
+  "hash": "ba2436df34ac88a9",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "CHT": {
   "fingerprint": {
@@ -6294,7 +6293,9 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
-    "struct_events": [],
+    "struct_events": [
+     "bos_up"
+    ],
     "struct_major": "bear"
    },
    "monthly": {
@@ -6316,8 +6317,8 @@
     "struct_major": null
    }
   },
-  "hash": "4d9a08d959d67baa",
-  "updated_at": "2026-08-24T01:32:26+00:00"
+  "hash": "91b71932331a63c6",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "CHYM": {
   "fingerprint": {
@@ -6392,8 +6393,10 @@
     "osc": "bull",
     "osc_hi": false,
     "osc_lo": false,
-    "struct": "bull",
-    "struct_events": [],
+    "struct": "bear",
+    "struct_events": [
+     "choch_dn"
+    ],
     "struct_major": "bull"
    },
    "monthly": {
@@ -6415,8 +6418,8 @@
     "struct_major": null
    }
   },
-  "hash": "fe768f1ead506ea0",
-  "updated_at": "2026-08-20T20:18:58+00:00"
+  "hash": "c972dfceab172a0a",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "CIFR": {
   "fingerprint": {
@@ -6791,10 +6794,7 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [
-     "bos_dn",
-     "maj_choch_dn"
-    ],
+    "struct_events": [],
     "struct_major": "bear"
    },
    "monthly": {
@@ -6816,8 +6816,8 @@
     "struct_major": null
    }
   },
-  "hash": "4f8397b0dc2b7347",
-  "updated_at": "2026-08-24T01:32:26+00:00"
+  "hash": "ba2436df34ac88a9",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "CNA": {
   "fingerprint": {
@@ -6889,7 +6889,7 @@
   "fingerprint": {
    "daily": {
     "bands": "bull",
-    "osc": "bear",
+    "osc": "bull",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
@@ -6915,8 +6915,8 @@
     "struct_major": null
    }
   },
-  "hash": "757c71c306e5d96c",
-  "updated_at": "2026-08-21T20:44:33+00:00"
+  "hash": "2cee55d0d0c0f8cf",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "CNI": {
   "fingerprint": {
@@ -6992,9 +6992,7 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [
-     "bos_dn"
-    ],
+    "struct_events": [],
     "struct_major": "bear"
    },
    "monthly": {
@@ -7016,8 +7014,8 @@
     "struct_major": null
    }
   },
-  "hash": "2c5034381df4d481",
-  "updated_at": "2026-08-21T20:44:33+00:00"
+  "hash": "ba2436df34ac88a9",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "CNQ": {
   "fingerprint": {
@@ -7091,7 +7089,7 @@
   "fingerprint": {
    "daily": {
     "bands": "bear",
-    "osc": "bull",
+    "osc": "bear",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
@@ -7117,15 +7115,15 @@
     "struct_major": null
    }
   },
-  "hash": "fe768f1ead506ea0",
-  "updated_at": "2026-08-19T07:55:02+00:00"
+  "hash": "dddc5dbc043ff242",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "COIN": {
   "fingerprint": {
    "daily": {
     "bands": "bull",
     "osc": "bull",
-    "osc_hi": false,
+    "osc_hi": true,
     "osc_lo": false,
     "struct": "bull",
     "struct_events": [],
@@ -7150,8 +7148,8 @@
     "struct_major": null
    }
   },
-  "hash": "2d4df64b1fd08387",
-  "updated_at": "2026-08-21T20:44:33+00:00"
+  "hash": "3566c6502924308c",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "COKE": {
   "fingerprint": {
@@ -7193,9 +7191,10 @@
     "osc": "bear",
     "osc_hi": false,
     "osc_lo": false,
-    "struct": "bull",
+    "struct": "bear",
     "struct_events": [
-     "sweep_lo"
+     "choch_dn",
+     "tl_break_dn"
     ],
     "struct_major": "bull"
    },
@@ -7218,8 +7217,8 @@
     "struct_major": null
    }
   },
-  "hash": "b8753c4c15260a23",
-  "updated_at": "2026-08-21T20:14:40+00:00"
+  "hash": "0f482acc378dc51f",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "COMP": {
   "fingerprint": {
@@ -7258,7 +7257,7 @@
   "fingerprint": {
    "daily": {
     "bands": "bull",
-    "osc": "bull",
+    "osc": "bear",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
@@ -7284,8 +7283,8 @@
     "struct_major": null
    }
   },
-  "hash": "eb1c09866e95533d",
-  "updated_at": "2026-08-24T01:32:26+00:00"
+  "hash": "dfcf35dc231c9380",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "COP": {
   "fingerprint": {
@@ -7361,9 +7360,7 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
-    "struct_events": [
-     "bos_up"
-    ],
+    "struct_events": [],
     "struct_major": "bull"
    },
    "monthly": {
@@ -7385,8 +7382,8 @@
     "struct_major": null
    }
   },
-  "hash": "7f8e1afa73752ec4",
-  "updated_at": "2026-08-21T20:14:40+00:00"
+  "hash": "c71cc2e59c82ffe9",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "COST": {
   "fingerprint": {
@@ -7592,7 +7589,7 @@
     "bands": "bull",
     "osc": "bear",
     "osc_hi": false,
-    "osc_lo": false,
+    "osc_lo": true,
     "struct": "bull",
     "struct_events": [],
     "struct_major": "bull"
@@ -7616,8 +7613,8 @@
     "struct_major": null
    }
   },
-  "hash": "8ce1be78323afac0",
-  "updated_at": "2026-08-20T19:52:35+00:00"
+  "hash": "679043e6c6c203db",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "CRCL": {
   "fingerprint": {
@@ -8151,7 +8148,7 @@
   "fingerprint": {
    "daily": {
     "bands": "bear",
-    "osc": "bear",
+    "osc": "bull",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
@@ -8177,18 +8174,20 @@
     "struct_major": null
    }
   },
-  "hash": "01cd4d69e018a178",
-  "updated_at": "2026-08-20T20:18:58+00:00"
+  "hash": "6dc05ca344a0bc99",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "CUBE": {
   "fingerprint": {
    "daily": {
-    "bands": "bull",
+    "bands": "bear",
     "osc": "bear",
     "osc_hi": false,
-    "osc_lo": false,
+    "osc_lo": true,
     "struct": "bull",
-    "struct_events": [],
+    "struct_events": [
+     "sweep_lo"
+    ],
     "struct_major": "bull"
    },
    "monthly": {
@@ -8210,8 +8209,8 @@
     "struct_major": null
    }
   },
-  "hash": "359ebb61a520b9ae",
-  "updated_at": "2026-08-12T21:02:12+00:00"
+  "hash": "a0e797f7234e1d30",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "CVE": {
   "fingerprint": {
@@ -8384,7 +8383,7 @@
     "bands": "bear",
     "osc": "bear",
     "osc_hi": false,
-    "osc_lo": true,
+    "osc_lo": false,
     "struct": "bear",
     "struct_events": [],
     "struct_major": "bull"
@@ -8408,8 +8407,8 @@
     "struct_major": null
    }
   },
-  "hash": "a872887a256c8c0c",
-  "updated_at": "2026-08-17T01:29:26+00:00"
+  "hash": "b86c10d77c79e42f",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "CYTK": {
   "fingerprint": {
@@ -9149,7 +9148,9 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
-    "struct_events": [],
+    "struct_events": [
+     "bos_up"
+    ],
     "struct_major": "bull"
    },
    "monthly": {
@@ -9171,8 +9172,8 @@
     "struct_major": null
    }
   },
-  "hash": "afae3c3f84377eb7",
-  "updated_at": "2026-08-21T05:52:56+00:00"
+  "hash": "3c950e97dfcdd9eb",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "DOC": {
   "fingerprint": {
@@ -9180,7 +9181,7 @@
     "bands": "bear",
     "osc": "bear",
     "osc_hi": false,
-    "osc_lo": true,
+    "osc_lo": false,
     "struct": "bear",
     "struct_events": [],
     "struct_major": "bull"
@@ -9204,14 +9205,14 @@
     "struct_major": null
    }
   },
-  "hash": "5180dc876944c1c2",
-  "updated_at": "2026-08-24T01:32:26+00:00"
+  "hash": "4c163040a5eda8c8",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "DOCN": {
   "fingerprint": {
    "daily": {
     "bands": "bear",
-    "osc": "bull",
+    "osc": "bear",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
@@ -9237,8 +9238,8 @@
     "struct_major": null
    }
   },
-  "hash": "e5012a787002a68b",
-  "updated_at": "2026-08-24T01:32:26+00:00"
+  "hash": "6608e8934bc4fa38",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "DOCU": {
   "fingerprint": {
@@ -9479,9 +9480,7 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [
-     "bos_dn"
-    ],
+    "struct_events": [],
     "struct_major": "bear"
    },
    "monthly": {
@@ -9503,8 +9502,8 @@
     "struct_major": null
    }
   },
-  "hash": "4ac9be6ec074e3cf",
-  "updated_at": "2026-08-24T01:32:26+00:00"
+  "hash": "6d56fdf8fbf9b643",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "DTM": {
   "fingerprint": {
@@ -9514,9 +9513,7 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [
-     "maj_choch_dn"
-    ],
+    "struct_events": [],
     "struct_major": "bear"
    },
    "monthly": {
@@ -9538,8 +9535,8 @@
     "struct_major": null
    }
   },
-  "hash": "9253219faf8415ca",
-  "updated_at": "2026-08-21T20:44:33+00:00"
+  "hash": "6d56fdf8fbf9b643",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "DUK": {
   "fingerprint": {
@@ -9749,7 +9746,9 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
-    "struct_events": [],
+    "struct_events": [
+     "bos_up"
+    ],
     "struct_major": "bull"
    },
    "monthly": {
@@ -9771,8 +9770,8 @@
     "struct_major": null
    }
   },
-  "hash": "c71cc2e59c82ffe9",
-  "updated_at": "2026-08-14T14:17:38+00:00"
+  "hash": "7f8e1afa73752ec4",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "EBAY": {
   "fingerprint": {
@@ -9945,7 +9944,7 @@
     "bands": "bear",
     "osc": "bear",
     "osc_hi": false,
-    "osc_lo": true,
+    "osc_lo": false,
     "struct": "bear",
     "struct_events": [],
     "struct_major": "bull"
@@ -9969,8 +9968,8 @@
     "struct_major": null
    }
   },
-  "hash": "69e6542f05419bc7",
-  "updated_at": "2026-08-21T05:52:56+00:00"
+  "hash": "08c039bd0d0aa811",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "EGP": {
   "fingerprint": {
@@ -9980,7 +9979,9 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [],
+    "struct_events": [
+     "tl_break_up"
+    ],
     "struct_major": "bull"
    },
    "monthly": {
@@ -10002,8 +10003,8 @@
     "struct_major": null
    }
   },
-  "hash": "01cd4d69e018a178",
-  "updated_at": "2026-08-24T01:32:26+00:00"
+  "hash": "a76ace100e2e26f2",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "EHC": {
   "fingerprint": {
@@ -10213,9 +10214,7 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [
-     "maj_choch_dn"
-    ],
+    "struct_events": [],
     "struct_major": "bear"
    },
    "monthly": {
@@ -10237,8 +10236,8 @@
     "struct_major": null
    }
   },
-  "hash": "9253219faf8415ca",
-  "updated_at": "2026-08-24T01:32:26+00:00"
+  "hash": "6d56fdf8fbf9b643",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "EMBJ": {
   "fingerprint": {
@@ -10710,7 +10709,9 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
-    "struct_events": [],
+    "struct_events": [
+     "tl_break_dn"
+    ],
     "struct_major": "bear"
    },
    "monthly": {
@@ -10732,8 +10733,8 @@
     "struct_major": null
    }
   },
-  "hash": "0c8417ba1974d36f",
-  "updated_at": "2026-08-18T16:22:27+00:00"
+  "hash": "84e6d759486a1a8b",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "EQX": {
   "fingerprint": {
@@ -10809,9 +10810,7 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [
-     "bos_dn"
-    ],
+    "struct_events": [],
     "struct_major": "bull"
    },
    "monthly": {
@@ -10833,8 +10832,8 @@
     "struct_major": null
    }
   },
-  "hash": "1aa6421b0c3db4d6",
-  "updated_at": "2026-08-21T20:44:33+00:00"
+  "hash": "4c163040a5eda8c8",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "ESE": {
   "fingerprint": {
@@ -10873,7 +10872,7 @@
   "fingerprint": {
    "daily": {
     "bands": "bear",
-    "osc": "bull",
+    "osc": "bear",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
@@ -10899,8 +10898,8 @@
     "struct_major": null
    }
   },
-  "hash": "fe768f1ead506ea0",
-  "updated_at": "2026-08-19T07:55:02+00:00"
+  "hash": "dddc5dbc043ff242",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "ESLT": {
   "fingerprint": {
@@ -10976,10 +10975,7 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [
-     "bos_dn",
-     "maj_choch_dn"
-    ],
+    "struct_events": [],
     "struct_major": "bear"
    },
    "monthly": {
@@ -11001,8 +10997,8 @@
     "struct_major": null
    }
   },
-  "hash": "ae522c738c69100d",
-  "updated_at": "2026-08-21T20:44:33+00:00"
+  "hash": "6d56fdf8fbf9b643",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "ETSY": {
   "fingerprint": {
@@ -11010,7 +11006,7 @@
     "bands": "bull",
     "osc": "bear",
     "osc_hi": false,
-    "osc_lo": true,
+    "osc_lo": false,
     "struct": "bull",
     "struct_events": [],
     "struct_major": "bull"
@@ -11034,8 +11030,8 @@
     "struct_major": null
    }
   },
-  "hash": "a27eacc0d2a3c4b2",
-  "updated_at": "2026-08-13T11:43:33+00:00"
+  "hash": "f74d4e046621f7e2",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "EVR": {
   "fingerprint": {
@@ -11078,9 +11074,7 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [
-     "bos_dn"
-    ],
+    "struct_events": [],
     "struct_major": "bull"
    },
    "monthly": {
@@ -11102,8 +11096,8 @@
     "struct_major": null
    }
   },
-  "hash": "69046c7dc25cf855",
-  "updated_at": "2026-08-24T01:32:26+00:00"
+  "hash": "6608e8934bc4fa38",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "EW": {
   "fingerprint": {
@@ -11145,42 +11139,9 @@
     "osc": "bear",
     "osc_hi": false,
     "osc_lo": false,
-    "struct": "bull",
-    "struct_events": [],
-    "struct_major": "bull"
-   },
-   "monthly": {
-    "bands": "bull",
-    "osc": "bull",
-    "osc_hi": false,
-    "osc_lo": false,
-    "struct": null,
-    "struct_events": [],
-    "struct_major": null
-   },
-   "weekly": {
-    "bands": "bull",
-    "osc": "bull",
-    "osc_hi": false,
-    "osc_lo": false,
-    "struct": null,
-    "struct_events": [],
-    "struct_major": null
-   }
-  },
-  "hash": "18b8bdfc74aee5b7",
-  "updated_at": "2026-08-20T20:18:58+00:00"
- },
- "EXC": {
-  "fingerprint": {
-   "daily": {
-    "bands": "bear",
-    "osc": "bear",
-    "osc_hi": false,
-    "osc_lo": false,
     "struct": "bear",
     "struct_events": [
-     "bos_dn"
+     "choch_dn"
     ],
     "struct_major": "bull"
    },
@@ -11195,6 +11156,39 @@
    },
    "weekly": {
     "bands": "bull",
+    "osc": "bull",
+    "osc_hi": false,
+    "osc_lo": false,
+    "struct": null,
+    "struct_events": [],
+    "struct_major": null
+   }
+  },
+  "hash": "8c5b618b64b25dcb",
+  "updated_at": "2026-08-24T20:20:41+00:00"
+ },
+ "EXC": {
+  "fingerprint": {
+   "daily": {
+    "bands": "bear",
+    "osc": "bear",
+    "osc_hi": false,
+    "osc_lo": false,
+    "struct": "bear",
+    "struct_events": [],
+    "struct_major": "bull"
+   },
+   "monthly": {
+    "bands": "bull",
+    "osc": "bull",
+    "osc_hi": false,
+    "osc_lo": false,
+    "struct": null,
+    "struct_events": [],
+    "struct_major": null
+   },
+   "weekly": {
+    "bands": "bull",
     "osc": "bear",
     "osc_hi": false,
     "osc_lo": false,
@@ -11203,8 +11197,8 @@
     "struct_major": null
    }
   },
-  "hash": "39b3b4d95782a8be",
-  "updated_at": "2026-08-21T20:44:33+00:00"
+  "hash": "01cd4d69e018a178",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "EXE": {
   "fingerprint": {
@@ -11379,7 +11373,9 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
-    "struct_events": [],
+    "struct_events": [
+     "tl_break_dn"
+    ],
     "struct_major": "bull"
    },
    "monthly": {
@@ -11401,8 +11397,8 @@
     "struct_major": null
    }
   },
-  "hash": "18b8bdfc74aee5b7",
-  "updated_at": "2026-08-13T21:00:12+00:00"
+  "hash": "14ec48178a8f5ced",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "FANG": {
   "fingerprint": {
@@ -11473,14 +11469,13 @@
  "FCFS": {
   "fingerprint": {
    "daily": {
-    "bands": "bear",
+    "bands": "bull",
     "osc": "bull",
-    "osc_hi": false,
+    "osc_hi": true,
     "osc_lo": false,
     "struct": "bull",
     "struct_events": [
-     "choch_up",
-     "choch_up_plus"
+     "maj_bos_up"
     ],
     "struct_major": "bull"
    },
@@ -11503,8 +11498,8 @@
     "struct_major": null
    }
   },
-  "hash": "b4a08105a6b77077",
-  "updated_at": "2026-08-21T20:14:40+00:00"
+  "hash": "5e9b617b0604e407",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "FCNCA": {
   "fingerprint": {
@@ -11512,7 +11507,7 @@
     "bands": "bull",
     "osc": "bear",
     "osc_hi": false,
-    "osc_lo": false,
+    "osc_lo": true,
     "struct": "bull",
     "struct_events": [],
     "struct_major": "bull"
@@ -11536,8 +11531,8 @@
     "struct_major": null
    }
   },
-  "hash": "7ca2eca0baeae2f6",
-  "updated_at": "2026-08-19T20:48:44+00:00"
+  "hash": "9f4f7489fc3871b0",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "FCX": {
   "fingerprint": {
@@ -11649,9 +11644,7 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [
-     "bos_dn"
-    ],
+    "struct_events": [],
     "struct_major": "bear"
    },
    "monthly": {
@@ -11673,8 +11666,8 @@
     "struct_major": null
    }
   },
-  "hash": "c69a449750963dc0",
-  "updated_at": "2026-08-21T20:44:33+00:00"
+  "hash": "613b57dd5cffab6c",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "FER": {
   "fingerprint": {
@@ -11783,9 +11776,7 @@
     "osc_hi": false,
     "osc_lo": true,
     "struct": "bull",
-    "struct_events": [
-     "sweep_lo"
-    ],
+    "struct_events": [],
     "struct_major": "bull"
    },
    "monthly": {
@@ -11807,8 +11798,8 @@
     "struct_major": null
    }
   },
-  "hash": "8905351f95dd345a",
-  "updated_at": "2026-08-21T20:14:40+00:00"
+  "hash": "2e234ad14f71d5fc",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "FICO": {
   "fingerprint": {
@@ -11984,7 +11975,7 @@
     "osc_lo": false,
     "struct": "bull",
     "struct_events": [
-     "bos_up"
+     "maj_bos_up"
     ],
     "struct_major": "bull"
    },
@@ -12007,14 +11998,14 @@
     "struct_major": null
    }
   },
-  "hash": "3cfbbcfc03d34ef1",
-  "updated_at": "2026-08-24T01:32:26+00:00"
+  "hash": "c27cc856a2c99f3e",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "FIX": {
   "fingerprint": {
    "daily": {
     "bands": "bear",
-    "osc": "bull",
+    "osc": "bear",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
@@ -12040,14 +12031,14 @@
     "struct_major": null
    }
   },
-  "hash": "fe768f1ead506ea0",
-  "updated_at": "2026-08-19T07:55:02+00:00"
+  "hash": "dddc5dbc043ff242",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "FLEX": {
   "fingerprint": {
    "daily": {
     "bands": "bear",
-    "osc": "bull",
+    "osc": "bear",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
@@ -12073,8 +12064,8 @@
     "struct_major": null
    }
   },
-  "hash": "6dc05ca344a0bc99",
-  "updated_at": "2026-08-10T00:22:54+00:00"
+  "hash": "01cd4d69e018a178",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "FLS": {
   "fingerprint": {
@@ -12113,7 +12104,7 @@
   "fingerprint": {
    "daily": {
     "bands": "bear",
-    "osc": "bear",
+    "osc": "bull",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
@@ -12139,8 +12130,8 @@
     "struct_major": null
    }
   },
-  "hash": "085c164c5549c9ed",
-  "updated_at": "2026-08-21T20:44:33+00:00"
+  "hash": "802490015a43e7db",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "FMX": {
   "fingerprint": {
@@ -12533,7 +12524,7 @@
   "fingerprint": {
    "daily": {
     "bands": "bear",
-    "osc": "bull",
+    "osc": "bear",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
@@ -12559,8 +12550,8 @@
     "struct_major": null
    }
   },
-  "hash": "f940b5b0e8c3f4e9",
-  "updated_at": "2026-08-04T20:31:30+00:00"
+  "hash": "ba2436df34ac88a9",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "FTI": {
   "fingerprint": {
@@ -12636,9 +12627,7 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [
-     "bos_dn"
-    ],
+    "struct_events": [],
     "struct_major": "bull"
    },
    "monthly": {
@@ -12660,8 +12649,8 @@
     "struct_major": null
    }
   },
-  "hash": "69046c7dc25cf855",
-  "updated_at": "2026-08-21T20:44:33+00:00"
+  "hash": "6608e8934bc4fa38",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "FTV": {
   "fingerprint": {
@@ -12803,7 +12792,9 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [],
+    "struct_events": [
+     "tl_break_up"
+    ],
     "struct_major": "bear"
    },
    "monthly": {
@@ -12825,8 +12816,8 @@
     "struct_major": null
    }
   },
-  "hash": "9e6661f85f3285c7",
-  "updated_at": "2026-08-20T20:18:58+00:00"
+  "hash": "e87f9177974cfd60",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "GE": {
   "fingerprint": {
@@ -13067,9 +13058,7 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [
-     "choch_dn"
-    ],
+    "struct_events": [],
     "struct_major": "bear"
    },
    "monthly": {
@@ -13091,8 +13080,8 @@
     "struct_major": null
    }
   },
-  "hash": "9b5dc226d320eba6",
-  "updated_at": "2026-08-21T20:14:40+00:00"
+  "hash": "3bfb0537d021d804",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "GH": {
   "fingerprint": {
@@ -13463,7 +13452,7 @@
     "bands": "bear",
     "osc": "bear",
     "osc_hi": false,
-    "osc_lo": true,
+    "osc_lo": false,
     "struct": "bear",
     "struct_events": [],
     "struct_major": "bear"
@@ -13487,15 +13476,15 @@
     "struct_major": null
    }
   },
-  "hash": "d61c69b187550dc4",
-  "updated_at": "2026-08-17T01:29:26+00:00"
+  "hash": "f9f48ed9e220300d",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "GMED": {
   "fingerprint": {
    "daily": {
     "bands": "bull",
     "osc": "bull",
-    "osc_hi": true,
+    "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
     "struct_events": [],
@@ -13520,8 +13509,8 @@
     "struct_major": null
    }
   },
-  "hash": "f0d0bca35b90988e",
-  "updated_at": "2026-08-20T20:18:58+00:00"
+  "hash": "af30141854441dcb",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "GNRC": {
   "fingerprint": {
@@ -14059,9 +14048,7 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
-    "struct_events": [
-     "bos_up"
-    ],
+    "struct_events": [],
     "struct_major": "bull"
    },
    "monthly": {
@@ -14083,8 +14070,8 @@
     "struct_major": null
    }
   },
-  "hash": "d54e3a26fe0f4879",
-  "updated_at": "2026-08-21T20:14:40+00:00"
+  "hash": "ed32690f69a8ae91",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "HCA": {
   "fingerprint": {
@@ -14295,9 +14282,7 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
-    "struct_events": [
-     "choch_up"
-    ],
+    "struct_events": [],
     "struct_major": "bear"
    },
    "monthly": {
@@ -14319,8 +14304,8 @@
     "struct_major": null
    }
   },
-  "hash": "af9139edb0b14986",
-  "updated_at": "2026-08-21T20:14:40+00:00"
+  "hash": "a9544cbb4ba5e24f",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "HL": {
   "fingerprint": {
@@ -14429,9 +14414,7 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
-    "struct_events": [
-     "maj_choch_up"
-    ],
+    "struct_events": [],
     "struct_major": "bull"
    },
    "monthly": {
@@ -14453,8 +14436,8 @@
     "struct_major": null
    }
   },
-  "hash": "2db76749388933c7",
-  "updated_at": "2026-08-21T20:44:33+00:00"
+  "hash": "5b742c4f2f62b725",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "HMY": {
   "fingerprint": {
@@ -14592,7 +14575,7 @@
   "fingerprint": {
    "daily": {
     "bands": "bull",
-    "osc": "bull",
+    "osc": "bear",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
@@ -14618,8 +14601,8 @@
     "struct_major": null
    }
   },
-  "hash": "5b742c4f2f62b725",
-  "updated_at": "2026-08-14T20:48:39+00:00"
+  "hash": "e6a875dea34c0016",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "HQY": {
   "fingerprint": {
@@ -14662,9 +14645,7 @@
     "osc_hi": false,
     "osc_lo": true,
     "struct": "bear",
-    "struct_events": [
-     "bos_dn"
-    ],
+    "struct_events": [],
     "struct_major": "bull"
    },
    "monthly": {
@@ -14686,8 +14667,8 @@
     "struct_major": null
    }
   },
-  "hash": "d7226ac4fae1d33e",
-  "updated_at": "2026-08-21T20:14:40+00:00"
+  "hash": "d1621a4b4cb74143",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "HSBC": {
   "fingerprint": {
@@ -15188,7 +15169,7 @@
   "fingerprint": {
    "daily": {
     "bands": "bull",
-    "osc": "bear",
+    "osc": "bull",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
@@ -15214,8 +15195,8 @@
     "struct_major": null
    }
   },
-  "hash": "c6783a49d6ca02a8",
-  "updated_at": "2026-08-20T20:18:58+00:00"
+  "hash": "50f16eefb16f6705",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "IDA": {
   "fingerprint": {
@@ -15225,9 +15206,7 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [
-     "bos_dn"
-    ],
+    "struct_events": [],
     "struct_major": "bull"
    },
    "monthly": {
@@ -15249,8 +15228,8 @@
     "struct_major": null
    }
   },
-  "hash": "69046c7dc25cf855",
-  "updated_at": "2026-08-24T01:32:26+00:00"
+  "hash": "6608e8934bc4fa38",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "IDXX": {
   "fingerprint": {
@@ -15293,8 +15272,11 @@
     "osc_hi": false,
     "osc_lo": true,
     "struct": "bear",
-    "struct_events": [],
-    "struct_major": "bull"
+    "struct_events": [
+     "bos_dn",
+     "maj_choch_dn"
+    ],
+    "struct_major": "bear"
    },
    "monthly": {
     "bands": "bull",
@@ -15315,8 +15297,8 @@
     "struct_major": null
    }
   },
-  "hash": "5180dc876944c1c2",
-  "updated_at": "2026-08-23T05:51:33+00:00"
+  "hash": "9b900ebc8c1bd92a",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "IEX": {
   "fingerprint": {
@@ -15355,7 +15337,7 @@
   "fingerprint": {
    "daily": {
     "bands": "bull",
-    "osc": "bear",
+    "osc": "bull",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
@@ -15381,14 +15363,14 @@
     "struct_major": null
    }
   },
-  "hash": "63ad6c06b32aecbe",
-  "updated_at": "2026-08-20T20:18:58+00:00"
+  "hash": "5911c8b2ed7003fe",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "ILMN": {
   "fingerprint": {
    "daily": {
     "bands": "bull",
-    "osc": "bear",
+    "osc": "bull",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
@@ -15414,8 +15396,8 @@
     "struct_major": null
    }
   },
-  "hash": "afae3c3f84377eb7",
-  "updated_at": "2026-08-21T20:44:33+00:00"
+  "hash": "5b061c9c60e44f86",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "IMO": {
   "fingerprint": {
@@ -15686,12 +15668,10 @@
    "daily": {
     "bands": "bull",
     "osc": "bull",
-    "osc_hi": true,
+    "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [
-     "tl_break_up"
-    ],
+    "struct_events": [],
     "struct_major": "bear"
    },
    "monthly": {
@@ -15713,8 +15693,8 @@
     "struct_major": null
    }
   },
-  "hash": "a42aaaff7b00ccf6",
-  "updated_at": "2026-08-21T20:44:33+00:00"
+  "hash": "9100049a348462bc",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "IONS": {
   "fingerprint": {
@@ -15886,7 +15866,7 @@
    "daily": {
     "bands": "bull",
     "osc": "bull",
-    "osc_hi": true,
+    "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
     "struct_events": [],
@@ -15911,14 +15891,14 @@
     "struct_major": null
    }
   },
-  "hash": "d9f4d28ce99ee7a6",
-  "updated_at": "2026-08-13T21:00:12+00:00"
+  "hash": "419daaa4f2b97f21",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "IRM": {
   "fingerprint": {
    "daily": {
     "bands": "bull",
-    "osc": "bull",
+    "osc": "bear",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
@@ -15944,8 +15924,8 @@
     "struct_major": null
    }
   },
-  "hash": "ed32690f69a8ae91",
-  "updated_at": "2026-08-20T20:18:58+00:00"
+  "hash": "41d26a012a5bf0e1",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "ISRG": {
   "fingerprint": {
@@ -15988,9 +15968,7 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
-    "struct_events": [
-     "bos_up"
-    ],
+    "struct_events": [],
     "struct_major": "bull"
    },
    "monthly": {
@@ -16012,8 +15990,8 @@
     "struct_major": null
    }
   },
-  "hash": "a25cada236b5092e",
-  "updated_at": "2026-08-21T20:14:40+00:00"
+  "hash": "5b742c4f2f62b725",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "ITT": {
   "fingerprint": {
@@ -16085,7 +16063,7 @@
   "fingerprint": {
    "daily": {
     "bands": "bull",
-    "osc": "bull",
+    "osc": "bear",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
@@ -16111,8 +16089,8 @@
     "struct_major": null
    }
   },
-  "hash": "5b061c9c60e44f86",
-  "updated_at": "2026-08-19T07:55:02+00:00"
+  "hash": "afae3c3f84377eb7",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "J": {
   "fingerprint": {
@@ -16188,7 +16166,9 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [],
+    "struct_events": [
+     "bos_dn"
+    ],
     "struct_major": "bull"
    },
    "monthly": {
@@ -16210,14 +16190,14 @@
     "struct_major": null
    }
   },
-  "hash": "01cd4d69e018a178",
-  "updated_at": "2026-08-13T21:00:12+00:00"
+  "hash": "39b3b4d95782a8be",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "JBL": {
   "fingerprint": {
    "daily": {
     "bands": "bear",
-    "osc": "bull",
+    "osc": "bear",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
@@ -16243,8 +16223,8 @@
     "struct_major": null
    }
   },
-  "hash": "545183a97194f516",
-  "updated_at": "2026-08-21T20:44:33+00:00"
+  "hash": "4a93368c46f457dd",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "JBS": {
   "fingerprint": {
@@ -16712,7 +16692,7 @@
   "fingerprint": {
    "daily": {
     "bands": "bear",
-    "osc": "bull",
+    "osc": "bear",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
@@ -16738,8 +16718,8 @@
     "struct_major": null
    }
   },
-  "hash": "545183a97194f516",
-  "updated_at": "2026-08-21T07:05:00+00:00"
+  "hash": "4a93368c46f457dd",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "KGC": {
   "fingerprint": {
@@ -16813,7 +16793,7 @@
     "bands": "bear",
     "osc": "bear",
     "osc_hi": false,
-    "osc_lo": true,
+    "osc_lo": false,
     "struct": "bear",
     "struct_events": [],
     "struct_major": "bull"
@@ -16837,8 +16817,8 @@
     "struct_major": null
    }
   },
-  "hash": "bb64e2d4a2cb7a14",
-  "updated_at": "2026-08-24T01:32:26+00:00"
+  "hash": "01cd4d69e018a178",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "KKR": {
   "fingerprint": {
@@ -16947,7 +16927,10 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
-    "struct_events": [],
+    "struct_events": [
+     "bos_up",
+     "tl_break_up"
+    ],
     "struct_major": "bull"
    },
    "monthly": {
@@ -16969,8 +16952,8 @@
     "struct_major": null
    }
   },
-  "hash": "8f6fe31050a56fdf",
-  "updated_at": "2026-08-19T07:55:02+00:00"
+  "hash": "090c15d7a1341014",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "KMI": {
   "fingerprint": {
@@ -17277,9 +17260,11 @@
     "bands": "bear",
     "osc": "bear",
     "osc_hi": false,
-    "osc_lo": true,
+    "osc_lo": false,
     "struct": "bull",
-    "struct_events": [],
+    "struct_events": [
+     "bos_up"
+    ],
     "struct_major": "bull"
    },
    "monthly": {
@@ -17301,8 +17286,8 @@
     "struct_major": null
    }
   },
-  "hash": "ef405ce6709e3a4d",
-  "updated_at": "2026-08-19T07:55:02+00:00"
+  "hash": "5487b9f3ed85020f",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "KYMR": {
   "fingerprint": {
@@ -17408,7 +17393,7 @@
    "daily": {
     "bands": "bull",
     "osc": "bull",
-    "osc_hi": true,
+    "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
     "struct_events": [],
@@ -17433,8 +17418,8 @@
     "struct_major": null
    }
   },
-  "hash": "3566c6502924308c",
-  "updated_at": "2026-08-24T01:32:26+00:00"
+  "hash": "2d4df64b1fd08387",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "LECO": {
   "fingerprint": {
@@ -17472,7 +17457,7 @@
  "LEN": {
   "fingerprint": {
    "daily": {
-    "bands": "bear",
+    "bands": "bull",
     "osc": "bull",
     "osc_hi": false,
     "osc_lo": false,
@@ -17499,8 +17484,8 @@
     "struct_major": null
    }
   },
-  "hash": "802490015a43e7db",
-  "updated_at": "2026-08-19T20:48:44+00:00"
+  "hash": "78cb66de8ec7e462",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "LEVI": {
   "fingerprint": {
@@ -18168,7 +18153,7 @@
     "bands": "bull",
     "osc": "bear",
     "osc_hi": false,
-    "osc_lo": true,
+    "osc_lo": false,
     "struct": "bull",
     "struct_events": [],
     "struct_major": "bull"
@@ -18192,8 +18177,8 @@
     "struct_major": null
    }
   },
-  "hash": "a27eacc0d2a3c4b2",
-  "updated_at": "2026-08-10T20:33:49+00:00"
+  "hash": "f74d4e046621f7e2",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "LULU": {
   "fingerprint": {
@@ -18264,7 +18249,7 @@
  "LVS": {
   "fingerprint": {
    "daily": {
-    "bands": "bear",
+    "bands": "bull",
     "osc": "bull",
     "osc_hi": false,
     "osc_lo": false,
@@ -18291,8 +18276,8 @@
     "struct_major": null
    }
   },
-  "hash": "b503245cbb352508",
-  "updated_at": "2026-08-19T20:48:44+00:00"
+  "hash": "b67b099b930a57a3",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "LYB": {
   "fingerprint": {
@@ -18755,7 +18740,9 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [],
+    "struct_events": [
+     "tl_break_dn"
+    ],
     "struct_major": "bull"
    },
    "monthly": {
@@ -18777,8 +18764,8 @@
     "struct_major": null
    }
   },
-  "hash": "6dc05ca344a0bc99",
-  "updated_at": "2026-08-21T05:52:56+00:00"
+  "hash": "95043310b14465a4",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "MDLN": {
   "fingerprint": {
@@ -19072,12 +19059,12 @@
   "fingerprint": {
    "daily": {
     "bands": "bull",
-    "osc": "bull",
+    "osc": "bear",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
     "struct_events": [
-     "bos_up"
+     "tl_break_dn"
     ],
     "struct_major": "bull"
    },
@@ -19100,8 +19087,8 @@
     "struct_major": null
    }
   },
-  "hash": "3cfbbcfc03d34ef1",
-  "updated_at": "2026-08-21T20:44:33+00:00"
+  "hash": "dc26e974db6b6b78",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "MGM": {
   "fingerprint": {
@@ -19144,7 +19131,9 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
-    "struct_events": [],
+    "struct_events": [
+     "bos_up"
+    ],
     "struct_major": "bull"
    },
    "weekly": {
@@ -19157,15 +19146,15 @@
     "struct_major": null
    }
   },
-  "hash": "1c5e8e0a91d6f60e",
-  "updated_at": "2026-08-14T20:48:39+00:00"
+  "hash": "7fa6d02fb36d086b",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "MKC": {
   "fingerprint": {
    "daily": {
     "bands": "bull",
     "osc": "bull",
-    "osc_hi": false,
+    "osc_hi": true,
     "osc_lo": false,
     "struct": "bull",
     "struct_events": [],
@@ -19190,8 +19179,8 @@
     "struct_major": null
    }
   },
-  "hash": "4d9a08d959d67baa",
-  "updated_at": "2026-08-17T01:29:26+00:00"
+  "hash": "77888b4c79a308bd",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "MKL": {
   "fingerprint": {
@@ -19432,7 +19421,9 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [],
+    "struct_events": [
+     "bos_dn"
+    ],
     "struct_major": "bull"
    },
    "monthly": {
@@ -19454,14 +19445,14 @@
     "struct_major": null
    }
   },
-  "hash": "e5012a787002a68b",
-  "updated_at": "2026-08-21T05:52:56+00:00"
+  "hash": "fdf99da6885b73aa",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "MOH": {
   "fingerprint": {
    "daily": {
     "bands": "bear",
-    "osc": "bull",
+    "osc": "bear",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
@@ -19487,8 +19478,8 @@
     "struct_major": null
    }
   },
-  "hash": "339a725513f2604a",
-  "updated_at": "2026-08-21T05:52:56+00:00"
+  "hash": "1c8a4785cb8863fd",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "MP": {
   "fingerprint": {
@@ -19758,7 +19749,7 @@
   "fingerprint": {
    "daily": {
     "bands": "bear",
-    "osc": "bear",
+    "osc": "bull",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
@@ -19784,8 +19775,8 @@
     "struct_major": null
    }
   },
-  "hash": "d9fd140f64da3105",
-  "updated_at": "2026-08-19T07:55:02+00:00"
+  "hash": "85153aecb5b9902f",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "MSFT": {
   "fingerprint": {
@@ -19824,7 +19815,7 @@
   "fingerprint": {
    "daily": {
     "bands": "bull",
-    "osc": "bull",
+    "osc": "bear",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
@@ -19850,8 +19841,8 @@
     "struct_major": null
    }
   },
-  "hash": "5b061c9c60e44f86",
-  "updated_at": "2026-08-14T20:10:13+00:00"
+  "hash": "afae3c3f84377eb7",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "MSI": {
   "fingerprint": {
@@ -19992,8 +19983,10 @@
     "osc": "bull",
     "osc_hi": false,
     "osc_lo": false,
-    "struct": "bear",
-    "struct_events": [],
+    "struct": "bull",
+    "struct_events": [
+     "choch_up"
+    ],
     "struct_major": "bull"
    },
    "monthly": {
@@ -20015,8 +20008,8 @@
     "struct_major": null
    }
   },
-  "hash": "1d13c5478cba21f2",
-  "updated_at": "2026-08-21T20:14:40+00:00"
+  "hash": "55938711cfee9773",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "MTD": {
   "fingerprint": {
@@ -20220,7 +20213,7 @@
   "fingerprint": {
    "daily": {
     "bands": "bear",
-    "osc": "bull",
+    "osc": "bear",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
@@ -20246,8 +20239,8 @@
     "struct_major": null
    }
   },
-  "hash": "6dc05ca344a0bc99",
-  "updated_at": "2026-08-13T21:00:12+00:00"
+  "hash": "01cd4d69e018a178",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "NBIS": {
   "fingerprint": {
@@ -20386,7 +20379,7 @@
    "daily": {
     "bands": "bull",
     "osc": "bull",
-    "osc_hi": false,
+    "osc_hi": true,
     "osc_lo": false,
     "struct": "bull",
     "struct_events": [],
@@ -20411,8 +20404,8 @@
     "struct_major": null
    }
   },
-  "hash": "5b061c9c60e44f86",
-  "updated_at": "2026-08-21T20:44:33+00:00"
+  "hash": "93cd043305032a08",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "NEE": {
   "fingerprint": {
@@ -20554,10 +20547,7 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [
-     "bos_dn",
-     "maj_choch_dn"
-    ],
+    "struct_events": [],
     "struct_major": "bear"
    },
    "monthly": {
@@ -20579,8 +20569,8 @@
     "struct_major": null
    }
   },
-  "hash": "4f8397b0dc2b7347",
-  "updated_at": "2026-08-21T20:44:33+00:00"
+  "hash": "ba2436df34ac88a9",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "NKE": {
   "fingerprint": {
@@ -20755,7 +20745,9 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [],
+    "struct_events": [
+     "bos_dn"
+    ],
     "struct_major": "bear"
    },
    "monthly": {
@@ -20777,8 +20769,8 @@
     "struct_major": null
    }
   },
-  "hash": "37bd82caefb9e1b2",
-  "updated_at": "2026-08-13T21:00:12+00:00"
+  "hash": "e198418ff465fb7c",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "NSC": {
   "fingerprint": {
@@ -20817,7 +20809,7 @@
   "fingerprint": {
    "daily": {
     "bands": "bull",
-    "osc": "bull",
+    "osc": "bear",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
@@ -20843,8 +20835,8 @@
     "struct_major": null
    }
   },
-  "hash": "a94af5df1f11e4df",
-  "updated_at": "2026-08-19T20:48:44+00:00"
+  "hash": "f74d4e046621f7e2",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "NTNX": {
   "fingerprint": {
@@ -20884,7 +20876,7 @@
    "daily": {
     "bands": "bull",
     "osc": "bull",
-    "osc_hi": false,
+    "osc_hi": true,
     "osc_lo": false,
     "struct": "bull",
     "struct_events": [],
@@ -20909,19 +20901,19 @@
     "struct_major": null
    }
   },
-  "hash": "af30141854441dcb",
-  "updated_at": "2026-08-24T01:32:26+00:00"
+  "hash": "f0d0bca35b90988e",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "NTRA": {
   "fingerprint": {
    "daily": {
     "bands": "bull",
     "osc": "bull",
-    "osc_hi": true,
+    "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
     "struct_events": [
-     "bos_up"
+     "tl_break_dn"
     ],
     "struct_major": "bull"
    },
@@ -20944,8 +20936,8 @@
     "struct_major": null
    }
   },
-  "hash": "78ed066bf91e6964",
-  "updated_at": "2026-08-21T20:44:33+00:00"
+  "hash": "efc51d051d379068",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "NU": {
   "fingerprint": {
@@ -21182,7 +21174,7 @@
   "fingerprint": {
    "daily": {
     "bands": "bear",
-    "osc": "bull",
+    "osc": "bear",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
@@ -21208,8 +21200,8 @@
     "struct_major": null
    }
   },
-  "hash": "545183a97194f516",
-  "updated_at": "2026-08-21T20:44:33+00:00"
+  "hash": "4a93368c46f457dd",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "NWS": {
   "fingerprint": {
@@ -21285,9 +21277,7 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [
-     "tl_break_up"
-    ],
+    "struct_events": [],
     "struct_major": "bull"
    },
    "monthly": {
@@ -21309,8 +21299,8 @@
     "struct_major": null
    }
   },
-  "hash": "5637ef740e042063",
-  "updated_at": "2026-08-24T01:32:26+00:00"
+  "hash": "0e53001bf1ba203c",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "NXT": {
   "fingerprint": {
@@ -21320,9 +21310,7 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [
-     "bos_dn"
-    ],
+    "struct_events": [],
     "struct_major": "bull"
    },
    "monthly": {
@@ -21344,8 +21332,8 @@
     "struct_major": null
    }
   },
-  "hash": "bf2c6c0df7314923",
-  "updated_at": "2026-08-21T20:44:33+00:00"
+  "hash": "0e53001bf1ba203c",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "NYT": {
   "fingerprint": {
@@ -21487,9 +21475,7 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [
-     "bos_dn"
-    ],
+    "struct_events": [],
     "struct_major": "bull"
    },
    "monthly": {
@@ -21511,8 +21497,8 @@
     "struct_major": null
    }
   },
-  "hash": "39b3b4d95782a8be",
-  "updated_at": "2026-08-21T20:44:33+00:00"
+  "hash": "01cd4d69e018a178",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "OHI": {
   "fingerprint": {
@@ -21621,7 +21607,9 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
-    "struct_events": [],
+    "struct_events": [
+     "bos_up"
+    ],
     "struct_major": "bull"
    },
    "monthly": {
@@ -21643,8 +21631,8 @@
     "struct_major": null
    }
   },
-  "hash": "7fcfc3b5a049ba85",
-  "updated_at": "2026-08-14T20:48:39+00:00"
+  "hash": "95b7cd4bceac1727",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "ON": {
   "fingerprint": {
@@ -22080,7 +22068,7 @@
    "daily": {
     "bands": "bull",
     "osc": "bull",
-    "osc_hi": true,
+    "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
     "struct_events": [],
@@ -22105,8 +22093,8 @@
     "struct_major": null
    }
   },
-  "hash": "641e7e8f0c844f18",
-  "updated_at": "2026-08-12T18:51:25+00:00"
+  "hash": "5013be761385fc5f",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "PAAS": {
   "fingerprint": {
@@ -22116,41 +22104,8 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
-    "struct_events": [],
-    "struct_major": "bear"
-   },
-   "monthly": {
-    "bands": "bull",
-    "osc": "bull",
-    "osc_hi": false,
-    "osc_lo": false,
-    "struct": null,
-    "struct_events": [],
-    "struct_major": null
-   },
-   "weekly": {
-    "bands": "bear",
-    "osc": "bear",
-    "osc_hi": false,
-    "osc_lo": true,
-    "struct": null,
-    "struct_events": [],
-    "struct_major": null
-   }
-  },
-  "hash": "419daaa4f2b97f21",
-  "updated_at": "2026-08-19T07:55:02+00:00"
- },
- "PAC": {
-  "fingerprint": {
-   "daily": {
-    "bands": "bear",
-    "osc": "bear",
-    "osc_hi": false,
-    "osc_lo": false,
-    "struct": "bear",
     "struct_events": [
-     "tl_break_up"
+     "bos_up"
     ],
     "struct_major": "bear"
    },
@@ -22173,8 +22128,41 @@
     "struct_major": null
    }
   },
-  "hash": "dabd0f30c209cf3e",
-  "updated_at": "2026-08-21T20:14:40+00:00"
+  "hash": "caf5f9d7aa70bb8a",
+  "updated_at": "2026-08-24T20:20:41+00:00"
+ },
+ "PAC": {
+  "fingerprint": {
+   "daily": {
+    "bands": "bear",
+    "osc": "bear",
+    "osc_hi": false,
+    "osc_lo": false,
+    "struct": "bear",
+    "struct_events": [],
+    "struct_major": "bear"
+   },
+   "monthly": {
+    "bands": "bull",
+    "osc": "bull",
+    "osc_hi": false,
+    "osc_lo": false,
+    "struct": null,
+    "struct_events": [],
+    "struct_major": null
+   },
+   "weekly": {
+    "bands": "bear",
+    "osc": "bear",
+    "osc_hi": false,
+    "osc_lo": true,
+    "struct": null,
+    "struct_events": [],
+    "struct_major": null
+   }
+  },
+  "hash": "ba2436df34ac88a9",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "PAG": {
   "fingerprint": {
@@ -22274,7 +22262,9 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
-    "struct_events": [],
+    "struct_events": [
+     "bos_up"
+    ],
     "struct_major": "bear"
    },
    "monthly": {
@@ -22296,8 +22286,8 @@
     "struct_major": null
    }
   },
-  "hash": "4fa3603e7b324d45",
-  "updated_at": "2026-08-18T16:22:27+00:00"
+  "hash": "80a988d85e67a9a0",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "PB": {
   "fingerprint": {
@@ -22505,9 +22495,7 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [
-     "bos_dn"
-    ],
+    "struct_events": [],
     "struct_major": "bear"
    },
    "monthly": {
@@ -22529,8 +22517,8 @@
     "struct_major": null
    }
   },
-  "hash": "e198418ff465fb7c",
-  "updated_at": "2026-08-21T20:44:33+00:00"
+  "hash": "37bd82caefb9e1b2",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "PEN": {
   "fingerprint": {
@@ -23099,7 +23087,7 @@
     "bands": "bull",
     "osc": "bear",
     "osc_hi": false,
-    "osc_lo": false,
+    "osc_lo": true,
     "struct": "bear",
     "struct_events": [],
     "struct_major": "bull"
@@ -23123,14 +23111,14 @@
     "struct_major": null
    }
   },
-  "hash": "d2b7f7d000564f00",
-  "updated_at": "2026-08-20T20:18:58+00:00"
+  "hash": "834ea5a6ee3259ac",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "PNR": {
   "fingerprint": {
    "daily": {
     "bands": "bear",
-    "osc": "bull",
+    "osc": "bear",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
@@ -23156,8 +23144,8 @@
     "struct_major": null
    }
   },
-  "hash": "6dfa71b719a498c8",
-  "updated_at": "2026-08-04T20:31:30+00:00"
+  "hash": "ab145718a2cc0f64",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "PNW": {
   "fingerprint": {
@@ -23167,9 +23155,7 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [
-     "bos_dn"
-    ],
+    "struct_events": [],
     "struct_major": "bull"
    },
    "monthly": {
@@ -23191,8 +23177,8 @@
     "struct_major": null
    }
   },
-  "hash": "39b3b4d95782a8be",
-  "updated_at": "2026-08-21T20:14:40+00:00"
+  "hash": "01cd4d69e018a178",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "PODD": {
   "fingerprint": {
@@ -23330,14 +23316,11 @@
   "fingerprint": {
    "daily": {
     "bands": "bear",
-    "osc": "bull",
+    "osc": "bear",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [
-     "bos_dn",
-     "maj_choch_dn"
-    ],
+    "struct_events": [],
     "struct_major": "bear"
    },
    "monthly": {
@@ -23359,8 +23342,8 @@
     "struct_major": null
    }
   },
-  "hash": "63b8a63564c9ea98",
-  "updated_at": "2026-08-24T01:32:26+00:00"
+  "hash": "f9f48ed9e220300d",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "PR": {
   "fingerprint": {
@@ -23623,7 +23606,7 @@
     "bands": "bear",
     "osc": "bear",
     "osc_hi": false,
-    "osc_lo": true,
+    "osc_lo": false,
     "struct": "bear",
     "struct_events": [],
     "struct_major": "bull"
@@ -23647,8 +23630,8 @@
     "struct_major": null
    }
   },
-  "hash": "4b6a112993dbed00",
-  "updated_at": "2026-08-24T01:32:26+00:00"
+  "hash": "0fc5271984ab6efa",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "PSX": {
   "fingerprint": {
@@ -23852,7 +23835,7 @@
   "fingerprint": {
    "daily": {
     "bands": "bear",
-    "osc": "bull",
+    "osc": "bear",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
@@ -23878,8 +23861,8 @@
     "struct_major": null
    }
   },
-  "hash": "30243be5c61a16bb",
-  "updated_at": "2026-08-13T21:00:12+00:00"
+  "hash": "2388f9109a1935a5",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "QCOM": {
   "fingerprint": {
@@ -23918,11 +23901,13 @@
   "fingerprint": {
    "daily": {
     "bands": "bull",
-    "osc": "bull",
+    "osc": "bear",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
-    "struct_events": [],
+    "struct_events": [
+     "tl_break_dn"
+    ],
     "struct_major": "bear"
    },
    "monthly": {
@@ -23944,8 +23929,8 @@
     "struct_major": null
    }
   },
-  "hash": "4d9a08d959d67baa",
-  "updated_at": "2026-08-24T01:32:26+00:00"
+  "hash": "481480ccc525bdaa",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "QSR": {
   "fingerprint": {
@@ -23955,7 +23940,9 @@
     "osc_hi": true,
     "osc_lo": false,
     "struct": "bull",
-    "struct_events": [],
+    "struct_events": [
+     "sweep_hi"
+    ],
     "struct_major": "bull"
    },
    "monthly": {
@@ -23977,8 +23964,8 @@
     "struct_major": null
    }
   },
-  "hash": "a95efa319e355096",
-  "updated_at": "2026-08-19T07:55:02+00:00"
+  "hash": "96cca614c0042276",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "QXO": {
   "fingerprint": {
@@ -24182,7 +24169,7 @@
   "fingerprint": {
    "daily": {
     "bands": "bear",
-    "osc": "bear",
+    "osc": "bull",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
@@ -24208,8 +24195,8 @@
     "struct_major": null
    }
   },
-  "hash": "b38a4e9f24c5ddac",
-  "updated_at": "2026-08-14T20:48:39+00:00"
+  "hash": "109141e82c447d1d",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "RBRK": {
   "fingerprint": {
@@ -24712,14 +24699,11 @@
   "fingerprint": {
    "daily": {
     "bands": "bear",
-    "osc": "bear",
+    "osc": "bull",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
-    "struct_events": [
-     "choch_up",
-     "tl_break_up"
-    ],
+    "struct_events": [],
     "struct_major": "bear"
    },
    "monthly": {
@@ -24741,8 +24725,8 @@
     "struct_major": null
    }
   },
-  "hash": "303bae2f2eed5f48",
-  "updated_at": "2026-08-21T20:44:33+00:00"
+  "hash": "127af71b83645f09",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "RJF": {
   "fingerprint": {
@@ -24850,8 +24834,11 @@
     "osc": "bear",
     "osc_hi": false,
     "osc_lo": false,
-    "struct": "bull",
-    "struct_events": [],
+    "struct": "bear",
+    "struct_events": [
+     "choch_dn",
+     "choch_dn_plus"
+    ],
     "struct_major": "bull"
    },
    "monthly": {
@@ -24873,8 +24860,8 @@
     "struct_major": null
    }
   },
-  "hash": "4a93368c46f457dd",
-  "updated_at": "2026-08-21T20:44:33+00:00"
+  "hash": "c89d31644b8322f3",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "RMBS": {
   "fingerprint": {
@@ -25247,9 +25234,7 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
-    "struct_events": [
-     "bos_up"
-    ],
+    "struct_events": [],
     "struct_major": "bull"
    },
    "monthly": {
@@ -25271,8 +25256,8 @@
     "struct_major": null
    }
   },
-  "hash": "37cdbd321b0b8de5",
-  "updated_at": "2026-08-21T20:14:40+00:00"
+  "hash": "022fe5641e75e876",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "RRX": {
   "fingerprint": {
@@ -25910,7 +25895,7 @@
     "bands": "bull",
     "osc": "bear",
     "osc_hi": false,
-    "osc_lo": false,
+    "osc_lo": true,
     "struct": "bull",
     "struct_events": [],
     "struct_major": "bull"
@@ -25934,8 +25919,8 @@
     "struct_major": null
    }
   },
-  "hash": "8ce1be78323afac0",
-  "updated_at": "2026-08-19T20:12:10+00:00"
+  "hash": "679043e6c6c203db",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "SFD": {
   "fingerprint": {
@@ -26139,7 +26124,7 @@
   "fingerprint": {
    "daily": {
     "bands": "bull",
-    "osc": "bear",
+    "osc": "bull",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
@@ -26165,8 +26150,8 @@
     "struct_major": null
    }
   },
-  "hash": "8ee905ca90bd2232",
-  "updated_at": "2026-08-07T20:30:10+00:00"
+  "hash": "657b209660bd438a",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "SKM": {
   "fingerprint": {
@@ -26272,7 +26257,7 @@
    "daily": {
     "bands": "bull",
     "osc": "bull",
-    "osc_hi": true,
+    "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
     "struct_events": [],
@@ -26297,8 +26282,8 @@
     "struct_major": null
    }
   },
-  "hash": "353514aa36d03aec",
-  "updated_at": "2026-08-24T01:32:26+00:00"
+  "hash": "eb1c09866e95533d",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "SMMT": {
   "fingerprint": {
@@ -26634,13 +26619,11 @@
   "fingerprint": {
    "daily": {
     "bands": "bull",
-    "osc": "bull",
+    "osc": "bear",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [
-     "choch_dn"
-    ],
+    "struct_events": [],
     "struct_major": "bull"
    },
    "monthly": {
@@ -26662,8 +26645,8 @@
     "struct_major": null
    }
   },
-  "hash": "1b43200522a3bfc4",
-  "updated_at": "2026-08-21T20:44:33+00:00"
+  "hash": "95f54f8ca1a6e282",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "SNY": {
   "fingerprint": {
@@ -26743,9 +26726,7 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
-    "struct_events": [
-     "choch_up"
-    ],
+    "struct_events": [],
     "struct_major": "bear"
    },
    "monthly": {
@@ -26767,8 +26748,8 @@
     "struct_major": null
    }
   },
-  "hash": "13e67706dfb62f86",
-  "updated_at": "2026-08-21T20:44:33+00:00"
+  "hash": "16d61560af47a5a5",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "SOLS": {
   "fingerprint": {
@@ -26811,7 +26792,9 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
-    "struct_events": [],
+    "struct_events": [
+     "bos_up"
+    ],
     "struct_major": "bull"
    },
    "monthly": {
@@ -26833,8 +26816,8 @@
     "struct_major": null
    }
   },
-  "hash": "566ca42e444bdce1",
-  "updated_at": "2026-08-03T20:35:53+00:00"
+  "hash": "dae726e8dafc8219",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "SPG": {
   "fingerprint": {
@@ -27009,9 +26992,7 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [
-     "bos_dn"
-    ],
+    "struct_events": [],
     "struct_major": "bear"
    },
    "monthly": {
@@ -27033,8 +27014,8 @@
     "struct_major": null
    }
   },
-  "hash": "2c5034381df4d481",
-  "updated_at": "2026-08-21T20:44:33+00:00"
+  "hash": "ba2436df34ac88a9",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "SSB": {
   "fingerprint": {
@@ -27172,7 +27153,7 @@
   "fingerprint": {
    "daily": {
     "bands": "bear",
-    "osc": "bear",
+    "osc": "bull",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
@@ -27198,8 +27179,8 @@
     "struct_major": null
    }
   },
-  "hash": "ab145718a2cc0f64",
-  "updated_at": "2026-08-19T07:55:02+00:00"
+  "hash": "6dfa71b719a498c8",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "STLD": {
   "fingerprint": {
@@ -27207,7 +27188,7 @@
     "bands": "bear",
     "osc": "bear",
     "osc_hi": false,
-    "osc_lo": false,
+    "osc_lo": true,
     "struct": "bear",
     "struct_events": [],
     "struct_major": "bull"
@@ -27231,8 +27212,8 @@
     "struct_major": null
    }
   },
-  "hash": "01cd4d69e018a178",
-  "updated_at": "2026-08-21T20:44:33+00:00"
+  "hash": "bb64e2d4a2cb7a14",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "STM": {
   "fingerprint": {
@@ -27402,7 +27383,7 @@
  "STZ": {
   "fingerprint": {
    "daily": {
-    "bands": "bear",
+    "bands": "bull",
     "osc": "bull",
     "osc_hi": false,
     "osc_lo": false,
@@ -27429,8 +27410,8 @@
     "struct_major": null
    }
   },
-  "hash": "c4848d66f3ecdceb",
-  "updated_at": "2026-08-21T05:52:56+00:00"
+  "hash": "1a3b7ad5c54af694",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "SU": {
   "fingerprint": {
@@ -27502,7 +27483,7 @@
   "fingerprint": {
    "daily": {
     "bands": "bull",
-    "osc": "bull",
+    "osc": "bear",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
@@ -27519,8 +27500,8 @@
     "struct_major": null
    }
   },
-  "hash": "136f34fe12c291d9",
-  "updated_at": "2026-08-21T20:44:33+00:00"
+  "hash": "4106cac9c6169768",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "SW": {
   "fingerprint": {
@@ -27530,9 +27511,7 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
-    "struct_events": [
-     "tl_break_up"
-    ],
+    "struct_events": [],
     "struct_major": "bear"
    },
    "monthly": {
@@ -27554,8 +27533,8 @@
     "struct_major": null
    }
   },
-  "hash": "14b0326fdab0ea60",
-  "updated_at": "2026-08-21T20:44:33+00:00"
+  "hash": "4fa3603e7b324d45",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "SWK": {
   "fingerprint": {
@@ -27563,7 +27542,7 @@
     "bands": "bull",
     "osc": "bear",
     "osc_hi": false,
-    "osc_lo": false,
+    "osc_lo": true,
     "struct": "bull",
     "struct_events": [],
     "struct_major": "bull"
@@ -27587,8 +27566,8 @@
     "struct_major": null
    }
   },
-  "hash": "f74d4e046621f7e2",
-  "updated_at": "2026-08-19T20:48:44+00:00"
+  "hash": "a27eacc0d2a3c4b2",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "SWKS": {
   "fingerprint": {
@@ -27860,7 +27839,7 @@
     "bands": "bear",
     "osc": "bear",
     "osc_hi": false,
-    "osc_lo": false,
+    "osc_lo": true,
     "struct": "bull",
     "struct_events": [],
     "struct_major": "bull"
@@ -27884,8 +27863,8 @@
     "struct_major": null
    }
   },
-  "hash": "18b8bdfc74aee5b7",
-  "updated_at": "2026-08-21T20:44:33+00:00"
+  "hash": "2e234ad14f71d5fc",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "TEAM": {
   "fingerprint": {
@@ -27961,9 +27940,7 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
-    "struct_events": [
-     "bos_up"
-    ],
+    "struct_events": [],
     "struct_major": "bull"
    },
    "monthly": {
@@ -27985,8 +27962,8 @@
     "struct_major": null
    }
   },
-  "hash": "d54e3a26fe0f4879",
-  "updated_at": "2026-08-21T20:44:33+00:00"
+  "hash": "ed32690f69a8ae91",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "TEL": {
   "fingerprint": {
@@ -28157,7 +28134,7 @@
   "fingerprint": {
    "daily": {
     "bands": "bear",
-    "osc": "bull",
+    "osc": "bear",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
@@ -28183,8 +28160,8 @@
     "struct_major": null
    }
   },
-  "hash": "6dc05ca344a0bc99",
-  "updated_at": "2026-08-21T05:52:56+00:00"
+  "hash": "01cd4d69e018a178",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "TGT": {
   "fingerprint": {
@@ -28222,12 +28199,14 @@
  "TGTX": {
   "fingerprint": {
    "daily": {
-    "bands": "bear",
-    "osc": "bear",
+    "bands": "bull",
+    "osc": "bull",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [],
+    "struct_events": [
+     "tl_break_up"
+    ],
     "struct_major": "bull"
    },
    "monthly": {
@@ -28249,8 +28228,8 @@
     "struct_major": null
    }
   },
-  "hash": "4c163040a5eda8c8",
-  "updated_at": "2026-08-19T20:12:10+00:00"
+  "hash": "c7b7d0d2282b0d2c",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "THC": {
   "fingerprint": {
@@ -28458,7 +28437,9 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [],
+    "struct_events": [
+     "bos_dn"
+    ],
     "struct_major": "bull"
    },
    "monthly": {
@@ -28480,8 +28461,8 @@
     "struct_major": null
    }
   },
-  "hash": "01cd4d69e018a178",
-  "updated_at": "2026-08-20T20:18:58+00:00"
+  "hash": "39b3b4d95782a8be",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "TM": {
   "fingerprint": {
@@ -28625,9 +28606,7 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
-    "struct_events": [
-     "bos_up"
-    ],
+    "struct_events": [],
     "struct_major": "bear"
    },
    "monthly": {
@@ -28649,8 +28628,8 @@
     "struct_major": null
    }
   },
-  "hash": "cd02fe7a88c1b235",
-  "updated_at": "2026-08-21T20:44:33+00:00"
+  "hash": "ac00945b012015c4",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "TPG": {
   "fingerprint": {
@@ -28689,13 +28668,11 @@
   "fingerprint": {
    "daily": {
     "bands": "bear",
-    "osc": "bear",
+    "osc": "bull",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [
-     "tl_break_up"
-    ],
+    "struct_events": [],
     "struct_major": "bull"
    },
    "monthly": {
@@ -28717,8 +28694,8 @@
     "struct_major": null
    }
   },
-  "hash": "5637ef740e042063",
-  "updated_at": "2026-08-21T20:44:33+00:00"
+  "hash": "75d6a1f10c18eaac",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "TPR": {
   "fingerprint": {
@@ -29021,7 +28998,7 @@
   "fingerprint": {
    "daily": {
     "bands": "bear",
-    "osc": "bull",
+    "osc": "bear",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
@@ -29047,8 +29024,8 @@
     "struct_major": null
    }
   },
-  "hash": "545183a97194f516",
-  "updated_at": "2026-08-21T20:44:33+00:00"
+  "hash": "4a93368c46f457dd",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "TSLA": {
   "fingerprint": {
@@ -29285,7 +29262,7 @@
   "fingerprint": {
    "daily": {
     "bands": "bear",
-    "osc": "bull",
+    "osc": "bear",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
@@ -29311,8 +29288,8 @@
     "struct_major": null
    }
   },
-  "hash": "e5012a787002a68b",
-  "updated_at": "2026-08-07T00:51:03+00:00"
+  "hash": "6608e8934bc4fa38",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "TTWO": {
   "fingerprint": {
@@ -29520,7 +29497,7 @@
     "bands": "bear",
     "osc": "bear",
     "osc_hi": false,
-    "osc_lo": false,
+    "osc_lo": true,
     "struct": "bear",
     "struct_events": [],
     "struct_major": "bear"
@@ -29544,8 +29521,8 @@
     "struct_major": null
    }
   },
-  "hash": "6d56fdf8fbf9b643",
-  "updated_at": "2026-08-24T01:32:26+00:00"
+  "hash": "282350a61b3d5499",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "TYL": {
   "fingerprint": {
@@ -29555,9 +29532,7 @@
     "osc_hi": true,
     "osc_lo": false,
     "struct": "bull",
-    "struct_events": [
-     "bos_up"
-    ],
+    "struct_events": [],
     "struct_major": "bear"
    },
    "monthly": {
@@ -29579,15 +29554,15 @@
     "struct_major": null
    }
   },
-  "hash": "b02112ab7165c596",
-  "updated_at": "2026-08-21T20:14:40+00:00"
+  "hash": "77888b4c79a308bd",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "U": {
   "fingerprint": {
    "daily": {
     "bands": "bull",
     "osc": "bull",
-    "osc_hi": true,
+    "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
     "struct_events": [],
@@ -29612,8 +29587,8 @@
     "struct_major": null
    }
   },
-  "hash": "c8d0688923bf8e1f",
-  "updated_at": "2026-08-24T01:32:26+00:00"
+  "hash": "8ab12dcdeb5af37f",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "UAL": {
   "fingerprint": {
@@ -29821,9 +29796,7 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
-    "struct_events": [
-     "bos_up"
-    ],
+    "struct_events": [],
     "struct_major": "bear"
    },
    "monthly": {
@@ -29845,8 +29818,8 @@
     "struct_major": null
    }
   },
-  "hash": "5d7ae5a675df161d",
-  "updated_at": "2026-08-21T20:14:40+00:00"
+  "hash": "2d4df64b1fd08387",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "UI": {
   "fingerprint": {
@@ -29856,9 +29829,7 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
-    "struct_events": [
-     "sweep_lo"
-    ],
+    "struct_events": [],
     "struct_major": "bear"
    },
    "monthly": {
@@ -29880,8 +29851,8 @@
     "struct_major": null
    }
   },
-  "hash": "63ffca2a30ba1fa7",
-  "updated_at": "2026-08-24T01:32:26+00:00"
+  "hash": "2ff3882af0ec6c61",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "ULS": {
   "fingerprint": {
@@ -30978,7 +30949,7 @@
     "bands": "bear",
     "osc": "bear",
     "osc_hi": false,
-    "osc_lo": true,
+    "osc_lo": false,
     "struct": "bull",
     "struct_events": [],
     "struct_major": "bull"
@@ -31002,8 +30973,8 @@
     "struct_major": null
    }
   },
-  "hash": "29de35a77347d77a",
-  "updated_at": "2026-08-17T01:29:26+00:00"
+  "hash": "4a93368c46f457dd",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "VZ": {
   "fingerprint": {
@@ -31307,7 +31278,7 @@
    "daily": {
     "bands": "bull",
     "osc": "bull",
-    "osc_hi": true,
+    "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
     "struct_events": [],
@@ -31332,8 +31303,8 @@
     "struct_major": null
    }
   },
-  "hash": "bef84f52c75119a6",
-  "updated_at": "2026-08-17T01:29:26+00:00"
+  "hash": "7c5669ec19dcd700",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "WDC": {
   "fingerprint": {
@@ -31372,7 +31343,7 @@
   "fingerprint": {
    "daily": {
     "bands": "bear",
-    "osc": "bull",
+    "osc": "bear",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
@@ -31398,8 +31369,8 @@
     "struct_major": null
    }
   },
-  "hash": "f940b5b0e8c3f4e9",
-  "updated_at": "2026-08-19T19:46:59+00:00"
+  "hash": "ba2436df34ac88a9",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "WELL": {
   "fingerprint": {
@@ -31471,7 +31442,7 @@
   "fingerprint": {
    "daily": {
     "bands": "bear",
-    "osc": "bull",
+    "osc": "bear",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
@@ -31497,8 +31468,8 @@
     "struct_major": null
    }
   },
-  "hash": "b9248ddac135f94c",
-  "updated_at": "2026-08-11T21:07:39+00:00"
+  "hash": "5f86ebf682646fe6",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "WLK": {
   "fingerprint": {
@@ -31640,7 +31611,9 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [],
+    "struct_events": [
+     "tl_break_dn"
+    ],
     "struct_major": "bear"
    },
    "monthly": {
@@ -31662,8 +31635,8 @@
     "struct_major": null
    }
   },
-  "hash": "b62277e660551fee",
-  "updated_at": "2026-08-21T20:14:40+00:00"
+  "hash": "e16446873058a427",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "WMT": {
   "fingerprint": {
@@ -31838,9 +31811,7 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [
-     "tl_break_dn"
-    ],
+    "struct_events": [],
     "struct_major": "bear"
    },
    "monthly": {
@@ -31862,8 +31833,8 @@
     "struct_major": null
    }
   },
-  "hash": "08fba259ce1ec199",
-  "updated_at": "2026-08-21T20:14:40+00:00"
+  "hash": "0752dc1b0709a721",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "WST": {
   "fingerprint": {
@@ -31968,7 +31939,7 @@
   "fingerprint": {
    "daily": {
     "bands": "bull",
-    "osc": "bull",
+    "osc": "bear",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
@@ -31994,8 +31965,8 @@
     "struct_major": null
    }
   },
-  "hash": "a94af5df1f11e4df",
-  "updated_at": "2026-08-17T01:29:26+00:00"
+  "hash": "f74d4e046621f7e2",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "WTW": {
   "fingerprint": {
@@ -32005,8 +31976,11 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
-    "struct_events": [],
-    "struct_major": "bear"
+    "struct_events": [
+     "bos_up",
+     "maj_choch_up"
+    ],
+    "struct_major": "bull"
    },
    "monthly": {
     "bands": "bear",
@@ -32027,8 +32001,8 @@
     "struct_major": null
    }
   },
-  "hash": "4fa3603e7b324d45",
-  "updated_at": "2026-08-19T07:55:02+00:00"
+  "hash": "72ddc33c05ff6112",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "WULF": {
   "fingerprint": {
@@ -32071,8 +32045,10 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [],
-    "struct_major": "bull"
+    "struct_events": [
+     "maj_choch_dn"
+    ],
+    "struct_major": "bear"
    },
    "monthly": {
     "bands": "bull",
@@ -32093,8 +32069,8 @@
     "struct_major": null
    }
   },
-  "hash": "6608e8934bc4fa38",
-  "updated_at": "2026-08-21T20:44:33+00:00"
+  "hash": "9253219faf8415ca",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "WY": {
   "fingerprint": {
@@ -32133,7 +32109,7 @@
   "fingerprint": {
    "daily": {
     "bands": "bull",
-    "osc": "bull",
+    "osc": "bear",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
@@ -32159,14 +32135,14 @@
     "struct_major": null
    }
   },
-  "hash": "8e749cbb43604100",
-  "updated_at": "2026-08-24T01:32:26+00:00"
+  "hash": "2766d3a8e082a1c4",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "XEL": {
   "fingerprint": {
    "daily": {
     "bands": "bear",
-    "osc": "bull",
+    "osc": "bear",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
@@ -32192,8 +32168,8 @@
     "struct_major": null
    }
   },
-  "hash": "6dc05ca344a0bc99",
-  "updated_at": "2026-08-18T16:22:27+00:00"
+  "hash": "01cd4d69e018a178",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "XOM": {
   "fingerprint": {
@@ -32232,7 +32208,7 @@
   "fingerprint": {
    "daily": {
     "bands": "bear",
-    "osc": "bear",
+    "osc": "bull",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
@@ -32258,8 +32234,8 @@
     "struct_major": null
    }
   },
-  "hash": "9f78a514b86de690",
-  "updated_at": "2026-08-19T20:12:10+00:00"
+  "hash": "1b32a52e344c3f2d",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "XPO": {
   "fingerprint": {
@@ -32269,7 +32245,9 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [],
+    "struct_events": [
+     "bos_dn"
+    ],
     "struct_major": "bull"
    },
    "monthly": {
@@ -32291,8 +32269,8 @@
     "struct_major": null
    }
   },
-  "hash": "6608e8934bc4fa38",
-  "updated_at": "2026-08-21T20:44:33+00:00"
+  "hash": "69046c7dc25cf855",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "XYL": {
   "fingerprint": {
@@ -32400,8 +32378,10 @@
     "osc": "bull",
     "osc_hi": false,
     "osc_lo": false,
-    "struct": "bear",
-    "struct_events": [],
+    "struct": "bull",
+    "struct_events": [
+     "choch_up"
+    ],
     "struct_major": "bull"
    },
    "monthly": {
@@ -32423,8 +32403,8 @@
     "struct_major": null
    }
   },
-  "hash": "75d6a1f10c18eaac",
-  "updated_at": "2026-08-21T20:44:33+00:00"
+  "hash": "027cefe7c4e1bb59",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "YUMC": {
   "fingerprint": {
@@ -32434,9 +32414,7 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
-    "struct_events": [
-     "bos_up"
-    ],
+    "struct_events": [],
     "struct_major": "bear"
    },
    "monthly": {
@@ -32458,8 +32436,8 @@
     "struct_major": null
    }
   },
-  "hash": "1ec5597e7841768d",
-  "updated_at": "2026-08-24T01:32:26+00:00"
+  "hash": "35f8768fd5f94af3",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "Z": {
   "fingerprint": {
@@ -32469,7 +32447,9 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
-    "struct_events": [],
+    "struct_events": [
+     "bos_up"
+    ],
     "struct_major": "bear"
    },
    "monthly": {
@@ -32491,8 +32471,8 @@
     "struct_major": null
    }
   },
-  "hash": "2d4df64b1fd08387",
-  "updated_at": "2026-08-15T19:44:10+00:00"
+  "hash": "5d7ae5a675df161d",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "ZBH": {
   "fingerprint": {
@@ -32531,7 +32511,7 @@
   "fingerprint": {
    "daily": {
     "bands": "bull",
-    "osc": "bull",
+    "osc": "bear",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
@@ -32557,8 +32537,8 @@
     "struct_major": null
    }
   },
-  "hash": "5b742c4f2f62b725",
-  "updated_at": "2026-08-19T07:55:02+00:00"
+  "hash": "e6a875dea34c0016",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "ZG": {
   "fingerprint": {
@@ -32568,7 +32548,9 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
-    "struct_events": [],
+    "struct_events": [
+     "bos_up"
+    ],
     "struct_major": "bear"
    },
    "monthly": {
@@ -32590,8 +32572,8 @@
     "struct_major": null
    }
   },
-  "hash": "2d4df64b1fd08387",
-  "updated_at": "2026-08-15T19:44:10+00:00"
+  "hash": "5d7ae5a675df161d",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "ZION": {
   "fingerprint": {
@@ -32695,7 +32677,7 @@
  "ZTS": {
   "fingerprint": {
    "daily": {
-    "bands": "bear",
+    "bands": "bull",
     "osc": "bull",
     "osc_hi": false,
     "osc_lo": false,
@@ -32722,8 +32704,8 @@
     "struct_major": null
    }
   },
-  "hash": "802490015a43e7db",
-  "updated_at": "2026-08-24T01:32:26+00:00"
+  "hash": "78cb66de8ec7e462",
+  "updated_at": "2026-08-24T20:20:41+00:00"
  },
  "ZWS": {
   "fingerprint": {
