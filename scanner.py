@@ -304,7 +304,8 @@ def screener_row(sym, rec):
     screener gets its own slim feed with just the fields worth filtering on.
     """
     row = {"sym": sym, "name": rec.get("name"),
-           "mcap": rec.get("mcap"), "price": rec.get("price")}
+           "mcap": rec.get("mcap"), "price": rec.get("price"),
+           "chg1d": rec.get("chg1d")}
     for tf in ("d", "w", "m"):
         eng = rec.get(tf) or {}
         b = eng.get("bands") or {}
@@ -398,6 +399,10 @@ def main(argv=None):
         rec = {"name": name,
                "mcap": round(mcaps.get(sym, 0.0), 3),
                "price": round(c[-1], 4),
+               # 1-day % change between the last two confirmed closes —
+               # the heatmap's color metric (TradingView-style Change 1D)
+               "chg1d": (round((c[-1] / c[-2] - 1) * 100, 2)
+                         if len(c) >= 2 and c[-2] else None),
                "bars_daily": len(c)}
 
         d_eng = run_engines(o, h, l, c, v, with_structure=True)
