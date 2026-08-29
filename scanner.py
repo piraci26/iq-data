@@ -176,6 +176,14 @@ def fetch_daily(sym, rng, delay, retries=1):
         l.append(float(row[2])); c.append(float(row[3]))
         v.append(float(row[4]))
 
+    # 1-day % change from the RAW series, BEFORE the confirmed-bar drop:
+    # weekend/evening → last close vs the prior close (Friday's move on a
+    # Saturday); during a session the last raw bar is the live one → the
+    # live day change, refreshed every scan pass. Engines never see this
+    # bar — only chg1d reads it.
+    chg1d = (round((c[-1] / c[-2] - 1) * 100, 2)
+             if len(c) >= 2 and c[-2] else None)
+
     # confirmed-bar guard: drop today's bar if the session is still open
     if dates:
         now = time.time()
@@ -196,7 +204,7 @@ def fetch_daily(sym, rng, delay, retries=1):
         print("  %s: only %d confirmed bars, skipped" % (sym, len(c)),
               file=sys.stderr)
         return None
-    return name, dates, o, h, l, c, v
+    return name, dates, o, h, l, c, v, chg1d
 
 
 def resample(dates, o, h, l, c, v, keyfn, drop_key):
@@ -394,15 +402,14 @@ def main(argv=None):
         if fetched is None:
             skipped.append(sym)
             continue
-        name, dates, o, h, l, c, v = fetched
+        name, dates, o, h, l, c, v, chg1d = fetched
 
         rec = {"name": name,
                "mcap": round(mcaps.get(sym, 0.0), 3),
                "price": round(c[-1], 4),
-               # 1-day % change between the last two confirmed closes —
-               # the heatmap's color metric (TradingView-style Change 1D)
-               "chg1d": (round((c[-1] / c[-2] - 1) * 100, 2)
-                         if len(c) >= 2 and c[-2] else None),
+               # 1-day % change, computed pre-drop in fetch_daily: Friday's
+               # move on weekends, the live move during sessions
+               "chg1d": chg1d,
                "bars_daily": len(c)}
 
         d_eng = run_engines(o, h, l, c, v, with_structure=True)
