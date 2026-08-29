@@ -8,6 +8,11 @@ engines on both, and emits docs/iq/signals.json containing ONLY tickers whose
 bands regime agrees on all three clocks (30m, 2H, 1D). That triple alignment
 is the product's definition of a signal — nothing else ships.
 
+The same pass also emits the SWING set, docs/iq/signals_swing.json: tickers
+whose regime agrees on 2H, 1D and W. It costs no extra fetches — the 2H leg
+is computed here anyway and the weekly state comes from scan.json (scanner.py
+resamples weeklies from dailies with the confirmed-period rule).
+
 2H bars are anchored to each session's first 30m bar (TradingView-style), so
 buckets run 9:30-11:30, 11:30-13:30, ... in exchange time regardless of DST.
 """
@@ -26,6 +31,7 @@ YAHOO_30M = ("https://query1.finance.yahoo.com/v8/finance/chart/{sym}"
              "?interval=30m&range=60d")
 SCAN_PATH = os.environ.get("SCAN_PATH", "docs/iq/scan.json")
 OUT_PATH = os.environ.get("SIGNALS_PATH", "docs/iq/signals.json")
+SWING_PATH = os.environ.get("SWING_PATH", "docs/iq/signals_swing.json")
 FETCH_DELAY = float(os.environ.get("FETCH_DELAY", "0.15"))
 MIN_30M_BARS = 120          # engines want 33-bar warm-up with headroom
 FRESH_MAX_AGE = 2           # a leg that flipped within its last 2 bars = fresh
@@ -119,6 +125,12 @@ def tf_state(engines, T=None):
     }
 
 
+def _age_rank(a):
+    """min() rank for a leg age. 0 is a REAL age (flipped this bar) — only
+    None falls to the sentinel; the old `age or 10**9` wrongly demoted 0."""
+    return a if a is not None else 10 ** 9
+
+
 def main(argv=None):
     try:
         with open(SCAN_PATH) as f:
@@ -133,6 +145,7 @@ def main(argv=None):
         syms = syms[:limit]
 
     triples = []
+    swing = []
     checked = 0
     failed = 0
     for sym in syms:
@@ -156,14 +169,54 @@ def main(argv=None):
         if not m30 or not h2:
             continue
 
+        # SWING SET: the same 2H leg gated against daily + weekly (weekly
+        # states come from scan.json — scanner.py resamples them from the
+        # dailies with the confirmed-period rule). Checked BEFORE the
+        # intraday gate: a ticker can hold a swing triple without its 30m
+        # leg agreeing.
+        w_bands = ((tk.get("w") or {}).get("bands")) or {}
+        w_regime = w_bands.get("regime")
+        if w_regime in ("bull", "bear") and h2["regime"] == d_regime == w_regime:
+            youngest_s = min(
+                ("2h", _age_rank(h2["age"])),
+                ("1d", _age_rank(d_bands.get("regime_age"))),
+                ("w", _age_rank(w_bands.get("regime_age"))),
+                key=lambda x: x[1],
+            )
+            swing.append({
+                "sym": sym,
+                "name": tk.get("name") or sym,
+                "side": d_regime,
+                "price": tk.get("price"),
+                "fresh": youngest_s[1] <= FRESH_MAX_AGE,
+                "youngest_tf": youngest_s[0],
+                "youngest_age": youngest_s[1],
+                # only the 2H leg carries an intraday flip timestamp; for a
+                # daily/weekly-youngest clients fall back to bar-age estimates
+                "completed_at": h2["flip_at"] if youngest_s[0] == "2h" else None,
+                "tfs": {
+                    "h2": h2,
+                    "d": {
+                        "regime": d_regime,
+                        "age": d_bands.get("regime_age"),
+                        "flipped": bool(d_bands.get("flipped_today")),
+                    },
+                    "w": {
+                        "regime": w_regime,
+                        "age": w_bands.get("regime_age"),
+                        "flipped": bool(w_bands.get("flipped_today")),
+                    },
+                },
+            })
+
         # THE GATE: all three clocks on the same side, or the ticker is silent.
         if not (m30["regime"] == h2["regime"] == d_regime):
             continue
 
         youngest = min(
-            ("30m", m30["age"] if m30["age"] is not None else 10 ** 9),
-            ("2h", h2["age"] if h2["age"] is not None else 10 ** 9),
-            ("1d", d_bands.get("regime_age") or 10 ** 9),
+            ("30m", _age_rank(m30["age"])),
+            ("2h", _age_rank(h2["age"])),
+            ("1d", _age_rank(d_bands.get("regime_age"))),
             key=lambda x: x[1],
         )
         # The alignment exists since its youngest leg flipped; that flip bar's
@@ -194,9 +247,11 @@ def main(argv=None):
             },
         })
 
+    updated = datetime.now(timezone.utc).isoformat(timespec="seconds")
+
     triples.sort(key=lambda t: (not t["fresh"], t["youngest_age"], t["sym"]))
     out = {
-        "updated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "updated_at": updated,
         "universe": len(syms),
         "checked": checked,
         "failed": failed,
@@ -206,8 +261,25 @@ def main(argv=None):
         "triples": triples,
     }
     atomic_write(OUT_PATH, out)
-    print("signals: %d triples (%d bull / %d bear) from %d checked, %d failed"
-          % (out["count"], out["bull"], out["bear"], checked, failed))
+
+    swing.sort(key=lambda t: (not t["fresh"], t["youngest_age"], t["sym"]))
+    out_swing = {
+        "updated_at": updated,
+        "universe": len(syms),
+        "checked": checked,
+        "failed": failed,
+        "count": len(swing),
+        "bull": sum(1 for t in swing if t["side"] == "bull"),
+        "bear": sum(1 for t in swing if t["side"] == "bear"),
+        "triples": swing,
+    }
+    atomic_write(SWING_PATH, out_swing)
+
+    print("signals: %d intraday triples (%d bull / %d bear), %d swing "
+          "triples (%d bull / %d bear) from %d checked, %d failed"
+          % (out["count"], out["bull"], out["bear"],
+             out_swing["count"], out_swing["bull"], out_swing["bear"],
+             checked, failed))
     return 0
 
 
