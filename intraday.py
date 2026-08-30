@@ -311,32 +311,47 @@ def main(argv=None):
     }
     atomic_write(SWING_PATH, out_swing)
 
-    # 1-MINUTE BUNDLE: the chart feed for the Signals workstation and the
+    # 1-MINUTE FEED: the chart feed for the Signals workstation and the
     # Pine workbench. Coverage = every symbol on either book + the top caps
-    # (scan.json is mcap-ordered, and entries carry mcap), one compact file
-    # of [t,o,h,l,c,v] rows — the site's 1m charts only ever ask for these.
+    # (scan.json is mcap-ordered, and entries carry mcap). PER-SYMBOL files
+    # (docs/iq/bars_1m/SYM.json, a bare [t,o,h,l,c,v] row array, ~30KB) so
+    # the client only ever downloads the one symbol it is charting — the
+    # books alone run to hundreds of tickers and a single bundle weighed
+    # 18MB. bars_1m.json stays as a small index. Files for symbols that
+    # dropped out of coverage are pruned so a 404 always means "not
+    # covered today", never "stale bars from last week".
     top = sorted(syms, key=lambda s: (tickers.get(s) or {}).get("mcap") or 0,
                  reverse=True)[:TOP_1M]
     want = sorted({t["sym"] for t in triples}
                   | {t["sym"] for t in swing} | set(top))
-    bundle = {}
+    bars_dir = os.path.join(os.path.dirname(BARS1M_PATH), "bars_1m")
+    os.makedirs(bars_dir, exist_ok=True)
+    got = []
     for sym in want:
         rows = fetch_1m(sym)
         time.sleep(FETCH_DELAY)
         if rows:
-            bundle[sym] = rows
+            atomic_write(os.path.join(bars_dir, "%s.json" % sym), rows)
+            got.append(sym)
+    keep = {"%s.json" % s for s in got}
+    for fn in os.listdir(bars_dir):
+        if fn.endswith(".json") and fn not in keep:
+            try:
+                os.remove(os.path.join(bars_dir, fn))
+            except OSError:
+                pass
     atomic_write(BARS1M_PATH, {
         "updated_at": updated,
-        "count": len(bundle),
-        "bars": bundle,
+        "count": len(got),
+        "syms": got,
     })
 
     print("signals: %d intraday triples (%d bull / %d bear), %d swing "
           "triples (%d bull / %d bear) from %d checked, %d failed; "
-          "1m bundle: %d/%d syms"
+          "1m files: %d/%d syms"
           % (out["count"], out["bull"], out["bear"],
              out_swing["count"], out_swing["bull"], out_swing["bear"],
-             checked, failed, len(bundle), len(want)))
+             checked, failed, len(got), len(want)))
     return 0
 
 
