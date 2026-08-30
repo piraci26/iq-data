@@ -29,9 +29,13 @@ from scanner import _http_json, run_engines, atomic_write  # noqa: E402
 
 YAHOO_30M = ("https://query1.finance.yahoo.com/v8/finance/chart/{sym}"
              "?interval=30m&range=60d")
+YAHOO_1M = ("https://query1.finance.yahoo.com/v8/finance/chart/{sym}"
+            "?interval=1m&range=2d")
 SCAN_PATH = os.environ.get("SCAN_PATH", "docs/iq/scan.json")
 OUT_PATH = os.environ.get("SIGNALS_PATH", "docs/iq/signals.json")
 SWING_PATH = os.environ.get("SWING_PATH", "docs/iq/signals_swing.json")
+BARS1M_PATH = os.environ.get("BARS1M_PATH", "docs/iq/bars_1m.json")
+TOP_1M = int(os.environ.get("TOP_1M", "40"))   # top caps always in the 1m bundle
 FETCH_DELAY = float(os.environ.get("FETCH_DELAY", "0.15"))
 MIN_30M_BARS = 120          # engines want 33-bar warm-up with headroom
 FRESH_MAX_AGE = 2           # a leg that flipped within its last 2 bars = fresh
@@ -68,6 +72,38 @@ def fetch_30m(sym):
     if len(c) < MIN_30M_BARS:
         return None
     return T, o, h, l, c, v
+
+
+def fetch_1m(sym):
+    """Confirmed 1m bars as compact rows [t, o, h, l, c, v], or None.
+
+    Chart feed only — the engines never see these. Floats rounded to 4dp
+    and volume to int so the whole bundle stays small on Pages.
+    """
+    url = YAHOO_1M.format(sym=urllib.request.quote(sym))
+    try:
+        data = _http_json(url)
+        res = data["chart"]["result"][0]
+        ts = res["timestamp"]
+        q = res["indicators"]["quote"][0]
+        oo, hh, ll, cc, vv = (q["open"], q["high"], q["low"],
+                              q["close"], q["volume"])
+    except Exception as e:
+        print("  %s: 1m fetch failed (%s)" % (sym, e), file=sys.stderr)
+        return None
+    rows = []
+    for i in range(len(ts)):
+        r = (oo[i], hh[i], ll[i], cc[i], vv[i])
+        if any(x is None for x in r):
+            continue
+        rows.append([int(ts[i]), round(float(r[0]), 4), round(float(r[1]), 4),
+                     round(float(r[2]), 4), round(float(r[3]), 4), int(r[4])])
+    # confirmed-bar guard: the newest minute may still be forming
+    if rows and time.time() < rows[-1][0] + 60:
+        rows.pop()
+    if len(rows) < 100:
+        return None
+    return rows
 
 
 def resample_2h(T, o, h, l, c, v):
@@ -275,11 +311,32 @@ def main(argv=None):
     }
     atomic_write(SWING_PATH, out_swing)
 
+    # 1-MINUTE BUNDLE: the chart feed for the Signals workstation and the
+    # Pine workbench. Coverage = every symbol on either book + the top caps
+    # (scan.json is mcap-ordered, and entries carry mcap), one compact file
+    # of [t,o,h,l,c,v] rows — the site's 1m charts only ever ask for these.
+    top = sorted(syms, key=lambda s: (tickers.get(s) or {}).get("mcap") or 0,
+                 reverse=True)[:TOP_1M]
+    want = sorted({t["sym"] for t in triples}
+                  | {t["sym"] for t in swing} | set(top))
+    bundle = {}
+    for sym in want:
+        rows = fetch_1m(sym)
+        time.sleep(FETCH_DELAY)
+        if rows:
+            bundle[sym] = rows
+    atomic_write(BARS1M_PATH, {
+        "updated_at": updated,
+        "count": len(bundle),
+        "bars": bundle,
+    })
+
     print("signals: %d intraday triples (%d bull / %d bear), %d swing "
-          "triples (%d bull / %d bear) from %d checked, %d failed"
+          "triples (%d bull / %d bear) from %d checked, %d failed; "
+          "1m bundle: %d/%d syms"
           % (out["count"], out["bull"], out["bear"],
              out_swing["count"], out_swing["bull"], out_swing["bear"],
-             checked, failed))
+             checked, failed, len(bundle), len(want)))
     return 0
 
 
