@@ -31,6 +31,11 @@ YAHOO_30M = ("https://query1.finance.yahoo.com/v8/finance/chart/{sym}"
              "?interval=30m&range=60d")
 YAHOO_1M = ("https://query1.finance.yahoo.com/v8/finance/chart/{sym}"
             "?interval=1m&range=2d")
+# 5-MINUTE HISTORY: Yahoo serves 60 days of 5m bars in one call. Written once
+# per session (after the close, New York) so the Pages repo does not churn;
+# the Quant backtester runs clock-driven scripts on these.
+YAHOO_5M = YAHOO_1M.replace("interval=1m", "interval=5m").replace("range=2d", "range=60d").replace("range=5d", "range=60d").replace("range=7d", "range=60d")
+BARS5M_PATH = os.environ.get("BARS5M_PATH", "docs/iq/bars_5m.json")
 SCAN_PATH = os.environ.get("SCAN_PATH", "docs/iq/scan.json")
 OUT_PATH = os.environ.get("SIGNALS_PATH", "docs/iq/signals.json")
 SWING_PATH = os.environ.get("SWING_PATH", "docs/iq/signals_swing.json")
@@ -105,6 +110,79 @@ def fetch_1m(sym):
         return None
     return rows
 
+
+
+def fetch_5m(sym):
+    """60 days of confirmed 5m bars as compact rows [t, o, h, l, c, v], or None."""
+    url = YAHOO_5M.format(sym=urllib.request.quote(sym))
+    try:
+        data = _http_json(url)
+        res = data["chart"]["result"][0]
+        ts = res["timestamp"]
+        q = res["indicators"]["quote"][0]
+        oo, hh, ll, cc, vv = (q["open"], q["high"], q["low"], q["close"], q["volume"])
+    except Exception as e:
+        print("  %s: 5m fetch failed (%s)" % (sym, e), file=sys.stderr)
+        return None
+    rows = []
+    for k in range(len(ts)):
+        r = (oo[k], hh[k], ll[k], cc[k], vv[k])
+        if any(x is None for x in r):
+            continue
+        rows.append([int(ts[k]), round(float(r[0]), 4), round(float(r[1]), 4),
+                     round(float(r[2]), 4), round(float(r[3]), 4), int(r[4])])
+    if rows and time.time() < rows[-1][0] + 300:
+        rows.pop()
+    if len(rows) < 500:
+        return None
+    return rows
+
+
+def _ny_now():
+    try:
+        from zoneinfo import ZoneInfo
+        return datetime.now(ZoneInfo("America/New_York"))
+    except Exception:
+        from datetime import timedelta
+        return datetime.utcnow() - timedelta(hours=4)
+
+
+def write_5m_history(want, updated):
+    """Once per session after the close: 60 days of 5m bars per covered symbol."""
+    try:
+        now = _ny_now()
+        today = now.strftime("%Y-%m-%d")
+        idx = {}
+        try:
+            with open(BARS5M_PATH) as fh:
+                idx = json.load(fh) or {}
+        except Exception:
+            idx = {}
+        done_day = idx.get("day")
+        after_close = (now.hour, now.minute) >= (16, 15) or now.weekday() >= 5
+        if done_day == today or (done_day and not after_close):
+            return
+        bars_dir = os.path.join(os.path.dirname(BARS5M_PATH), "bars_5m")
+        os.makedirs(bars_dir, exist_ok=True)
+        got = []
+        for sym in want:
+            rows = fetch_5m(sym)
+            time.sleep(FETCH_DELAY)
+            if rows:
+                atomic_write(os.path.join(bars_dir, "%s.json" % sym), rows)
+                got.append(sym)
+        keep = {"%s.json" % s for s in got}
+        for fn in os.listdir(bars_dir):
+            if fn.endswith(".json") and fn not in keep:
+                try:
+                    os.remove(os.path.join(bars_dir, fn))
+                except OSError:
+                    pass
+        atomic_write(BARS5M_PATH, {"day": today if after_close else done_day, "updated_at": updated,
+                                   "count": len(got), "symbols": got, "days": 60, "interval": "5m"})
+        print("5m history: %d symbols" % len(got))
+    except Exception as e:
+        print("5m history skipped (%s)" % e, file=sys.stderr)
 
 def resample_2h(T, o, h, l, c, v):
     """Session-anchored 2H bars from 30m bars.
@@ -345,6 +423,7 @@ def main(argv=None):
         "count": len(got),
         "syms": got,
     })
+    write_5m_history(want, updated)
 
     print("signals: %d intraday triples (%d bull / %d bear), %d swing "
           "triples (%d bull / %d bear) from %d checked, %d failed; "
