@@ -49,6 +49,13 @@ jobs:
         run: |
           python indexes.py
 
+      - name: ETF and crypto heatmap feeds (writes docs/iq/etf.json and crypto.json)
+        continue-on-error: true
+        env:
+          ETF_TOP: "500"
+        run: |
+          python heatmaps.py
+
       - name: Generate AI reads
         env:
           # LLM_API_KEY repo secret (Groq key) required; step skips without it.
