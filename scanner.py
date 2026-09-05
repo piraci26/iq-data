@@ -180,9 +180,10 @@ def fetch_daily(sym, rng, delay, retries=1):
     # weekend/evening → last close vs the prior close (Friday's move on a
     # Saturday); during a session the last raw bar is the live one → the
     # live day change, refreshed every scan pass. Engines never see this
-    # bar — only chg1d reads it.
+    # bar — only chg1d and the market stats read it.
     chg1d = (round((c[-1] / c[-2] - 1) * 100, 2)
              if len(c) >= 2 and c[-2] else None)
+    mkt = market_stats(dates, o, h, l, c, v)
 
     # confirmed-bar guard: drop today's bar if the session is still open
     if dates:
@@ -204,7 +205,65 @@ def fetch_daily(sym, rng, delay, retries=1):
         print("  %s: only %d confirmed bars, skipped" % (sym, len(c)),
               file=sys.stderr)
         return None
-    return name, dates, o, h, l, c, v, chg1d
+    return name, dates, o, h, l, c, v, chg1d, mkt
+
+
+def market_stats(dates, o, h, l, c, v):
+    """The heatmap's size and colour fields, from the RAW daily series (the
+    live bar included during a session, so they refresh like chg1d).
+
+    perf: % change over 1 week, 1 month, 3 and 6 months, year to date and
+          1 year (5, 21, 63, 126, 252 bars; YTD against the last close of
+          the previous calendar year)
+    vol:  volume of the last bar, mean of the last 5 and 21 bars (shares)
+    turn: mean of close x volume over the same windows, in $ millions
+    rvol: last volume over the mean of the previous 21 bars
+    volat: the last bar's range as % of its close
+    gap:  the last open against the previous close, %
+    hi52 / lo52: the close against the 52-week high and low, %
+    """
+    n = len(c)
+    if n < 2 or not c[-1]:
+        return None
+
+    def pct(back):
+        if n <= back or not c[-1 - back]:
+            return None
+        return round((c[-1] / c[-1 - back] - 1) * 100, 2)
+
+    def mean(xs):
+        xs = [x for x in xs if x is not None]
+        return sum(xs) / len(xs) if xs else None
+
+    def r2(x):
+        return None if x is None else round(x, 2)
+
+    ytd = None
+    year = dates[-1].year
+    prev_year = [i for i, d in enumerate(dates) if d.year < year]
+    if prev_year and c[prev_year[-1]]:
+        ytd = round((c[-1] / c[prev_year[-1]] - 1) * 100, 2)
+
+    def turnover(k):
+        k = min(k, n)
+        return mean([c[-i] * v[-i] for i in range(1, k + 1)])
+
+    base_v = mean(v[-22:-1]) if n > 22 else None
+    hi52 = max(h[-252:])
+    lo52 = min(l[-252:])
+    return {
+        "perf": {"w1": pct(5), "m1": pct(21), "m3": pct(63), "m6": pct(126),
+                 "ytd": ytd, "y1": pct(252)},
+        "vol": {"d1": round(v[-1]), "w1": round(mean(v[-5:]) or 0),
+                "m1": round(mean(v[-21:]) or 0)},
+        "turn": {"d1": r2(turnover(1) / 1e6), "w1": r2(turnover(5) / 1e6),
+                 "m1": r2(turnover(21) / 1e6)},
+        "rvol": r2(v[-1] / base_v) if base_v else None,
+        "volat": r2((h[-1] - l[-1]) / c[-1] * 100),
+        "gap": r2((o[-1] / c[-2] - 1) * 100) if c[-2] else None,
+        "hi52": r2((c[-1] / hi52 - 1) * 100) if hi52 else None,
+        "lo52": r2((c[-1] / lo52 - 1) * 100) if lo52 else None,
+    }
 
 
 def resample(dates, o, h, l, c, v, keyfn, drop_key):
@@ -314,6 +373,8 @@ def screener_row(sym, rec):
     row = {"sym": sym, "name": rec.get("name"),
            "mcap": rec.get("mcap"), "price": rec.get("price"),
            "chg1d": rec.get("chg1d")}
+    if rec.get("mkt"):
+        row["mkt"] = rec["mkt"]
     for tf in ("d", "w", "m"):
         eng = rec.get(tf) or {}
         b = eng.get("bands") or {}
@@ -402,7 +463,7 @@ def main(argv=None):
         if fetched is None:
             skipped.append(sym)
             continue
-        name, dates, o, h, l, c, v, chg1d = fetched
+        name, dates, o, h, l, c, v, chg1d, mkt = fetched
 
         rec = {"name": name,
                "mcap": round(mcaps.get(sym, 0.0), 3),
@@ -410,6 +471,8 @@ def main(argv=None):
                # 1-day % change, computed pre-drop in fetch_daily: Friday's
                # move on weekends, the live move during sessions
                "chg1d": chg1d,
+               # the heatmap's size and colour fields, same raw series
+               "mkt": mkt,
                "bars_daily": len(c)}
 
         d_eng = run_engines(o, h, l, c, v, with_structure=True)

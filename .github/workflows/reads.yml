@@ -44,6 +44,11 @@ jobs:
         run: |
           python intraday.py
 
+      - name: Index membership lists (writes docs/iq/indexes.json and sp500.json)
+        continue-on-error: true
+        run: |
+          python indexes.py
+
       - name: Generate AI reads
         env:
           # LLM_API_KEY repo secret (Groq key) required; step skips without it.
