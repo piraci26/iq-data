@@ -56,6 +56,11 @@ jobs:
         run: |
           python heatmaps.py
 
+      - name: Logos for new symbols (docs/logos, docs/iq/logos.json)
+        continue-on-error: true
+        run: |
+          python logos.py
+
       - name: Generate AI reads
         env:
           # LLM_API_KEY repo secret (Groq key) required; step skips without it.
@@ -87,8 +92,8 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if [[ -n "$(git status --porcelain docs/iq docs/ai ai/worker/state)" ]]; then
-            git add docs/iq docs/ai ai/worker/state
+          if [[ -n "$(git status --porcelain docs/iq docs/ai docs/logos ai/worker/state)" ]]; then
+            git add docs/iq docs/ai docs/logos ai/worker/state
             git commit -m "scan+reads @ $(date -u +'%Y-%m-%d %H:%M UTC') [actions]"
             # a code push can land mid-run; rebase our output commit on top
             # (rebase reverses ours/theirs: -X theirs keeps THIS run's files)
