@@ -52,6 +52,56 @@ def mark_is_light(path):
     return 1 if (transparent_share > 0.3 and lum > 0.7) else 0
 
 
+def normalise(path):
+    """Trim the transparent margin around the mark, then place it on a square
+    canvas so its centre of mass (not its bounding box) sits in the middle:
+    asymmetric marks (an eye, a slanted M, a script L) look balanced in a
+    disc only when centred optically. The shift is capped at 5%% of the
+    canvas so nothing is cut. Full-bleed images (no transparency) are left
+    as they are. Returns (w, h) of the written file, or None without Pillow."""
+    try:
+        from PIL import Image
+    except ImportError:
+        return None
+    try:
+        im = Image.open(path).convert("RGBA")
+    except Exception:
+        return None
+    alpha = im.getchannel("A")
+    bbox = alpha.getbbox()
+    if not bbox:
+        return im.size
+    w, h = im.size
+    bw, bh = bbox[2] - bbox[0], bbox[3] - bbox[1]
+    if bw >= w - 2 and bh >= h - 2:
+        return im.size                           # full-bleed: nothing to trim or shift
+    mark = im.crop(bbox)
+    # alpha-weighted centre of mass of the mark, relative to its own box
+    a = mark.getchannel("A")
+    px = a.load()
+    total = sx = sy = 0
+    step = max(1, min(bw, bh) // 120)            # sample at most ~120 rows/cols
+    for y in range(0, bh, step):
+        for x in range(0, bw, step):
+            v = px[x, y]
+            if v:
+                total += v
+                sx += v * x
+                sy += v * y
+    if total:
+        cx, cy = sx / total, sy / total
+    else:
+        cx, cy = bw / 2, bh / 2
+    side = int(max(bw, bh) * 1.16) + 2           # 8%% margin each side
+    cap = side * 0.05
+    dx = max(-cap, min(cap, bw / 2 - cx))        # move the mark so its mass sits centre
+    dy = max(-cap, min(cap, bh / 2 - cy))
+    canvas = Image.new("RGBA", (side, side), (0, 0, 0, 0))
+    canvas.paste(mark, (int(round((side - bw) / 2 + dx)), int(round((side - bh) / 2 + dy))), mark)
+    canvas.save(path, optimize=True)
+    return canvas.size
+
+
 def png_size(b):
     if b[:8] != b"\x89PNG\r\n\x1a\n" or len(b) < 24:
         return None
@@ -91,6 +141,13 @@ def load_symbols():
 
 def main():
     os.makedirs(OUT_DIR, exist_ok=True)
+    if "--renormalise" in sys.argv:
+        n = 0
+        for fn in sorted(os.listdir(OUT_DIR)):
+            if fn.endswith(".png"):
+                normalise(os.path.join(OUT_DIR, fn))
+                n += 1
+        print("renormalised %d logos" % n)
     manifest = {}
     if os.path.exists(MANIFEST):
         try:
@@ -107,8 +164,10 @@ def main():
         b, size = get_logo(sym)
         if not b:
             return sym, None
-        with open(os.path.join(OUT_DIR, sym + ".png"), "wb") as f:
+        path = os.path.join(OUT_DIR, sym + ".png")
+        with open(path, "wb") as f:
             f.write(b)
+        size = normalise(path) or size
         return sym, size
 
     with ThreadPoolExecutor(max_workers=8) as ex:
@@ -120,7 +179,9 @@ def main():
     manifest = {s: v for s, v in manifest.items() if os.path.exists(os.path.join(OUT_DIR, s + ".png"))}
     flagged = 0
     for s, v in manifest.items():
-        if len(v) < 3:
+        if "--renormalise" in sys.argv:
+            v = list(png_size(open(os.path.join(OUT_DIR, s + ".png"), "rb").read(24)) or v[:2])
+        if len(v) < 3 or "--renormalise" in sys.argv:
             light = mark_is_light(os.path.join(OUT_DIR, s + ".png"))
             if light is not None:
                 manifest[s] = [v[0], v[1], light]
