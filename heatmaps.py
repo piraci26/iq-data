@@ -29,6 +29,9 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 UA = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
       "(KHTML, like Gecko) Chrome/128.0 Safari/537.36")
 ETF_LIST_URL = "https://stockanalysis.com/etf/"
+# the screener page's data endpoint carries every US ETF with assets and asset
+# class in one document (the list page is alphabetical and 500 rows long)
+ETF_DATA_URL = "https://stockanalysis.com/etf/screener/__data.json"
 COINGECKO_URL = ("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd"
                  "&order=market_cap_desc&per_page=250&page=1"
                  "&price_change_percentage=1h,24h,7d,14d,30d,1y")
@@ -74,7 +77,66 @@ def parse_money(s):
     return n * {"T": 1000.0, "B": 1.0, "M": 0.001, "K": 0.000001, "": 1e-9}[unit]
 
 
+def _devalue(data):
+    """Resolve a SvelteKit devalue array into plain Python (objects and lists hold indices)."""
+    memo = {}
+
+    def resolve(i):
+        if i in memo:
+            return memo[i]
+        if not isinstance(i, int) or i < 0 or i >= len(data):
+            return None
+        v = data[i]
+        if isinstance(v, dict):
+            out = {k: resolve(j) for k, j in v.items()}
+        elif isinstance(v, list):
+            out = v if (v and isinstance(v[0], str)) else [resolve(j) for j in v]
+        else:
+            out = v
+        memo[i] = out
+        return out
+    return resolve(0)
+
+
+def etf_universe_data():
+    """Every ETF from the screener data endpoint: [{sym, name, cls, aum}] sorted by assets."""
+    doc = json.loads(fetch_text(ETF_DATA_URL))
+    rows = []
+
+    def walk(o):
+        if isinstance(o, dict):
+            if "assetClass" in o and "s" in o:
+                rows.append(o)
+                return
+            for v in o.values():
+                walk(v)
+        elif isinstance(o, list):
+            for v in o:
+                walk(v)
+    for node in doc.get("nodes") or []:
+        if node and node.get("type") == "data":
+            walk(_devalue(node["data"]))
+    out = []
+    for r in rows:
+        sym = str(r.get("s") or "").upper().replace(".", "-")
+        aum = r.get("aum")
+        if not re.fullmatch(r"[A-Z]{1,5}(-[A-Z])?", sym) or not isinstance(aum, (int, float)) or aum <= 0:
+            continue
+        raw_cls = str(r.get("assetClass") or "").strip()
+        out.append({"sym": sym, "name": r.get("n") or sym, "cls": CLASS_MAP.get(raw_cls.lower(), raw_cls or "Other"),
+                    "aum": round(float(aum) / 1e9, 3)})
+    out.sort(key=lambda r: -r["aum"])
+    return out
+
+
 def etf_universe():
+    try:
+        rows = etf_universe_data()
+        if len(rows) >= 500:
+            return rows
+        print("etf: data endpoint gave %d rows, trying the list page" % len(rows), file=sys.stderr)
+    except Exception as ex:
+        print("etf: data endpoint failed (%s), trying the list page" % ex, file=sys.stderr)
     page = fetch_text(ETF_LIST_URL)
     for table in page.split("<table")[1:]:
         table = table.split("</table>")[0]
