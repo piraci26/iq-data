@@ -27,8 +27,10 @@ from datetime import datetime, timezone
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from scanner import _http_json, run_engines, atomic_write  # noqa: E402
 
+# pre/post bars ride along for the extended-hours changes; the engines only
+# ever see the regular session (split by the exchange clock in fetch_30m)
 YAHOO_30M = ("https://query1.finance.yahoo.com/v8/finance/chart/{sym}"
-             "?interval=30m&range=60d")
+             "?interval=30m&range=60d&includePrePost=true")
 YAHOO_1M = ("https://query1.finance.yahoo.com/v8/finance/chart/{sym}"
             "?interval=1m&range=2d")
 # 5-MINUTE HISTORY: Yahoo serves 60 days of 5m bars in one call. Written once
@@ -40,6 +42,8 @@ SCAN_PATH = os.environ.get("SCAN_PATH", "docs/iq/scan.json")
 OUT_PATH = os.environ.get("SIGNALS_PATH", "docs/iq/signals.json")
 SWING_PATH = os.environ.get("SWING_PATH", "docs/iq/signals_swing.json")
 BARS1M_PATH = os.environ.get("BARS1M_PATH", "docs/iq/bars_1m.json")
+# per-symbol 1h / 4h / pre-market / post-market changes for the heatmap
+CHANGES_PATH = os.environ.get("CHANGES_PATH", "docs/iq/changes.json")
 TOP_1M = int(os.environ.get("TOP_1M", "40"))   # top caps always in the 1m bundle
 FETCH_DELAY = float(os.environ.get("FETCH_DELAY", "0.15"))
 MIN_30M_BARS = 120          # engines want 33-bar warm-up with headroom
@@ -47,7 +51,13 @@ FRESH_MAX_AGE = 2           # a leg that flipped within its last 2 bars = fresh
 
 
 def fetch_30m(sym):
-    """Confirmed 30m bars: (ts_epochs, o, h, l, c, v) or None."""
+    """Confirmed regular-session 30m bars: (ts_epochs, o, h, l, c, v, changes)
+    or None. `changes` = {chg1h, chg4h, pre, post} in %, read from the RAW
+    series (forming bar included) so they move with the tape:
+      chg1h / chg4h: last regular close against 2 / 8 regular bars earlier
+      pre:  the latest day's last pre-market bar against the previous regular close
+      post: the latest day's last post-market bar against that day's regular close
+    """
     url = YAHOO_30M.format(sym=urllib.request.quote(sym))
     try:
         data = _http_json(url)
@@ -56,19 +66,56 @@ def fetch_30m(sym):
         q = res["indicators"]["quote"][0]
         oo, hh, ll, cc, vv = (q["open"], q["high"], q["low"],
                               q["close"], q["volume"])
+        meta = res.get("meta") or {}
     except Exception as e:
         print("  %s: 30m fetch failed (%s)" % (sym, e), file=sys.stderr)
         return None
 
+    # the exchange clock: regular session bounds as seconds since local midnight
+    off = int(meta.get("gmtoffset") or 0)
+    reg = (meta.get("currentTradingPeriod") or {}).get("regular") or {}
+    tod = lambda t: (int(t) + off) % 86400
+    day = lambda t: (int(t) + off) // 86400
+    reg_start = tod(reg["start"]) if reg.get("start") else 9 * 3600 + 1800
+    reg_end = tod(reg["end"]) if reg.get("end") else 16 * 3600
+
     T, o, h, l, c, v = [], [], [], [], [], []
+    ext = []   # (ts, close, kind) for pre/post bars
     for i in range(len(ts)):
         row = (oo[i], hh[i], ll[i], cc[i], vv[i])
         if any(x is None for x in row):
             continue
-        T.append(int(ts[i]))
+        t = int(ts[i])
+        k = tod(t)
+        if k < reg_start:
+            ext.append((t, float(row[3]), "pre"))
+            continue
+        if k >= reg_end:
+            ext.append((t, float(row[3]), "post"))
+            continue
+        T.append(t)
         o.append(float(row[0])); h.append(float(row[1]))
         l.append(float(row[2])); c.append(float(row[3]))
         v.append(float(row[4]))
+
+    def pct(a, b):
+        return round((a / b - 1) * 100, 2) if a and b else None
+
+    changes = {"chg1h": None, "chg4h": None, "pre": None, "post": None}
+    if len(c) >= 3:
+        changes["chg1h"] = pct(c[-1], c[-3])
+    if len(c) >= 9:
+        changes["chg4h"] = pct(c[-1], c[-9])
+    if T or ext:
+        latest = max(([day(T[-1])] if T else []) + ([day(ext[-1][0])] if ext else []))
+        pre_bars = [x for x in ext if x[2] == "pre" and day(x[0]) == latest]
+        post_bars = [x for x in ext if x[2] == "post" and day(x[0]) == latest]
+        prev_reg = [c[i] for i in range(len(T)) if day(T[i]) < latest]
+        today_reg = [c[i] for i in range(len(T)) if day(T[i]) == latest]
+        if pre_bars and prev_reg:
+            changes["pre"] = pct(pre_bars[-1][1], prev_reg[-1])
+        if post_bars and today_reg:
+            changes["post"] = pct(post_bars[-1][1], today_reg[-1])
 
     # confirmed-bar guard: the last 30m bucket may still be forming
     if T and time.time() < T[-1] + 1800:
@@ -76,7 +123,7 @@ def fetch_30m(sym):
             s.pop()
     if len(c) < MIN_30M_BARS:
         return None
-    return T, o, h, l, c, v
+    return T, o, h, l, c, v, changes
 
 
 def fetch_1m(sym):
@@ -260,6 +307,7 @@ def main(argv=None):
 
     triples = []
     swing = []
+    changes = {}
     checked = 0
     failed = 0
     for sym in syms:
@@ -275,7 +323,8 @@ def main(argv=None):
             failed += 1
             continue
         checked += 1
-        T, o, h, l, c, v = bars
+        T, o, h, l, c, v, x = bars
+        changes[sym] = x
 
         m30 = tf_state(run_engines(o, h, l, c, v, with_structure=False), T=T)
         T2, r2o, r2h, r2l, r2c, r2v = resample_2h(T, o, h, l, c, v)
@@ -388,6 +437,9 @@ def main(argv=None):
         "triples": swing,
     }
     atomic_write(SWING_PATH, out_swing)
+
+    atomic_write(CHANGES_PATH, {"updated_at": updated, "count": len(changes),
+                                "rows": changes})
 
     # 1-MINUTE FEED: the chart feed for the Signals workstation and the
     # Pine workbench. Coverage = every symbol on either book + the top caps
