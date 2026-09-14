@@ -63,7 +63,7 @@
    }
   },
   "hash": "cf478ca26b9db0cb",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "AAL": {
   "fingerprint": {
@@ -131,7 +131,7 @@
    }
   },
   "hash": "39b3b4d95782a8be",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "AAON": {
   "fingerprint": {
@@ -205,7 +205,7 @@
     "bands": "bear",
     "osc": "bear",
     "osc_hi": false,
-    "osc_lo": true,
+    "osc_lo": false,
     "struct": "bull",
     "struct_events": [],
     "struct_major": "bull"
@@ -229,8 +229,8 @@
     "struct_major": null
    }
   },
-  "hash": "2e234ad14f71d5fc",
-  "updated_at": "2026-09-09T22:15:23+00:00"
+  "hash": "18b8bdfc74aee5b7",
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "ABNB": {
   "fingerprint": {
@@ -463,7 +463,7 @@
    }
   },
   "hash": "ee135a9ee6a92197",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "ADI": {
   "fingerprint": {
@@ -630,7 +630,7 @@
    }
   },
   "hash": "2c5034381df4d481",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "AEG": {
   "fingerprint": {
@@ -698,7 +698,7 @@
    }
   },
   "hash": "eae17fbef806dcb0",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "AEM": {
   "fingerprint": {
@@ -731,7 +731,7 @@
    }
   },
   "hash": "db0bd2c65a75ace6",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "AEP": {
   "fingerprint": {
@@ -964,7 +964,7 @@
    }
   },
   "hash": "7e8b722b62b41c06",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "AGCO": {
   "fingerprint": {
@@ -1228,7 +1228,7 @@
    }
   },
   "hash": "69e6542f05419bc7",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "AKAM": {
   "fingerprint": {
@@ -1261,7 +1261,7 @@
    }
   },
   "hash": "ae7ce894ffd2bf05",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "ALAB": {
   "fingerprint": {
@@ -1296,7 +1296,7 @@
    }
   },
   "hash": "215c03fb63a20f17",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "ALB": {
   "fingerprint": {
@@ -1362,7 +1362,7 @@
    }
   },
   "hash": "c036cbfb0a3c3d3b",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "ALGN": {
   "fingerprint": {
@@ -1560,7 +1560,7 @@
    }
   },
   "hash": "1a3b7ad5c54af694",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "ALSN": {
   "fingerprint": {
@@ -1664,7 +1664,7 @@
    }
   },
   "hash": "968d000b4f2093b4",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "AMAT": {
   "fingerprint": {
@@ -1674,7 +1674,9 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [],
+    "struct_events": [
+     "bos_dn"
+    ],
     "struct_major": "bull"
    },
    "monthly": {
@@ -1696,8 +1698,8 @@
     "struct_major": null
    }
   },
-  "hash": "6608e8934bc4fa38",
-  "updated_at": "2026-09-14T03:57:18+00:00"
+  "hash": "69046c7dc25cf855",
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "AMCR": {
   "fingerprint": {
@@ -1831,7 +1833,7 @@
    }
   },
   "hash": "8e2142d65440bb6d",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "AMGN": {
   "fingerprint": {
@@ -2266,11 +2268,13 @@
   "fingerprint": {
    "daily": {
     "bands": "bull",
-    "osc": "bull",
+    "osc": "bear",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [],
+    "struct_events": [
+     "tl_break_dn"
+    ],
     "struct_major": "bull"
    },
    "monthly": {
@@ -2292,8 +2296,8 @@
     "struct_major": null
    }
   },
-  "hash": "1d13c5478cba21f2",
-  "updated_at": "2026-09-12T06:00:59+00:00"
+  "hash": "26873201f52354f6",
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "APO": {
   "fingerprint": {
@@ -2425,7 +2429,7 @@
    }
   },
   "hash": "8ce1be78323afac0",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "ARCC": {
   "fingerprint": {
@@ -2557,7 +2561,7 @@
    }
   },
   "hash": "4c163040a5eda8c8",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "ARW": {
   "fingerprint": {
@@ -2590,7 +2594,7 @@
    }
   },
   "hash": "ed32690f69a8ae91",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "ARWR": {
   "fingerprint": {
@@ -2625,7 +2629,7 @@
    }
   },
   "hash": "5fdf2b2fc75b9aa6",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "ARXS": {
   "fingerprint": {
@@ -2653,7 +2657,7 @@
    }
   },
   "hash": "489aa867ce660445",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "AS": {
   "fingerprint": {
@@ -2696,7 +2700,10 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [],
+    "struct_events": [
+     "bos_dn",
+     "tl_break_dn"
+    ],
     "struct_major": "bull"
    },
    "monthly": {
@@ -2718,8 +2725,8 @@
     "struct_major": null
    }
   },
-  "hash": "01cd4d69e018a178",
-  "updated_at": "2026-09-01T21:22:13+00:00"
+  "hash": "8efc28ac0e19e1e3",
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "ASND": {
   "fingerprint": {
@@ -2884,7 +2891,7 @@
    }
   },
   "hash": "f9f48ed9e220300d",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "ATR": {
   "fingerprint": {
@@ -3016,7 +3023,7 @@
    }
   },
   "hash": "5f86ebf682646fe6",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "AVGO": {
   "fingerprint": {
@@ -3148,7 +3155,7 @@
    }
   },
   "hash": "2cbe43ac7194dde6",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "AXON": {
   "fingerprint": {
@@ -3189,7 +3196,7 @@
     "bands": "bear",
     "osc": "bear",
     "osc_hi": false,
-    "osc_lo": true,
+    "osc_lo": false,
     "struct": "bear",
     "struct_events": [],
     "struct_major": "bull"
@@ -3213,8 +3220,8 @@
     "struct_major": null
    }
   },
-  "hash": "4b6a112993dbed00",
-  "updated_at": "2026-09-01T21:22:13+00:00"
+  "hash": "0fc5271984ab6efa",
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "AXS": {
   "fingerprint": {
@@ -3249,7 +3256,7 @@
    }
   },
   "hash": "23a6837b476cf79f",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "AXSM": {
   "fingerprint": {
@@ -3282,7 +3289,7 @@
    }
   },
   "hash": "e5012a787002a68b",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "AYI": {
   "fingerprint": {
@@ -3325,7 +3332,9 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [],
+    "struct_events": [
+     "tl_break_up"
+    ],
     "struct_major": "bull"
    },
    "monthly": {
@@ -3347,8 +3356,8 @@
     "struct_major": null
    }
   },
-  "hash": "ae7ce894ffd2bf05",
-  "updated_at": "2026-09-03T05:21:10+00:00"
+  "hash": "1e51207028d95837",
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "AZO": {
   "fingerprint": {
@@ -3416,7 +3425,7 @@
    }
   },
   "hash": "bf9587f0574359ab",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "BA": {
   "fingerprint": {
@@ -3457,9 +3466,13 @@
     "bands": "bull",
     "osc": "bear",
     "osc_hi": false,
-    "osc_lo": false,
-    "struct": "bull",
-    "struct_events": [],
+    "osc_lo": true,
+    "struct": "bear",
+    "struct_events": [
+     "choch_dn",
+     "choch_dn_plus",
+     "tl_break_dn"
+    ],
     "struct_major": "bull"
    },
    "monthly": {
@@ -3481,8 +3494,41 @@
     "struct_major": null
    }
   },
-  "hash": "afae3c3f84377eb7",
-  "updated_at": "2026-09-09T06:56:27+00:00"
+  "hash": "5873490a32e21adb",
+  "updated_at": "2026-09-14T21:15:42+00:00"
+ },
+ "BAH": {
+  "fingerprint": {
+   "daily": {
+    "bands": "bull",
+    "osc": "bear",
+    "osc_hi": false,
+    "osc_lo": false,
+    "struct": "bear",
+    "struct_events": [],
+    "struct_major": "bear"
+   },
+   "monthly": {
+    "bands": "bear",
+    "osc": "bear",
+    "osc_hi": false,
+    "osc_lo": false,
+    "struct": null,
+    "struct_events": [],
+    "struct_major": null
+   },
+   "weekly": {
+    "bands": "bear",
+    "osc": "bull",
+    "osc_hi": true,
+    "osc_lo": false,
+    "struct": null,
+    "struct_events": [],
+    "struct_major": null
+   }
+  },
+  "hash": "caf2ee2c41f1b0c6",
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "BAH": {
   "fingerprint": {
@@ -3814,7 +3860,7 @@
    }
   },
   "hash": "dc26e974db6b6b78",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "BCS": {
   "fingerprint": {
@@ -3849,7 +3895,7 @@
    }
   },
   "hash": "1aa6421b0c3db4d6",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "BDX": {
   "fingerprint": {
@@ -4113,7 +4159,7 @@
    }
   },
   "hash": "1f4689f6450086d1",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "BJ": {
   "fingerprint": {
@@ -4146,7 +4192,7 @@
    }
   },
   "hash": "b38a4e9f24c5ddac",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "BKNG": {
   "fingerprint": {
@@ -4412,7 +4458,7 @@
    }
   },
   "hash": "c6474dfa6309f1ca",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "BNS": {
   "fingerprint": {
@@ -4709,7 +4755,7 @@
    }
   },
   "hash": "b86c10d77c79e42f",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "BSAC": {
   "fingerprint": {
@@ -4744,7 +4790,7 @@
    }
   },
   "hash": "d8ad62068f0ce969",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "BSX": {
   "fingerprint": {
@@ -4816,13 +4862,11 @@
   "fingerprint": {
    "daily": {
     "bands": "bear",
-    "osc": "bear",
+    "osc": "bull",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [
-     "tl_break_up"
-    ],
+    "struct_events": [],
     "struct_major": "bear"
    },
    "monthly": {
@@ -4844,8 +4888,8 @@
     "struct_major": null
    }
   },
-  "hash": "dabd0f30c209cf3e",
-  "updated_at": "2026-09-12T06:00:59+00:00"
+  "hash": "f940b5b0e8c3f4e9",
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "BTSG": {
   "fingerprint": {
@@ -4977,7 +5021,7 @@
    }
   },
   "hash": "a1f7cc57dec2ec85",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "BWA": {
   "fingerprint": {
@@ -5012,7 +5056,7 @@
    }
   },
   "hash": "69d2c69e617616a3",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "BWXT": {
   "fingerprint": {
@@ -5540,7 +5584,7 @@
    }
   },
   "hash": "2e234ad14f71d5fc",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "CCI": {
   "fingerprint": {
@@ -5609,7 +5653,7 @@
    }
   },
   "hash": "ab2e768b8304a5bb",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "CCK": {
   "fingerprint": {
@@ -5708,7 +5752,7 @@
    }
   },
   "hash": "db0bd2c65a75ace6",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "CDNS": {
   "fingerprint": {
@@ -5810,7 +5854,7 @@
    }
   },
   "hash": "a1015227842fd788",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "CF": {
   "fingerprint": {
@@ -5975,7 +6019,7 @@
    }
   },
   "hash": "fe768f1ead506ea0",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "CHD": {
   "fingerprint": {
@@ -6074,7 +6118,7 @@
    }
   },
   "hash": "5911c8b2ed7003fe",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "CHRW": {
   "fingerprint": {
@@ -6110,7 +6154,7 @@
    }
   },
   "hash": "626595b62e97d1b0",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "CHT": {
   "fingerprint": {
@@ -6277,7 +6321,7 @@
    }
   },
   "hash": "c56a7762fe4bc889",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "CIEN": {
   "fingerprint": {
@@ -6343,7 +6387,7 @@
    }
   },
   "hash": "ae7ce894ffd2bf05",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "CINF": {
   "fingerprint": {
@@ -6376,7 +6420,7 @@
    }
   },
   "hash": "6dc05ca344a0bc99",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "CL": {
   "fingerprint": {
@@ -6442,7 +6486,7 @@
    }
   },
   "hash": "5b061c9c60e44f86",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "CLS": {
   "fingerprint": {
@@ -6574,7 +6618,7 @@
    }
   },
   "hash": "2ef1f4a9987b5622",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "CME": {
   "fingerprint": {
@@ -6675,7 +6719,7 @@
    }
   },
   "hash": "eae17fbef806dcb0",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "CMS": {
   "fingerprint": {
@@ -6708,7 +6752,7 @@
    }
   },
   "hash": "fc98d5253cc88244",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "CNA": {
   "fingerprint": {
@@ -6741,7 +6785,7 @@
    }
   },
   "hash": "0fc5271984ab6efa",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "CNC": {
   "fingerprint": {
@@ -6777,7 +6821,7 @@
    }
   },
   "hash": "8e1fc22e082f7c85",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "CNH": {
   "fingerprint": {
@@ -6886,9 +6930,7 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
-    "struct_events": [
-     "tl_break_dn"
-    ],
+    "struct_events": [],
     "struct_major": "bull"
    },
    "monthly": {
@@ -6910,8 +6952,8 @@
     "struct_major": null
    }
   },
-  "hash": "dc26e974db6b6b78",
-  "updated_at": "2026-09-12T06:00:59+00:00"
+  "hash": "afae3c3f84377eb7",
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "COF": {
   "fingerprint": {
@@ -7045,7 +7087,7 @@
    }
   },
   "hash": "058c33b22d34cd14",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "COLB": {
   "fingerprint": {
@@ -7111,7 +7153,7 @@
    }
   },
   "hash": "4c163040a5eda8c8",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "COO": {
   "fingerprint": {
@@ -7154,7 +7196,9 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
-    "struct_events": [],
+    "struct_events": [
+     "tl_break_dn"
+    ],
     "struct_major": "bull"
    },
    "monthly": {
@@ -7176,8 +7220,8 @@
     "struct_major": null
    }
   },
-  "hash": "5b061c9c60e44f86",
-  "updated_at": "2026-09-03T05:21:10+00:00"
+  "hash": "8f471ffea1c0582a",
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "COR": {
   "fingerprint": {
@@ -7375,7 +7419,7 @@
    }
   },
   "hash": "085c164c5549c9ed",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "CPRT": {
   "fingerprint": {
@@ -7682,7 +7726,9 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
-    "struct_events": [],
+    "struct_events": [
+     "bos_up"
+    ],
     "struct_major": "bull"
    },
    "monthly": {
@@ -7704,8 +7750,8 @@
     "struct_major": null
    }
   },
-  "hash": "afae3c3f84377eb7",
-  "updated_at": "2026-08-29T17:55:37+00:00"
+  "hash": "3c950e97dfcdd9eb",
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "CRWV": {
   "fingerprint": {
@@ -7740,7 +7786,7 @@
    }
   },
   "hash": "227922529bd11123",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "CSCO": {
   "fingerprint": {
@@ -7940,7 +7986,7 @@
    }
   },
   "hash": "69046c7dc25cf855",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "CTSH": {
   "fingerprint": {
@@ -7973,7 +8019,7 @@
    }
   },
   "hash": "4fa3603e7b324d45",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "CTVA": {
   "fingerprint": {
@@ -8303,7 +8349,7 @@
    }
   },
   "hash": "01cd4d69e018a178",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "DAL": {
   "fingerprint": {
@@ -8437,7 +8483,7 @@
    }
   },
   "hash": "dc26e974db6b6b78",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "DCI": {
   "fingerprint": {
@@ -8506,7 +8552,7 @@
    }
   },
   "hash": "54f9cb859bab527a",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "DDOG": {
   "fingerprint": {
@@ -8541,13 +8587,13 @@
    }
   },
   "hash": "a76ace100e2e26f2",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "DDS": {
   "fingerprint": {
    "daily": {
     "bands": "bull",
-    "osc": "bear",
+    "osc": "bull",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
@@ -8573,8 +8619,8 @@
     "struct_major": null
    }
   },
-  "hash": "afae3c3f84377eb7",
-  "updated_at": "2026-09-14T03:57:18+00:00"
+  "hash": "5b061c9c60e44f86",
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "DE": {
   "fingerprint": {
@@ -8881,7 +8927,9 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
-    "struct_events": [],
+    "struct_events": [
+     "tl_break_up"
+    ],
     "struct_major": "bull"
    },
    "monthly": {
@@ -8903,8 +8951,8 @@
     "struct_major": null
    }
   },
-  "hash": "359ebb61a520b9ae",
-  "updated_at": "2026-09-05T05:17:30+00:00"
+  "hash": "af6dacd9c124a14d",
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "DKNG": {
   "fingerprint": {
@@ -9234,7 +9282,7 @@
    }
   },
   "hash": "0fc5271984ab6efa",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "DRS": {
   "fingerprint": {
@@ -9267,7 +9315,7 @@
    }
   },
   "hash": "f9f48ed9e220300d",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "DT": {
   "fingerprint": {
@@ -9333,7 +9381,7 @@
    }
   },
   "hash": "ba2436df34ac88a9",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "DTM": {
   "fingerprint": {
@@ -9401,7 +9449,7 @@
    }
   },
   "hash": "3ca9cdab21af0a2a",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "DVA": {
   "fingerprint": {
@@ -9500,7 +9548,7 @@
    }
   },
   "hash": "d1621a4b4cb74143",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "DY": {
   "fingerprint": {
@@ -9698,7 +9746,7 @@
    }
   },
   "hash": "6608e8934bc4fa38",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "EDU": {
   "fingerprint": {
@@ -9863,7 +9911,7 @@
    }
   },
   "hash": "7ca2eca0baeae2f6",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "EIX": {
   "fingerprint": {
@@ -10162,7 +10210,7 @@
    }
   },
   "hash": "36541251561bec63",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "EMR": {
   "fingerprint": {
@@ -10329,7 +10377,7 @@
    }
   },
   "hash": "db29dab16e901a82",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "EOG": {
   "fingerprint": {
@@ -10465,7 +10513,7 @@
    }
   },
   "hash": "c8599e55c25c1b3d",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "EQNR": {
   "fingerprint": {
@@ -10533,7 +10581,7 @@
    }
   },
   "hash": "44d4c1b671c51f62",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "EQX": {
   "fingerprint": {
@@ -10568,7 +10616,7 @@
    }
   },
   "hash": "564af907bd274306",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "ERIE": {
   "fingerprint": {
@@ -10670,7 +10718,7 @@
    }
   },
   "hash": "433a70f22f4f759c",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "ESLT": {
   "fingerprint": {
@@ -10771,7 +10819,7 @@
    }
   },
   "hash": "e726d84cb3f59ef0",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "EVR": {
   "fingerprint": {
@@ -10806,7 +10854,7 @@
    }
   },
   "hash": "188534fc4ce52fe7",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "EVRG": {
   "fingerprint": {
@@ -10940,7 +10988,7 @@
    }
   },
   "hash": "3ca9cdab21af0a2a",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "EXE": {
   "fingerprint": {
@@ -11039,7 +11087,7 @@
    }
   },
   "hash": "f74d4e046621f7e2",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "EXPE": {
   "fingerprint": {
@@ -11501,7 +11549,7 @@
    }
   },
   "hash": "ed32690f69a8ae91",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "FHN": {
   "fingerprint": {
@@ -11633,7 +11681,7 @@
    }
   },
   "hash": "35f248d071e21f48",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "FISV": {
   "fingerprint": {
@@ -11897,7 +11945,7 @@
    }
   },
   "hash": "e5012a787002a68b",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "FN": {
   "fingerprint": {
@@ -12161,7 +12209,7 @@
    }
   },
   "hash": "93cd043305032a08",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "FROG": {
   "fingerprint": {
@@ -12295,7 +12343,7 @@
    }
   },
   "hash": "55cf429c1410b2b1",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "FTNT": {
   "fingerprint": {
@@ -12364,7 +12412,7 @@
    }
   },
   "hash": "ae522c738c69100d",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "FTV": {
   "fingerprint": {
@@ -12537,7 +12585,7 @@
     "bands": "bear",
     "osc": "bear",
     "osc_hi": false,
-    "osc_lo": false,
+    "osc_lo": true,
     "struct": "bear",
     "struct_events": [],
     "struct_major": "bull"
@@ -12561,8 +12609,8 @@
     "struct_major": null
    }
   },
-  "hash": "01cd4d69e018a178",
-  "updated_at": "2026-09-14T03:57:18+00:00"
+  "hash": "bb64e2d4a2cb7a14",
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "GEHC": {
   "fingerprint": {
@@ -12634,7 +12682,7 @@
   "fingerprint": {
    "daily": {
     "bands": "bear",
-    "osc": "bull",
+    "osc": "bear",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
@@ -12660,8 +12708,8 @@
     "struct_major": null
    }
   },
-  "hash": "769bdb78bb59cef0",
-  "updated_at": "2026-09-12T06:00:59+00:00"
+  "hash": "cc07b81f4c6f3306",
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "GFL": {
   "fingerprint": {
@@ -13189,7 +13237,7 @@
    }
   },
   "hash": "38f29aeb63238987",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "GMED": {
   "fingerprint": {
@@ -13257,7 +13305,7 @@
    }
   },
   "hash": "eae17fbef806dcb0",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "GOOG": {
   "fingerprint": {
@@ -13465,7 +13513,9 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [],
+    "struct_events": [
+     "bos_dn"
+    ],
     "struct_major": "bull"
    },
    "monthly": {
@@ -13487,8 +13537,8 @@
     "struct_major": null
    }
   },
-  "hash": "01cd4d69e018a178",
-  "updated_at": "2026-09-03T05:21:10+00:00"
+  "hash": "39b3b4d95782a8be",
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "GSAT": {
   "fingerprint": {
@@ -13857,13 +13907,11 @@
   "fingerprint": {
    "daily": {
     "bands": "bear",
-    "osc": "bear",
+    "osc": "bull",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [
-     "tl_break_up"
-    ],
+    "struct_events": [],
     "struct_major": "bear"
    },
    "monthly": {
@@ -13885,8 +13933,8 @@
     "struct_major": null
    }
   },
-  "hash": "56fe08b015c1b6f5",
-  "updated_at": "2026-09-12T06:00:59+00:00"
+  "hash": "802490015a43e7db",
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "HEI": {
   "fingerprint": {
@@ -14053,7 +14101,7 @@
    }
   },
   "hash": "65ec0b9a0ab951f0",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "HLI": {
   "fingerprint": {
@@ -14119,7 +14167,7 @@
    }
   },
   "hash": "6608e8934bc4fa38",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "HMC": {
   "fingerprint": {
@@ -14187,7 +14235,7 @@
    }
   },
   "hash": "1ca9c4caeab0c7ea",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "HON": {
   "fingerprint": {
@@ -14758,11 +14806,7 @@
     "osc_hi": true,
     "osc_lo": false,
     "struct": "bull",
-    "struct_events": [
-     "choch_up",
-     "choch_up_plus",
-     "tl_break_up"
-    ],
+    "struct_events": [],
     "struct_major": "bear"
    },
    "monthly": {
@@ -14784,8 +14828,8 @@
     "struct_major": null
    }
   },
-  "hash": "2a15d1d2ad023694",
-  "updated_at": "2026-09-12T06:00:59+00:00"
+  "hash": "ccc62bec1a46aa51",
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "IBN": {
   "fingerprint": {
@@ -14884,7 +14928,7 @@
    }
   },
   "hash": "6341d4da1100da91",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "ICLR": {
   "fingerprint": {
@@ -14952,7 +14996,7 @@
    }
   },
   "hash": "2506d6dbefa60eeb",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "IDXX": {
   "fingerprint": {
@@ -15216,7 +15260,7 @@
    }
   },
   "hash": "3473618ba07ab38e",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "ING": {
   "fingerprint": {
@@ -15414,7 +15458,7 @@
    }
   },
   "hash": "37bd82caefb9e1b2",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "IONS": {
   "fingerprint": {
@@ -15655,9 +15699,7 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [
-     "tl_break_up"
-    ],
+    "struct_events": [],
     "struct_major": "bear"
    },
    "monthly": {
@@ -15679,8 +15721,8 @@
     "struct_major": null
    }
   },
-  "hash": "cf3abdb36184b005",
-  "updated_at": "2026-09-12T06:00:59+00:00"
+  "hash": "ab145718a2cc0f64",
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "IT": {
   "fingerprint": {
@@ -15816,7 +15858,7 @@
    }
   },
   "hash": "162b2d5b3ccb8684",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "J": {
   "fingerprint": {
@@ -16017,7 +16059,7 @@
    }
   },
   "hash": "f66272b3c0fd6ad6",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "JEF": {
   "fingerprint": {
@@ -16053,7 +16095,7 @@
    }
   },
   "hash": "b96877ef68647ae0",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "JHX": {
   "fingerprint": {
@@ -16194,8 +16236,11 @@
     "osc": "bear",
     "osc_hi": false,
     "osc_lo": true,
-    "struct": "bull",
-    "struct_events": [],
+    "struct": "bear",
+    "struct_events": [
+     "choch_dn",
+     "choch_dn_plus"
+    ],
     "struct_major": "bull"
    },
    "monthly": {
@@ -16217,8 +16262,8 @@
     "struct_major": null
    }
   },
-  "hash": "6e4547d2114bcdbd",
-  "updated_at": "2026-09-09T22:15:23+00:00"
+  "hash": "f733af1ac3775c10",
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "JXN": {
   "fingerprint": {
@@ -16317,7 +16362,7 @@
    }
   },
   "hash": "7b31c3fd315fca9a",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "KEP": {
   "fingerprint": {
@@ -16451,7 +16496,7 @@
    }
   },
   "hash": "40fb6edb854cee3c",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "KGC": {
   "fingerprint": {
@@ -16484,7 +16529,7 @@
    }
   },
   "hash": "1148734f8615e81b",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "KHC": {
   "fingerprint": {
@@ -16789,7 +16834,7 @@
     "bands": "bull",
     "osc": "bear",
     "osc_hi": false,
-    "osc_lo": true,
+    "osc_lo": false,
     "struct": "bull",
     "struct_events": [],
     "struct_major": "bull"
@@ -16813,8 +16858,8 @@
     "struct_major": null
    }
   },
-  "hash": "6e4547d2114bcdbd",
-  "updated_at": "2026-09-14T03:57:18+00:00"
+  "hash": "afae3c3f84377eb7",
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "KR": {
   "fingerprint": {
@@ -16849,7 +16894,7 @@
    }
   },
   "hash": "9f93239c4c844523",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "KRYS": {
   "fingerprint": {
@@ -16882,7 +16927,7 @@
    }
   },
   "hash": "41d26a012a5bf0e1",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "KSPI": {
   "fingerprint": {
@@ -17115,7 +17160,7 @@
    }
   },
   "hash": "a76ace100e2e26f2",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "LDOS": {
   "fingerprint": {
@@ -17283,7 +17328,7 @@
    }
   },
   "hash": "0d18839da4a67921",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "LH": {
   "fingerprint": {
@@ -17483,7 +17528,7 @@
    }
   },
   "hash": "d5e369f4628f2e76",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "LLY": {
   "fingerprint": {
@@ -17648,7 +17693,7 @@
    }
   },
   "hash": "f74d4e046621f7e2",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "LNG": {
   "fingerprint": {
@@ -17819,11 +17864,13 @@
   "fingerprint": {
    "daily": {
     "bands": "bear",
-    "osc": "bull",
+    "osc": "bear",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [],
+    "struct_events": [
+     "bos_dn"
+    ],
     "struct_major": "bull"
    },
    "monthly": {
@@ -17845,8 +17892,8 @@
     "struct_major": null
    }
   },
-  "hash": "e5012a787002a68b",
-  "updated_at": "2026-09-09T22:15:23+00:00"
+  "hash": "69046c7dc25cf855",
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "LSCC": {
   "fingerprint": {
@@ -17881,7 +17928,7 @@
    }
   },
   "hash": "fdf99da6885b73aa",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "LTH": {
   "fingerprint": {
@@ -17980,7 +18027,7 @@
    }
   },
   "hash": "ae7ce894ffd2bf05",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "LVS": {
   "fingerprint": {
@@ -18046,7 +18093,7 @@
    }
   },
   "hash": "26af30900d6570cd",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "LYV": {
   "fingerprint": {
@@ -18171,7 +18218,7 @@
    }
   },
   "hash": "0c2ecfb83e31b5bc",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "MANH": {
   "fingerprint": {
@@ -18369,7 +18416,7 @@
    }
   },
   "hash": "ae7ce894ffd2bf05",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "MCK": {
   "fingerprint": {
@@ -18980,7 +19027,7 @@
    }
   },
   "hash": "116b3690a80d398c",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "MLI": {
   "fingerprint": {
@@ -19081,7 +19128,7 @@
    }
   },
   "hash": "2e4cf0715b4045c6",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "MNST": {
   "fingerprint": {
@@ -19114,18 +19161,18 @@
    }
   },
   "hash": "01cd4d69e018a178",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "MO": {
   "fingerprint": {
    "daily": {
-    "bands": "bear",
+    "bands": "bull",
     "osc": "bull",
     "osc_hi": false,
     "osc_lo": false,
-    "struct": "bear",
+    "struct": "bull",
     "struct_events": [
-     "tl_break_up"
+     "choch_up"
     ],
     "struct_major": "bull"
    },
@@ -19148,8 +19195,8 @@
     "struct_major": null
    }
   },
-  "hash": "9554cc210e792cce",
-  "updated_at": "2026-09-12T06:00:59+00:00"
+  "hash": "f7646e8f334b3157",
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "MOD": {
   "fingerprint": {
@@ -19217,7 +19264,7 @@
    }
   },
   "hash": "520f69add9f8094d",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "MP": {
   "fingerprint": {
@@ -19250,7 +19297,7 @@
    }
   },
   "hash": "b62277e660551fee",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "MPC": {
   "fingerprint": {
@@ -19260,9 +19307,7 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
-    "struct_events": [
-     "tl_break_dn"
-    ],
+    "struct_events": [],
     "struct_major": "bull"
    },
    "monthly": {
@@ -19284,8 +19329,8 @@
     "struct_major": null
    }
   },
-  "hash": "efc51d051d379068",
-  "updated_at": "2026-09-12T06:00:59+00:00"
+  "hash": "a94af5df1f11e4df",
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "MPWR": {
   "fingerprint": {
@@ -19318,7 +19363,7 @@
    }
   },
   "hash": "b86c10d77c79e42f",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "MRK": {
   "fingerprint": {
@@ -19386,7 +19431,7 @@
    }
   },
   "hash": "bb0480589e109923",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "MRSH": {
   "fingerprint": {
@@ -19462,7 +19507,10 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [],
+    "struct_events": [
+     "bos_dn",
+     "tl_break_dn"
+    ],
     "struct_major": "bull"
    },
    "monthly": {
@@ -19484,8 +19532,8 @@
     "struct_major": null
    }
   },
-  "hash": "01cd4d69e018a178",
-  "updated_at": "2026-09-12T06:00:59+00:00"
+  "hash": "8efc28ac0e19e1e3",
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "MSCI": {
   "fingerprint": {
@@ -19683,7 +19731,7 @@
    }
   },
   "hash": "afae3c3f84377eb7",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "MTB": {
   "fingerprint": {
@@ -19817,7 +19865,7 @@
    }
   },
   "hash": "fdf99da6885b73aa",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "MTZ": {
   "fingerprint": {
@@ -20188,7 +20236,7 @@
     "bands": "bull",
     "osc": "bear",
     "osc_hi": false,
-    "osc_lo": false,
+    "osc_lo": true,
     "struct": "bull",
     "struct_events": [],
     "struct_major": "bull"
@@ -20212,14 +20260,14 @@
     "struct_major": null
    }
   },
-  "hash": "afae3c3f84377eb7",
-  "updated_at": "2026-09-12T06:00:59+00:00"
+  "hash": "6e4547d2114bcdbd",
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "NET": {
   "fingerprint": {
    "daily": {
     "bands": "bull",
-    "osc": "bear",
+    "osc": "bull",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
@@ -20245,8 +20293,8 @@
     "struct_major": null
    }
   },
-  "hash": "afae3c3f84377eb7",
-  "updated_at": "2026-09-14T03:57:18+00:00"
+  "hash": "5b061c9c60e44f86",
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "NFLX": {
   "fingerprint": {
@@ -20576,7 +20624,7 @@
    }
   },
   "hash": "afae3c3f84377eb7",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "NTNX": {
   "fingerprint": {
@@ -20708,7 +20756,7 @@
    }
   },
   "hash": "2766d3a8e082a1c4",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "NUE": {
   "fingerprint": {
@@ -20809,7 +20857,7 @@
    }
   },
   "hash": "116b3690a80d398c",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "NVO": {
   "fingerprint": {
@@ -20943,7 +20991,7 @@
    }
   },
   "hash": "40fb6edb854cee3c",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "NWS": {
   "fingerprint": {
@@ -21042,7 +21090,7 @@
    }
   },
   "hash": "b07f7ba44e633bf3",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "NXT": {
   "fingerprint": {
@@ -21110,7 +21158,7 @@
    }
   },
   "hash": "4dc484b5c9b54c12",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "O": {
   "fingerprint": {
@@ -21145,7 +21193,7 @@
    }
   },
   "hash": "a048c0bf694f3d2f",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "OC": {
   "fingerprint": {
@@ -21345,7 +21393,7 @@
    }
   },
   "hash": "09e49af4f21a6e07",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "OMC": {
   "fingerprint": {
@@ -21411,7 +21459,7 @@
    }
   },
   "hash": "ae7ce894ffd2bf05",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "ONB": {
   "fingerprint": {
@@ -21512,7 +21560,7 @@
    }
   },
   "hash": "69d2c69e617616a3",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "ORCL": {
   "fingerprint": {
@@ -21646,7 +21694,7 @@
    }
   },
   "hash": "3cfbbcfc03d34ef1",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "OSK": {
   "fingerprint": {
@@ -21679,7 +21727,7 @@
    }
   },
   "hash": "5180dc876944c1c2",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "OTIS": {
   "fingerprint": {
@@ -21846,7 +21894,7 @@
    }
   },
   "hash": "92577a5d5ecf52a9",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "PAC": {
   "fingerprint": {
@@ -21856,7 +21904,9 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [],
+    "struct_events": [
+     "bos_dn"
+    ],
     "struct_major": "bear"
    },
    "monthly": {
@@ -21878,8 +21928,8 @@
     "struct_major": null
    }
   },
-  "hash": "fc98d5253cc88244",
-  "updated_at": "2026-09-03T05:21:10+00:00"
+  "hash": "527419206809afc2",
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "PAG": {
   "fingerprint": {
@@ -21920,7 +21970,7 @@
     "bands": "bear",
     "osc": "bear",
     "osc_hi": false,
-    "osc_lo": true,
+    "osc_lo": false,
     "struct": "bull",
     "struct_events": [],
     "struct_major": "bull"
@@ -21944,8 +21994,8 @@
     "struct_major": null
    }
   },
-  "hash": "2e234ad14f71d5fc",
-  "updated_at": "2026-09-14T03:57:18+00:00"
+  "hash": "18b8bdfc74aee5b7",
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "PATH": {
   "fingerprint": {
@@ -22101,7 +22151,7 @@
    }
   },
   "hash": "6608e8934bc4fa38",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "PBF": {
   "fingerprint": {
@@ -22266,7 +22316,7 @@
    }
   },
   "hash": "69e6542f05419bc7",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "PCVX": {
   "fingerprint": {
@@ -22332,7 +22382,7 @@
    }
   },
   "hash": "f9f48ed9e220300d",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "PEN": {
   "fingerprint": {
@@ -22804,9 +22854,7 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [
-     "tl_break_up"
-    ],
+    "struct_events": [],
     "struct_major": "bull"
    },
    "monthly": {
@@ -22828,8 +22876,8 @@
     "struct_major": null
    }
   },
-  "hash": "45f3f8046bbb297f",
-  "updated_at": "2026-09-12T06:00:59+00:00"
+  "hash": "4c163040a5eda8c8",
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "PNC": {
   "fingerprint": {
@@ -22928,7 +22976,7 @@
    }
   },
   "hash": "1f4689f6450086d1",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "PNW": {
   "fingerprint": {
@@ -22961,7 +23009,7 @@
    }
   },
   "hash": "ba2436df34ac88a9",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "PODD": {
   "fingerprint": {
@@ -23029,7 +23077,7 @@
    }
   },
   "hash": "a2a7ac1bbd57d7b7",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "PPG": {
   "fingerprint": {
@@ -23163,7 +23211,7 @@
    }
   },
   "hash": "daffbcd8621767bc",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "PRI": {
   "fingerprint": {
@@ -23198,7 +23246,7 @@
    }
   },
   "hash": "2c26fa63700dbfb8",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "PRMB": {
   "fingerprint": {
@@ -23422,7 +23470,7 @@
    }
   },
   "hash": "efc51d051d379068",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "PTC": {
   "fingerprint": {
@@ -23688,7 +23736,7 @@
    }
   },
   "hash": "344edc5b5bf01a4a",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "QRVO": {
   "fingerprint": {
@@ -23721,7 +23769,7 @@
    }
   },
   "hash": "3ee4bc5078e6a7cc",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "QSR": {
   "fingerprint": {
@@ -23789,7 +23837,7 @@
    }
   },
   "hash": "f8c8308ccbcedcf9",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "R": {
   "fingerprint": {
@@ -23824,7 +23872,7 @@
    }
   },
   "hash": "69046c7dc25cf855",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "RACE": {
   "fingerprint": {
@@ -24022,7 +24070,7 @@
    }
   },
   "hash": "60d452e5c459fe4d",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "RCI": {
   "fingerprint": {
@@ -24123,7 +24171,7 @@
    }
   },
   "hash": "c731f71ed69aab96",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "RDY": {
   "fingerprint": {
@@ -24189,7 +24237,7 @@
    }
   },
   "hash": "ba2436df34ac88a9",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "REGN": {
   "fingerprint": {
@@ -24257,7 +24305,7 @@
    }
   },
   "hash": "39ec50900ff498ab",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "RF": {
   "fingerprint": {
@@ -24389,7 +24437,7 @@
    }
   },
   "hash": "8a93cccb32ac5844",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "RHP": {
   "fingerprint": {
@@ -24521,7 +24569,7 @@
    }
   },
   "hash": "127af71b83645f09",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "RJF": {
   "fingerprint": {
@@ -24688,7 +24736,7 @@
    }
   },
   "hash": "116b3690a80d398c",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "RMD": {
   "fingerprint": {
@@ -25018,7 +25066,7 @@
    }
   },
   "hash": "2e234ad14f71d5fc",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "RRC": {
   "fingerprint": {
@@ -25086,7 +25134,7 @@
    }
   },
   "hash": "22dadcd9eec2f6de",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "RS": {
   "fingerprint": {
@@ -25154,7 +25202,7 @@
    }
   },
   "hash": "a7fbf97269d2bc9e",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "RTX": {
   "fingerprint": {
@@ -25220,7 +25268,7 @@
    }
   },
   "hash": "18b8bdfc74aee5b7",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "RVMD": {
   "fingerprint": {
@@ -25418,7 +25466,7 @@
    }
   },
   "hash": "a78db8b555843f46",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "SAN": {
   "fingerprint": {
@@ -25484,7 +25532,7 @@
    }
   },
   "hash": "ed32690f69a8ae91",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "SAP": {
   "fingerprint": {
@@ -25583,7 +25631,7 @@
    }
   },
   "hash": "1f8efcde2a764205",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "SBSW": {
   "fingerprint": {
@@ -25618,7 +25666,7 @@
    }
   },
   "hash": "ad07a496f4686a55",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "SBUX": {
   "fingerprint": {
@@ -25659,7 +25707,7 @@
     "bands": "bull",
     "osc": "bear",
     "osc_hi": false,
-    "osc_lo": false,
+    "osc_lo": true,
     "struct": "bull",
     "struct_events": [],
     "struct_major": "bull"
@@ -25683,8 +25731,8 @@
     "struct_major": null
    }
   },
-  "hash": "afae3c3f84377eb7",
-  "updated_at": "2026-09-05T05:17:30+00:00"
+  "hash": "6e4547d2114bcdbd",
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "SCHW": {
   "fingerprint": {
@@ -25819,7 +25867,7 @@
    }
   },
   "hash": "3f2bab5245a071cc",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "SFD": {
   "fingerprint": {
@@ -25885,7 +25933,7 @@
    }
   },
   "hash": "d11a3b80a7bd2297",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "SGI": {
   "fingerprint": {
@@ -26052,7 +26100,7 @@
    }
   },
   "hash": "2cb640721c451a31",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "SJM": {
   "fingerprint": {
@@ -26085,7 +26133,7 @@
    }
   },
   "hash": "574292ea379c3d15",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "SKM": {
   "fingerprint": {
@@ -26120,7 +26168,7 @@
    }
   },
   "hash": "cfcd6cfe06cc6ada",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "SLB": {
   "fingerprint": {
@@ -26155,7 +26203,7 @@
    }
   },
   "hash": "dc26e974db6b6b78",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "SLF": {
   "fingerprint": {
@@ -26223,7 +26271,7 @@
    }
   },
   "hash": "618d7898cadc758c",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "SMMT": {
   "fingerprint": {
@@ -26388,7 +26436,7 @@
    }
   },
   "hash": "87823224df04bf06",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "SNDK": {
   "fingerprint": {
@@ -26555,7 +26603,7 @@
    }
   },
   "hash": "3d08a28cc7e8913d",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "SNX": {
   "fingerprint": {
@@ -26588,7 +26636,7 @@
    }
   },
   "hash": "ed32690f69a8ae91",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "SNY": {
   "fingerprint": {
@@ -26656,7 +26704,7 @@
    }
   },
   "hash": "3ca9cdab21af0a2a",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "SOFI": {
   "fingerprint": {
@@ -26722,7 +26770,7 @@
    }
   },
   "hash": "58e7c475e41168d7",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "SOLV": {
   "fingerprint": {
@@ -26920,7 +26968,7 @@
    }
   },
   "hash": "56679b415eb501c5",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "SRE": {
   "fingerprint": {
@@ -27151,7 +27199,7 @@
    }
   },
   "hash": "01cd4d69e018a178",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "STM": {
   "fingerprint": {
@@ -27187,7 +27235,7 @@
    }
   },
   "hash": "dec23e867e37e2a8",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "STN": {
   "fingerprint": {
@@ -27288,7 +27336,7 @@
    }
   },
   "hash": "dc26e974db6b6b78",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "STX": {
   "fingerprint": {
@@ -27389,7 +27437,7 @@
    }
   },
   "hash": "d5e369f4628f2e76",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "SUI": {
   "fingerprint": {
@@ -27545,7 +27593,7 @@
    }
   },
   "hash": "3ee4bc5078e6a7cc",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "SYF": {
   "fingerprint": {
@@ -27687,7 +27735,9 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
-    "struct_events": [],
+    "struct_events": [
+     "bos_up"
+    ],
     "struct_major": "bear"
    },
    "monthly": {
@@ -27709,8 +27759,8 @@
     "struct_major": null
    }
   },
-  "hash": "15e9662de6810f93",
-  "updated_at": "2026-09-11T05:30:10+00:00"
+  "hash": "7ce5e7879d8cfba8",
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "TD": {
   "fingerprint": {
@@ -27778,7 +27828,7 @@
    }
   },
   "hash": "ae1d517fe0734d10",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "TDY": {
   "fingerprint": {
@@ -27976,7 +28026,7 @@
    }
   },
   "hash": "9144cb0b0ec6f0fd",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "TER": {
   "fingerprint": {
@@ -28011,7 +28061,7 @@
    }
   },
   "hash": "35a8939c51fb8ea0",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "TEX": {
   "fingerprint": {
@@ -28046,7 +28096,7 @@
    }
   },
   "hash": "5fdf2b2fc75b9aa6",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "TFC": {
   "fingerprint": {
@@ -28178,7 +28228,7 @@
    }
   },
   "hash": "1d13c5478cba21f2",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "THC": {
   "fingerprint": {
@@ -28379,7 +28429,7 @@
    }
   },
   "hash": "b778d21666eb4ca3",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "TLN": {
   "fingerprint": {
@@ -28414,7 +28464,7 @@
    }
   },
   "hash": "2d4479951dea0b5e",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "TM": {
   "fingerprint": {
@@ -28486,7 +28536,7 @@
   "fingerprint": {
    "daily": {
     "bands": "bear",
-    "osc": "bear",
+    "osc": "bull",
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
@@ -28512,8 +28562,8 @@
     "struct_major": null
    }
   },
-  "hash": "5f86ebf682646fe6",
-  "updated_at": "2026-09-12T06:00:59+00:00"
+  "hash": "b9248ddac135f94c",
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "TOL": {
   "fingerprint": {
@@ -28843,7 +28893,7 @@
    }
   },
   "hash": "ae7ce894ffd2bf05",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "TRU": {
   "fingerprint": {
@@ -28911,7 +28961,7 @@
    }
   },
   "hash": "452afa42b043f55b",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "TSCO": {
   "fingerprint": {
@@ -28944,7 +28994,7 @@
    }
   },
   "hash": "9dd259232f741885",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "TSEM": {
   "fingerprint": {
@@ -28980,14 +29030,14 @@
    }
   },
   "hash": "0d18839da4a67921",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "TSLA": {
   "fingerprint": {
    "daily": {
     "bands": "bull",
     "osc": "bull",
-    "osc_hi": true,
+    "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
     "struct_events": [],
@@ -29012,8 +29062,8 @@
     "struct_major": null
    }
   },
-  "hash": "ccc62bec1a46aa51",
-  "updated_at": "2026-09-01T21:22:13+00:00"
+  "hash": "0c8417ba1974d36f",
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "TSM": {
   "fingerprint": {
@@ -29079,7 +29129,7 @@
    }
   },
   "hash": "ba2436df34ac88a9",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "TT": {
   "fingerprint": {
@@ -29114,7 +29164,7 @@
    }
   },
   "hash": "496fa750cb716d3f",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "TTC": {
   "fingerprint": {
@@ -29248,7 +29298,7 @@
    }
   },
   "hash": "13cca65610fa5c2e",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "TTWO": {
   "fingerprint": {
@@ -29281,7 +29331,7 @@
    }
   },
   "hash": "9a5ca2b79b5b5274",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "TU": {
   "fingerprint": {
@@ -29413,7 +29463,7 @@
    }
   },
   "hash": "f74d4e046621f7e2",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "TXN": {
   "fingerprint": {
@@ -29423,9 +29473,7 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [
-     "tl_break_up"
-    ],
+    "struct_events": [],
     "struct_major": "bull"
    },
    "monthly": {
@@ -29447,8 +29495,8 @@
     "struct_major": null
    }
   },
-  "hash": "9554cc210e792cce",
-  "updated_at": "2026-09-14T03:57:18+00:00"
+  "hash": "e5012a787002a68b",
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "TXRH": {
   "fingerprint": {
@@ -29745,7 +29793,7 @@
    }
   },
   "hash": "afae3c3f84377eb7",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "UHAL": {
   "fingerprint": {
@@ -29986,9 +30034,7 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [
-     "bos_dn"
-    ],
+    "struct_events": [],
     "struct_major": "bull"
    },
    "monthly": {
@@ -30010,8 +30056,8 @@
     "struct_major": null
    }
   },
-  "hash": "f158b1ae617f32cf",
-  "updated_at": "2026-09-14T03:57:18+00:00"
+  "hash": "1bfb3e6b083b2163",
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "UNM": {
   "fingerprint": {
@@ -30704,7 +30750,7 @@
    }
   },
   "hash": "f74d4e046621f7e2",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "VRSK": {
   "fingerprint": {
@@ -30968,7 +31014,7 @@
    }
   },
   "hash": "4a93368c46f457dd",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "VZ": {
   "fingerprint": {
@@ -30978,7 +31024,9 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
-    "struct_events": [],
+    "struct_events": [
+     "bos_up"
+    ],
     "struct_major": "bear"
    },
    "monthly": {
@@ -31000,8 +31048,8 @@
     "struct_major": null
    }
   },
-  "hash": "7111ffba57a2c611",
-  "updated_at": "2026-09-09T22:15:23+00:00"
+  "hash": "bcffc809dbe5e762",
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "W": {
   "fingerprint": {
@@ -31034,7 +31082,7 @@
    }
   },
   "hash": "4c163040a5eda8c8",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "WAB": {
   "fingerprint": {
@@ -31275,7 +31323,9 @@
     "osc_hi": false,
     "osc_lo": false,
     "struct": "bull",
-    "struct_events": [],
+    "struct_events": [
+     "sweep_lo"
+    ],
     "struct_major": "bull"
    },
    "monthly": {
@@ -31297,8 +31347,8 @@
     "struct_major": null
    }
   },
-  "hash": "fe768f1ead506ea0",
-  "updated_at": "2026-09-11T05:30:10+00:00"
+  "hash": "525207382ea6c81e",
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "WEC": {
   "fingerprint": {
@@ -31430,7 +31480,7 @@
    }
   },
   "hash": "ab145718a2cc0f64",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "WLK": {
   "fingerprint": {
@@ -31496,7 +31546,7 @@
    }
   },
   "hash": "343de714227c399e",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "WMB": {
   "fingerprint": {
@@ -31760,7 +31810,7 @@
    }
   },
   "hash": "18b8bdfc74aee5b7",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "WSO": {
   "fingerprint": {
@@ -32026,7 +32076,7 @@
    }
   },
   "hash": "694050268f421bf8",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "WY": {
   "fingerprint": {
@@ -32127,7 +32177,7 @@
    }
   },
   "hash": "eae17fbef806dcb0",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "XOM": {
   "fingerprint": {
@@ -32228,7 +32278,7 @@
    }
   },
   "hash": "3e213b0bd59d05cb",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "XYL": {
   "fingerprint": {
@@ -32261,7 +32311,7 @@
    }
   },
   "hash": "af4d60aa53080e69",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "XYZ": {
   "fingerprint": {
@@ -32360,7 +32410,7 @@
    }
   },
   "hash": "16a60d5488bc9c94",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "YUMC": {
   "fingerprint": {
@@ -32492,7 +32542,7 @@
    }
   },
   "hash": "f74d4e046621f7e2",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "ZG": {
   "fingerprint": {
@@ -32525,7 +32575,7 @@
    }
   },
   "hash": "2893edfde5fc2f55",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "ZION": {
   "fingerprint": {
@@ -32629,7 +32679,7 @@
    }
   },
   "hash": "11424615b3ebb6dc",
-  "updated_at": "2026-09-14T20:30:26+00:00"
+  "updated_at": "2026-09-14T21:15:42+00:00"
  },
  "ZTS": {
   "fingerprint": {
