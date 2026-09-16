@@ -63,14 +63,17 @@ jobs:
 
       - name: Generate AI reads
         env:
-          # LLM_API_KEY repo secret (Groq key) required; step skips without it.
-          LLM_API_KEY:  ${{ secrets.LLM_API_KEY }}
-          LLM_BASE_URL: https://api.groq.com/openai/v1
-          LLM_MODEL:    llama-3.3-70b-versatile
-          # Groq free-tier caps are per model+day; when the 70B budget is
-          # spent, the pass walks this chain instead of starving. gpt-oss-120b
-          # is deliberately absent: it is reserved for the premium chat.
-          LLM_MODEL_FALLBACK: "llama-3.1-8b-instant,qwen/qwen3.6-27b"
+          # OpenRouter, the same provider and models as the site's ask function
+          # (2026-09-16). OPENROUTER_API_KEY repo secret required; the step
+          # skips without it. The old Groq path had failed since 2026-09-05
+          # (llama-3.3-70b-versatile retired).
+          LLM_API_KEY:  ${{ secrets.OPENROUTER_API_KEY }}
+          LLM_PROVIDER: openrouter
+          LLM_BASE_URL: https://openrouter.ai/api/v1
+          LLM_MODEL:    anthropic/claude-haiku-4.5
+          # Sonnet 5 only when Haiku fails (outage, rate limit, retired id)
+          LLM_MODEL_FALLBACK: "anthropic/claude-sonnet-5"
+          LLM_REASONING: none
           # The scanner just wrote docs/iq/scan.json in this same job — read
           # it locally instead of round-tripping through Pages (which would
           # lag one deploy behind).
@@ -78,7 +81,7 @@ jobs:
           MAX_READS_PER_PASS: "25"
         run: |
           if [[ -z "$LLM_API_KEY" ]]; then
-            echo "LLM_API_KEY not set, skipping reads"
+            echo "OPENROUTER_API_KEY not set, skipping reads"
             exit 0
           fi
           # Restore accumulated reads (fresh checkout has no ai/worker/out).

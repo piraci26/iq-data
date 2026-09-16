@@ -80,6 +80,14 @@ LLM_BASE_URL = os.environ.get("LLM_BASE_URL", "http://localhost:11434/v1").strip
 LLM_MODEL = os.environ.get("LLM_MODEL", "llama3.1:8b").strip()
 LLM_MODEL_FALLBACK = os.environ.get("LLM_MODEL_FALLBACK", "").strip()
 LLM_API_KEY = os.environ.get("LLM_API_KEY", "ollama").strip()
+# OpenRouter (the site's provider since 2026-09-15; Groq retired the 70B model
+# the reads used and the pass had been failing since 2026-09-05). Detected by
+# URL, or forced with LLM_PROVIDER=openrouter.
+LLM_PROVIDER = os.environ.get("LLM_PROVIDER", "").strip().lower()
+IS_OPENROUTER = LLM_PROVIDER == "openrouter" or "openrouter.ai" in LLM_BASE_URL
+# OpenRouter turns Claude's reasoning on by default and bills it as output;
+# a two-sentence read needs none (the same default the site's ask function uses).
+LLM_REASONING = os.environ.get("LLM_REASONING", "none").strip().lower()
 LLM_TIMEOUT = float(os.environ.get("LLM_TIMEOUT", "60"))
 MAX_READS_PER_PASS = int(os.environ.get("MAX_READS_PER_PASS", "25"))
 FETCH_TIMEOUT = float(os.environ.get("FETCH_TIMEOUT", "30"))
@@ -147,7 +155,9 @@ def make_client():
         log("openai package not installed -- reads will be skipped "
             "(pip install -r requirements.txt)")
         return None
-    return OpenAI(base_url=LLM_BASE_URL, api_key=LLM_API_KEY, timeout=LLM_TIMEOUT)
+    headers = {"HTTP-Referer": "https://trend-iq.lovable.app", "X-Title": "Alpha Charts"} if IS_OPENROUTER else None
+    return OpenAI(base_url=LLM_BASE_URL, api_key=LLM_API_KEY, timeout=LLM_TIMEOUT,
+                  default_headers=headers, max_retries=1)
 
 
 def chat(client, system, user, max_tokens=220, temperature=0.4):
@@ -165,11 +175,15 @@ def chat(client, system, user, max_tokens=220, temperature=0.4):
     messages.append({"role": "user", "content": user})
 
     def _run(model):
+        extra = {}
+        if IS_OPENROUTER and model.startswith("anthropic/"):
+            extra["reasoning"] = {"effort": LLM_REASONING}
         resp = client.chat.completions.create(
             model=model,
             messages=messages,
             max_tokens=max_tokens,
             temperature=temperature,
+            extra_body=extra or None,
         )
         return (resp.choices[0].message.content or "").strip().strip('"').strip()
 
@@ -183,10 +197,14 @@ def chat(client, system, user, max_tokens=220, temperature=0.4):
         try:
             return _run(model)
         except Exception as exc:
-            rate_limited = "429" in str(exc) or type(exc).__name__ == "RateLimitError"
-            if not rate_limited or i == len(chain) - 1:
+            name, text = type(exc).__name__, str(exc)
+            # a bad key never improves on the next model; everything a
+            # different model can survive (rate limits, provider outages,
+            # timeouts, a retired model id) walks the chain
+            auth = name in ("AuthenticationError", "PermissionDeniedError") or " 401" in text or " 403" in text
+            if auth or i == len(chain) - 1:
                 raise
-            log("rate-limited on %s -- falling back to %s" % (model, chain[i + 1]))
+            log("%s on %s -- falling back to %s" % (name, model, chain[i + 1]))
 
 
 # --------------------------------------------------------------------------- scan loading
