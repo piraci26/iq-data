@@ -20,6 +20,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          # the newest main, not the commit this run was queued on: a run that
+          # waits behind a 50-minute run otherwise starts from a stale commit
+          # and its push conflicts with what that run wrote (2026-09-16)
+          ref: main
           persist-credentials: true
 
       - name: Set up Python
@@ -95,13 +99,38 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if [[ -n "$(git status --porcelain docs/iq docs/ai docs/logos ai/worker/state)" ]]; then
-            git add docs/iq docs/ai docs/logos ai/worker/state
-            git commit -m "scan+reads @ $(date -u +'%Y-%m-%d %H:%M UTC') [actions]"
-            # a code push can land mid-run; rebase our output commit on top
-            # (rebase reverses ours/theirs: -X theirs keeps THIS run's files)
-            git pull --rebase -X theirs origin main
-            git push
-          else
+          OUT="docs/iq docs/ai docs/logos ai/worker/state"
+          if [[ -z "$(git status --porcelain $OUT)" ]]; then
             echo "no changes"
+            exit 0
           fi
+          # This run's outputs win. A rebase with -X theirs could not settle
+          # delete/modify conflicts on the minute-bar files and lost whole scans,
+          # so: snapshot the outputs, move onto the newest main, lay them back.
+          SNAP="$RUNNER_TEMP/out-snapshot"
+          rm -rf "$SNAP" && mkdir -p "$SNAP"
+          for d in $OUT; do
+            if [[ -e "$d" ]]; then mkdir -p "$SNAP/$(dirname "$d")" && cp -a "$d" "$SNAP/$d"; fi
+          done
+          for attempt in 1 2 3; do
+            git fetch -q origin main
+            git reset -q --hard origin/main
+            for d in $OUT; do
+              rm -rf "$d"
+              if [[ -e "$SNAP/$d" ]]; then mkdir -p "$(dirname "$d")" && cp -a "$SNAP/$d" "$d"; fi
+            done
+            git add -A $OUT
+            if git diff --cached --quiet; then
+              echo "no changes against the newest main"
+              exit 0
+            fi
+            git commit -q -m "scan+reads @ $(date -u +'%Y-%m-%d %H:%M UTC') [actions]"
+            if git push -q origin HEAD:main; then
+              echo "pushed on attempt $attempt"
+              exit 0
+            fi
+            echo "push rejected on attempt $attempt, retrying"
+            sleep 5
+          done
+          echo "could not push after 3 attempts"
+          exit 1
