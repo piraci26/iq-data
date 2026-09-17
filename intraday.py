@@ -27,6 +27,7 @@ from datetime import datetime, timezone
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from scanner import _http_json, run_engines, atomic_write  # noqa: E402
+import alpaca  # noqa: E402
 
 # pre/post bars ride along for the extended-hours changes; the engines only
 # ever see the regular session (split by the exchange clock in fetch_30m)
@@ -50,6 +51,8 @@ YAHOO_1M_WINDOW = ("https://query1.finance.yahoo.com/v8/finance/chart/{sym}"
 DAYS_1M_DIR = os.environ.get("DAYS_1M_DIR", "docs/iq/bars_1m_days")
 DAYS_1M_KEEP = int(os.environ.get("DAYS_1M_KEEP", "20"))
 BACKFILL_1M_PER_RUN = int(os.environ.get("BACKFILL_1M_PER_RUN", "60"))
+# Alpaca fetches whole sessions for many symbols a request, so it backfills far more a run
+BACKFILL_1M_ALPACA_PER_RUN = int(os.environ.get("BACKFILL_1M_ALPACA_PER_RUN", "300"))
 MIN_SESSION_1M = 150        # fewer minutes than this is a broken fetch, not a session
 STALE_1M_DAYS = 14          # history of a symbol out of coverage this long is pruned
 # 5-MINUTE HISTORY: Yahoo serves 60 days of 5m bars in one call. Written once
@@ -230,18 +233,35 @@ def write_5m_history(want, updated):
         except Exception:
             idx = {}
         done_day = idx.get("day")
-        after_close = (now.hour, now.minute) >= (16, 15) or now.weekday() >= 5
+        # 16:35, not 16:15: Alpaca withholds the newest 15 minutes, so a session is whole a little later
+        after_close = (now.hour, now.minute) >= (16, 35) or now.weekday() >= 5
         if done_day == today or (done_day and not after_close):
             return
         bars_dir = os.path.join(os.path.dirname(BARS5M_PATH), "bars_5m")
         os.makedirs(bars_dir, exist_ok=True)
         got = []
-        for sym in want:
-            rows = fetch_5m(sym)
-            time.sleep(FETCH_DELAY)
-            if rows:
-                atomic_write(os.path.join(bars_dir, "%s.json" % sym), rows)
-                got.append(sym)
+        from_alpaca = 0
+        days_5m = alpaca.recent_weekdays(64, include_today=after_close) if alpaca.enabled() else []
+        for i in range(0, len(want), alpaca.CHUNK):
+            group = want[i:i + alpaca.CHUNK]
+            covered = set()
+            alp = None
+            if days_5m and alpaca.enabled():
+                try:
+                    alp = alpaca.session_bars(group, "5Min", days_5m, covered=covered)
+                except Exception as e:
+                    print("  alpaca 5m group failed (%s)" % e, file=sys.stderr)
+                    alp = None
+            for sym in group:
+                rows = _last_sessions(alp[sym], 60) if alp and sym in covered and alp.get(sym) else None
+                if rows and len(rows) >= 500:
+                    from_alpaca += 1
+                else:
+                    rows = fetch_5m(sym)
+                    time.sleep(FETCH_DELAY)
+                if rows:
+                    atomic_write(os.path.join(bars_dir, "%s.json" % sym), rows)
+                    got.append(sym)
         keep = {"%s.json" % s for s in got}
         for fn in os.listdir(bars_dir):
             if fn.endswith(".json") and fn not in keep:
@@ -251,7 +271,7 @@ def write_5m_history(want, updated):
                     pass
         atomic_write(BARS5M_PATH, {"day": today if after_close else done_day, "updated_at": updated,
                                    "count": len(got), "symbols": got, "days": 60, "interval": "5m"})
-        print("5m history: %d symbols" % len(got))
+        print("5m history: %d symbols (%d from Alpaca)" % (len(got), from_alpaca))
     except Exception as e:
         print("5m history skipped (%s)" % e, file=sys.stderr)
 
@@ -263,10 +283,60 @@ def _ny_day(ts):
         return datetime.utcfromtimestamp(ts - 4 * 3600).strftime("%Y-%m-%d")
 
 
+def _last_sessions(rows, n):
+    """The rows of the newest n New York sessions present, in time order."""
+    keep = set(sorted({_ny_day(r[0]) for r in rows})[-n:])
+    return sorted((r for r in rows if _ny_day(r[0]) in keep), key=lambda r: r[0])
+
+
+def _alpaca_live_1m(want, bars_dir):
+    """The live 1m rows from Alpaca: what the last run saved plus only the minutes since,
+    or two whole sessions for a symbol with nothing recent saved. {} when Alpaca is off or
+    refuses; a symbol whose request failed is left out, so it falls back to Yahoo."""
+    if not alpaca.enabled():
+        return {}
+    now = time.time()
+    saved = {}
+    for sym in want:
+        try:
+            with open(os.path.join(bars_dir, "%s.json" % sym)) as fh:
+                rows = json.load(fh) or []
+            if rows and rows[-1][0] >= now - 2 * 86400:
+                saved[sym] = rows
+        except Exception:
+            pass
+    out = {}
+    try:
+        fresh = sorted(saved)
+        if fresh:
+            covered = set()
+            got = alpaca.bars(fresh, "1Min", min(saved[s][-1][0] for s in fresh) + 60, covered=covered)
+            if got is None:
+                return {}
+            for sym in fresh:
+                if sym not in covered:
+                    continue
+                by_t = {r[0]: r for r in saved[sym]}
+                for r in got.get(sym, []):
+                    by_t[r[0]] = r
+                out[sym] = [by_t[t] for t in sorted(by_t)]
+        new = [s for s in want if s not in saved]
+        if new:
+            covered = set()
+            got = alpaca.session_bars(new, "1Min", alpaca.recent_weekdays(4), covered=covered)
+            if got is None:
+                return out if fresh else {}
+            out.update({s: r for s, r in got.items() if s in covered})
+    except Exception as e:
+        print("alpaca live 1m failed (%s); Yahoo instead" % e, file=sys.stderr)
+        return {}
+    return {s: _last_sessions(r, 2) for s, r in out.items() if r}
+
+
 def _sessions_1m(rows, now_ny):
     """1m rows grouped by New York date, finished sessions only, each sorted and de-duplicated."""
     today = now_ny.strftime("%Y-%m-%d")
-    closed = (now_ny.hour, now_ny.minute) >= (16, 15)
+    closed = (now_ny.hour, now_ny.minute) >= (16, 35)
     by_day = {}
     for r in rows:
         by_day.setdefault(_ny_day(r[0]), {})[r[0]] = r
@@ -278,23 +348,39 @@ def write_1m_days(want, live):
     """Finished sessions' 1m bars, one file each, written once (see DAYS_1M_DIR).
 
     live = this run's live 1m rows per symbol (two sessions, no extra fetch);
-    a symbol never backfilled gets its last four weeks from Yahoo first.
+    a symbol never backfilled gets its last four weeks first, from Alpaca or else Yahoo.
     """
     try:
         now_ny = _ny_now()
         now = int(time.time())
         os.makedirs(DAYS_1M_DIR, exist_ok=True)
         backfills = failures = written = 0
+        manifests = {}
+        for sym in want:
+            try:
+                with open(os.path.join(DAYS_1M_DIR, "%s.json" % sym)) as fh:
+                    manifests[sym] = json.load(fh) or {}
+            except Exception:
+                manifests[sym] = {}
+        # Alpaca first: whole regular sessions for a batch of symbols never backfilled
+        alp_back, alp_done = {}, set()
+        pending = [s for s in want if not manifests[s].get("backfilled")][:BACKFILL_1M_ALPACA_PER_RUN]
+        if pending and alpaca.enabled():
+            try:
+                alp_back = alpaca.session_bars(pending, "1Min", alpaca.recent_weekdays(DAYS_1M_KEEP + 3, include_today=False), covered=alp_done) or {}
+            except Exception as e:
+                print("  alpaca 1m backfill failed (%s); Yahoo instead" % e, file=sys.stderr)
+                alp_back, alp_done = {}, set()
         for sym in want:
             man_path = os.path.join(DAYS_1M_DIR, "%s.json" % sym)
-            try:
-                with open(man_path) as fh:
-                    man = json.load(fh) or {}
-            except Exception:
-                man = {}
+            man = manifests[sym]
             have = set(man.get("days") or [])
             rows = list(live.get(sym) or [])
             backfilled = bool(man.get("backfilled"))
+            if not backfilled and sym in alp_done:
+                rows.extend(alp_back.get(sym) or [])
+                backfilled = True
+                backfills += 1
             # three failing symbols in a run means Yahoo is refusing: stop asking until next run
             if not backfilled and backfills < BACKFILL_1M_PER_RUN and failures < 3:
                 backfills += 1
@@ -584,13 +670,21 @@ def main(argv=None):
     os.makedirs(bars_dir, exist_ok=True)
     got = []
     live = {}
+    # Alpaca first (Basic plan: the whole tape, 15 minutes delayed); Yahoo for anything it did not return
+    alp_live = _alpaca_live_1m(want, bars_dir)
+    from_alpaca = 0
     for sym in want:
-        rows = fetch_1m(sym)
-        time.sleep(FETCH_DELAY)
+        rows = alp_live.get(sym)
+        if rows and len(rows) >= 100:
+            from_alpaca += 1
+        else:
+            rows = fetch_1m(sym)
+            time.sleep(FETCH_DELAY)
         if rows:
             atomic_write(os.path.join(bars_dir, "%s.json" % sym), rows)
             got.append(sym)
             live[sym] = rows
+    print("1m feed: %d symbols, %d from Alpaca (%s)" % (len(got), from_alpaca, alpaca.stats))
     keep = {"%s.json" % s for s in got}
     for fn in os.listdir(bars_dir):
         if fn.endswith(".json") and fn not in keep:

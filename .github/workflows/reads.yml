@@ -45,6 +45,11 @@ jobs:
           python scanner.py --top "${UNIVERSE_TOP:-500}"
 
       - name: Triple-signal scan (30m + 2H vs daily; writes docs/iq/signals.json)
+        env:
+          # Alpaca Basic (free, 15 minutes delayed) for the 1m and 5m chart feeds;
+          # intraday.py keeps Yahoo for anything Alpaca does not return
+          ALPACA_KEY_ID: ${{ secrets.ALPACA_KEY_ID }}
+          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
         run: |
           python intraday.py
 
