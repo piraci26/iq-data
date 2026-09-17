@@ -53,6 +53,12 @@ jobs:
         run: |
           python intraday.py
 
+      - name: Daily history by year (writes docs/iq/bars_1d_years)
+        continue-on-error: true
+        timeout-minutes: 12
+        run: |
+          python daily_history.py
+
       - name: Index membership lists (writes docs/iq/indexes.json and sp500.json)
         continue-on-error: true
         run: |

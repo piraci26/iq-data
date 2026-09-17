@@ -49,7 +49,9 @@ YAHOO_1M = ("https://query1.finance.yahoo.com/v8/finance/chart/{sym}"
 YAHOO_1M_WINDOW = ("https://query1.finance.yahoo.com/v8/finance/chart/{sym}"
                    "?interval=1m&period1={p1}&period2={p2}")
 DAYS_1M_DIR = os.environ.get("DAYS_1M_DIR", "docs/iq/bars_1m_days")
-DAYS_1M_KEEP = int(os.environ.get("DAYS_1M_KEEP", "20"))
+# 12 sessions = 4,680 bars: the bar budget every chart timeframe gets (60 sessions of 5m,
+# ~18 years of daily in daily_history.py); two weeks of 1m was the owner's minimum
+DAYS_1M_KEEP = int(os.environ.get("DAYS_1M_KEEP", "12"))
 BACKFILL_1M_PER_RUN = int(os.environ.get("BACKFILL_1M_PER_RUN", "60"))
 # Alpaca fetches whole sessions for many symbols a request, so it backfills far more a run
 BACKFILL_1M_ALPACA_PER_RUN = int(os.environ.get("BACKFILL_1M_ALPACA_PER_RUN", "300"))
