@@ -42,8 +42,8 @@ The `ALERTS_CONFIG` repository secret holds JSON shaped like
 | `ALERTS_CONFIG` | secret | the subscriptions |
 | `RESEND_API_KEY` | secret | email |
 | `TELEGRAM_BOT_TOKEN` | secret | Telegram |
-| `ALERTS_FROM` | variable | sender, e.g. `Alpha Charts <alerts@alphacharts.us>`; until a domain is verified in Resend, `onboarding@resend.dev` only delivers to the Resend account's own address |
-| `ALERTS_SITE` | variable | link base (default `https://trend-iq.lovable.app`) |
+| `ALERTS_FROM` | variable | sender, e.g. `Alpha Charts <alerts@getalphacharts.com>`; until a domain is verified in Resend, `onboarding@resend.dev` only delivers to the Resend account's own address |
+| `ALERTS_SITE` | variable | link base (default `https://getalphacharts.com`) |
 
 ## Webhook payload
 
@@ -53,7 +53,7 @@ One POST per alert:
 {"source":"alpha-charts","type":"alert","version":1,"id":"3f1c…","sent_at":"2026-09-17T21:30:00+00:00",
  "symbol":"NVDA","name":"NVIDIA Corporation","timeframe":"1D","engine":"IQ Bands","event":"sig_buy",
  "label":"buy signal","side":"long","price":213.9,"fired_at":"2026-09-17T21:11:04+00:00",
- "text":"NVDA · IQ Bands buy signal · 1D · $213.90","url":"https://trend-iq.lovable.app/screener?sel=NVDA"}
+ "text":"NVDA · IQ Bands buy signal · 1D · $213.90","url":"https://getalphacharts.com/screener?sel=NVDA"}
 ```
 
 With a `secret`, each request carries `X-Alpha-Charts-Timestamp` and

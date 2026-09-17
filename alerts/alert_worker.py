@@ -27,11 +27,11 @@ printed: state lives in the Actions cache and logs name subscriptions by id.
 Secrets / env:
   ALERTS_CONFIG       the subscriptions JSON (or --config path)
   RESEND_API_KEY      email through Resend
-  ALERTS_FROM         sender, e.g. "Alpha Charts <alerts@alphacharts.us>"
+  ALERTS_FROM         sender, e.g. "Alpha Charts <alerts@getalphacharts.com>"
                       (Resend's onboarding@resend.dev only delivers to the
                       Resend account's own address until a domain is verified)
   TELEGRAM_BOT_TOKEN  Telegram delivery
-  ALERTS_SITE         link base, default https://trend-iq.lovable.app
+  ALERTS_SITE         link base, default https://getalphacharts.com
 
 Usage:
   python alerts/alert_worker.py --docs docs              # a real pass
@@ -56,7 +56,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 DEFAULT_STATE = HERE / "state"
-DEFAULT_SITE = "https://trend-iq.lovable.app"
+DEFAULT_SITE = "https://getalphacharts.com"
 DEFAULT_FROM = "Alpha Charts <onboarding@resend.dev>"
 FETCH_TIMEOUT = 30
 SEND_TIMEOUT = 12
