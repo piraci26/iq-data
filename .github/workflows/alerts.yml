@@ -1,0 +1,58 @@
+name: Alerts
+
+# Runs right after every scan pass: reads the feeds that pass just published
+# (docs/iq/events.json, scan.json, signals.json) and sends each new alert once
+# to every subscription that watches it. Subscriptions live in the
+# ALERTS_CONFIG secret; the dedupe state lives in the Actions cache, so
+# nothing personal is ever committed to this public repo.
+
+on:
+  workflow_run:
+    workflows: ["IQ Scan + AI Reads"]
+    types: [completed]
+  workflow_dispatch:
+
+concurrency:
+  group: alerts
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  send:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Restore alert state
+        uses: actions/cache/restore@v4
+        with:
+          path: alerts/state
+          key: alerts-state-${{ github.run_id }}
+          restore-keys: |
+            alerts-state-
+
+      - name: Send alerts
+        env:
+          ALERTS_CONFIG: ${{ secrets.ALERTS_CONFIG }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          ALERTS_FROM: ${{ vars.ALERTS_FROM }}
+          ALERTS_SITE: ${{ vars.ALERTS_SITE }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        run: python alerts/alert_worker.py --docs docs
+
+      - name: Save alert state
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: alerts/state
+          key: alerts-state-${{ github.run_id }}

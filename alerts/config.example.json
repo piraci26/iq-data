@@ -1,0 +1,30 @@
+{
+  "site": "https://trend-iq.lovable.app",
+  "subscriptions": [
+    {
+      "id": "owner-big-caps",
+      "watch": {
+        "symbols": "*",
+        "min_mcap_b": 50,
+        "timeframes": ["d", "w"],
+        "events": ["signals", "short_term"]
+      },
+      "email": ["you@example.com"],
+      "max_per_pass": 30
+    },
+    {
+      "id": "bot-nvda",
+      "watch": {
+        "symbols": ["NVDA", "AAPL", "MSFT"],
+        "timeframes": ["d"],
+        "events": ["signals", "momentum", "structure"],
+        "sides": ["long", "short"]
+      },
+      "webhooks": [
+        { "url": "https://your-bot.example.com/alpha-charts", "secret": "a-long-random-string", "format": "json" },
+        { "url": "https://discord.com/api/webhooks/…", "format": "discord" }
+      ],
+      "telegram": [{ "chat_id": "123456789" }]
+    }
+  ]
+}
