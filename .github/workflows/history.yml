@@ -39,7 +39,8 @@ jobs:
 
       # committed before the slow daily backfill, so the 1-minute charts get their weeks in minutes
       - name: Commit the sessions
-        run: bash .github/scripts/commit-hist.sh "chart history: 1-minute sessions"
+        run: |
+          bash .github/scripts/commit-hist.sh "chart history, 1-minute sessions"
 
       - name: Daily years (docs/hist/bars_1d_years)
         env:
@@ -49,4 +50,5 @@ jobs:
         run: python history.py daily
 
       - name: Commit the daily years
-        run: bash .github/scripts/commit-hist.sh "chart history: daily years"
+        run: |
+          bash .github/scripts/commit-hist.sh "chart history, daily years"
