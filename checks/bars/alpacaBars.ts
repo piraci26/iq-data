@@ -12,7 +12,7 @@
 export type Tf = "1Min" | "5Min";
 /** [unix seconds, open, high, low, close, volume] — the rows the iq-data files use */
 export type Row = [number, number, number, number, number, number];
-export type Stats = { requests: number; pages: number; raw: number; bars: number; sessions: number; ms: number };
+export type Stats = { requests: number; pages: number; raw: number; bars: number; sessions: number; ms: number; cachedMonths?: number };
 
 export type AlpacaErrorCode = "refused" | "rate_limited" | "upstream" | "bad_request";
 export class AlpacaError extends Error {
@@ -24,12 +24,13 @@ export class AlpacaError extends Error {
 }
 
 const DATA = "https://data.alpaca.markets/v2/stocks";
-/* a chunk stays under one 10,000-bar page even with pre-market and after-hours
-   bars in it (up to ~960 one-minute bars a weekday), so chunks run side by side */
-const CHUNK_DAYS: Record<Tf, number> = { "1Min": 10, "5Min": 50 };
-const PARALLEL = 6;
+/* one page a request either way, so the requests run side by side: a 1-minute
+   page holds 10,000 bars, ten weekdays with pre-market and after-hours; a
+   5-minute page holds about 1,900 (Alpaca counts the minutes under them), nine */
+const CHUNK_DAYS: Record<Tf, number> = { "1Min": 10, "5Min": 9 };
+const PARALLEL = 12;
 /* the free plan refuses the newest 15 minutes of the consolidated tape */
-const DELAY_MS = 16 * 60_000;
+export const DELAY_MS = 16 * 60_000;
 const DAY_MS = 86_400_000;
 
 /* New York's UTC offset for a UTC day, by the US rule since 2007 (daylight time
@@ -50,13 +51,30 @@ function nyOffsetMin(utcDay: number): number {
 }
 
 /** the New York calendar day (days since 1970-01-01) and minute of that day */
-function nyClock(ms: number): { day: number; min: number } {
+export function nyClock(ms: number): { day: number; min: number } {
   const local = ms + nyOffsetMin(Math.floor(ms / DAY_MS)) * 60_000;
   return { day: Math.floor(local / DAY_MS), min: Math.floor((local % DAY_MS) / 60_000) };
 }
+export const isWeekday = (day: number) => { const w = (day + 4) % 7; return w >= 1 && w <= 5; }; // 1970-01-01 was a Thursday
+export const isoDay = (day: number) => new Date(day * DAY_MS).toISOString().slice(0, 10);
+/** "YYYY-MM" of a New York day */
+export const monthOf = (day: number) => isoDay(day).slice(0, 7);
+export const rowDay = (r: Row) => nyClock(r[0] * 1000).day;
 
-const isWeekday = (day: number) => { const w = (day + 4) % 7; return w >= 1 && w <= 5; }; // 1970-01-01 was a Thursday
-const isoDay = (day: number) => new Date(day * DAY_MS).toISOString().slice(0, 10);
+/** weekdays, oldest first, far enough back to hold `sessions` sessions despite holidays */
+export function planDays(sessions: number, endMs: number): number[] {
+  const want = sessions + Math.ceil(sessions / 20) + 2;
+  const days: number[] = [];
+  for (let d = nyClock(endMs).day; days.length < want; d--) if (isWeekday(d)) days.unshift(d);
+  return days;
+}
+
+/** every weekday from the first of `month` through `lastDay` */
+export function weekdaysFrom(month: string, lastDay: number): number[] {
+  const out: number[] = [];
+  for (let d = Math.floor(Date.parse(`${month}-01T00:00:00Z`) / DAY_MS); d <= lastDay; d++) if (isWeekday(d)) out.push(d);
+  return out;
+}
 
 type AlpacaBar = { t: string; o: number; h: number; l: number; c: number; v: number };
 
@@ -78,32 +96,34 @@ async function getPage(url: string, keyId: string, secret: string, fetchImpl: ty
   }
 }
 
-/** The newest `sessions` regular sessions of `sym`, oldest first, up to 16 minutes ago. */
-export async function deepBars(opts: { sym: string; tf: Tf; sessions: number; keyId: string; secret: string; now?: number; fetchImpl?: typeof fetch }): Promise<{ rows: Row[]; stats: Stats }> {
-  const t0 = Date.now();
-  const fetchImpl = opts.fetchImpl ?? fetch;
-  const stats: Stats = { requests: 0, pages: 0, raw: 0, bars: 0, sessions: 0, ms: 0 };
-  const end = (opts.now ?? Date.now()) - DELAY_MS;
-  /* weekdays back from today, with room for holidays */
-  const want = opts.sessions + Math.ceil(opts.sessions / 20) + 2;
-  const days: number[] = [];
-  for (let d = nyClock(end).day; days.length < want; d--) if (isWeekday(d)) days.unshift(d);
+export type FetchOpts = { sym: string; tf: Tf; keyId: string; secret: string; endMs: number; fetchImpl?: typeof fetch; stats: Stats };
+
+/** Regular-session bars for the given weekdays (ascending, gaps allowed), oldest first. */
+export async function fetchDays(days: number[], o: FetchOpts): Promise<Row[]> {
+  const fetchImpl = o.fetchImpl ?? fetch;
+  /* runs of consecutive weekdays, cut every CHUNK_DAYS */
   const chunks: { start: string; end: string }[] = [];
-  for (let i = 0; i < days.length; i += CHUNK_DAYS[opts.tf]) {
-    const next = days[i + CHUNK_DAYS[opts.tf]];
-    chunks.push({
-      start: `${isoDay(days[i])}T00:00:00Z`,
-      end: next === undefined ? new Date(end).toISOString() : `${isoDay(next)}T00:00:00Z`,
-    });
+  let run: number[] = [];
+  const close = () => {
+    if (!run.length) return;
+    const endMs = Math.min(o.endMs, (run[run.length - 1] + 1) * DAY_MS);
+    if (run[0] * DAY_MS < endMs) chunks.push({ start: `${isoDay(run[0])}T00:00:00Z`, end: new Date(endMs).toISOString() });
+    run = [];
+  };
+  for (const d of days) {
+    const prev = run[run.length - 1];
+    if (run.length >= CHUNK_DAYS[o.tf] || (prev !== undefined && d - prev > 3)) close(); // more than a weekend apart: a new run
+    run.push(d);
   }
+  close();
   const byTime = new Map<number, Row>();
   const fetchChunk = async (c: { start: string; end: string }) => {
     let token: string | null = null;
     do {
-      const q = new URLSearchParams({ timeframe: opts.tf, start: c.start, end: c.end, limit: "10000", adjustment: "split", feed: "sip", sort: "asc" });
+      const q = new URLSearchParams({ timeframe: o.tf, start: c.start, end: c.end, limit: "10000", adjustment: "split", feed: "sip", sort: "asc" });
       if (token) q.set("page_token", token);
-      const page = await getPage(`${DATA}/${encodeURIComponent(opts.sym)}/bars?${q}`, opts.keyId, opts.secret, fetchImpl, stats);
-      stats.raw += page.bars.length;
+      const page = await getPage(`${DATA}/${encodeURIComponent(o.sym)}/bars?${q}`, o.keyId, o.secret, fetchImpl, o.stats);
+      o.stats.raw += page.bars.length;
       for (const b of page.bars) {
         const ms = Date.parse(b.t);
         const { day, min } = nyClock(ms);
@@ -114,16 +134,29 @@ export async function deepBars(opts: { sym: string; tf: Tf; sessions: number; ke
     } while (token);
   };
   for (let i = 0; i < chunks.length; i += PARALLEL) await Promise.all(chunks.slice(i, i + PARALLEL).map(fetchChunk));
-  let rows = [...byTime.values()].sort((a, b) => a[0] - b[0]);
-  /* keep the newest `sessions` days that traded */
-  const sessionDays: number[] = [];
-  for (const r of rows) { const d = nyClock(r[0] * 1000).day; if (sessionDays[sessionDays.length - 1] !== d) sessionDays.push(d); }
-  if (sessionDays.length > opts.sessions) {
-    const first = sessionDays[sessionDays.length - opts.sessions];
-    rows = rows.filter((r) => nyClock(r[0] * 1000).day >= first);
-  }
-  stats.bars = rows.length;
-  stats.sessions = Math.min(sessionDays.length, opts.sessions);
+  return [...byTime.values()].sort((a, b) => a[0] - b[0]);
+}
+
+/** the newest `sessions` days that traded */
+export function lastSessions(rows: Row[], sessions: number): { rows: Row[]; sessions: number } {
+  const days: number[] = [];
+  for (const r of rows) { const d = rowDay(r); if (days[days.length - 1] !== d) days.push(d); }
+  if (days.length <= sessions) return { rows, sessions: days.length };
+  const first = days[days.length - sessions];
+  return { rows: rows.filter((r) => rowDay(r) >= first), sessions };
+}
+
+export const newStats = (): Stats => ({ requests: 0, pages: 0, raw: 0, bars: 0, sessions: 0, ms: 0 });
+
+/** The newest `sessions` regular sessions of `sym`, oldest first, up to 16 minutes ago, straight from Alpaca. */
+export async function deepBars(opts: { sym: string; tf: Tf; sessions: number; keyId: string; secret: string; now?: number; fetchImpl?: typeof fetch }): Promise<{ rows: Row[]; stats: Stats }> {
+  const t0 = Date.now();
+  const stats = newStats();
+  const endMs = (opts.now ?? Date.now()) - DELAY_MS;
+  const all = await fetchDays(planDays(opts.sessions, endMs), { ...opts, endMs, stats });
+  const out = lastSessions(all, opts.sessions);
+  stats.bars = out.rows.length;
+  stats.sessions = out.sessions;
   stats.ms = Date.now() - t0;
-  return { rows, stats };
+  return { rows: out.rows, stats };
 }
