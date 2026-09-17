@@ -1,0 +1,39 @@
+name: Bars check
+
+# Run by hand before deploying the site's bars edge function: runs its core
+# (checks/bars) on Node against the real Alpaca API with the repo's keys and
+# prints the cost of one chart load. Writes nothing to the repo; the rows are
+# kept for a day as an artifact.
+on:
+  workflow_dispatch:
+    inputs:
+      symbols:
+        description: "Symbols, space separated"
+        default: "NVDA SPY"
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: checks/bars
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Deep bars from Alpaca
+        env:
+          ALPACA_KEY_ID: ${{ secrets.ALPACA_KEY_ID }}
+          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+          SYMBOLS: ${{ inputs.symbols }}
+        run: node checks/bars/check.ts
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: deep-bars
+          path: out/
+          retention-days: 1
