@@ -703,8 +703,7 @@ def main(argv=None):
         "syms": got,
     })
     write_5m_history(want, updated)
-    # after the 5m write: backfill calls must not be what throttles that once-a-day fetch
-    write_1m_days(got, live, first=top)
+    # the 1-minute sessions and daily years now live in history.py (their own workflow, docs/hist)
 
     print("signals: %d intraday triples (%d bull / %d bear), %d swing "
           "triples (%d bull / %d bear) from %d checked, %d failed; "

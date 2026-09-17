@@ -1,0 +1,70 @@
+name: Chart history
+
+# The charts' 1-minute sessions and daily years, from Alpaca (history.py), on
+# their own clock: inside the 40-minute scan they only moved when a scan
+# finished, and the scan's commit replaces docs/iq wholesale. This writes
+# docs/hist only. Every half hour it fills whatever is missing; runs are cheap
+# once the backfill is done.
+on:
+  schedule:
+    - cron: "10,40 * * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: history
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  history:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: true
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Fill the chart history (1-minute sessions, daily years)
+        env:
+          ALPACA_KEY_ID: ${{ secrets.ALPACA_KEY_ID }}
+          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+        run: python history.py
+
+      - name: Commit + push if anything changed
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          OUT="docs/hist"
+          if [[ -z "$(git status --porcelain $OUT)" ]]; then
+            echo "no changes"
+            exit 0
+          fi
+          # the same snapshot-and-lay-back move as the scan job, on docs/hist only
+          SNAP="$RUNNER_TEMP/hist-snapshot"
+          rm -rf "$SNAP" && mkdir -p "$SNAP/docs" && cp -a docs/hist "$SNAP/docs/hist"
+          for attempt in 1 2 3; do
+            git fetch -q origin main
+            git reset -q --hard origin/main
+            rm -rf docs/hist && mkdir -p docs && cp -a "$SNAP/docs/hist" docs/hist
+            git add -A docs/hist
+            if git diff --cached --quiet; then
+              echo "no changes against the newest main"
+              exit 0
+            fi
+            git commit -q -m "chart history @ $(date -u +'%Y-%m-%d %H:%M UTC') [actions]"
+            if git push -q origin HEAD:main; then
+              echo "pushed on attempt $attempt"
+              exit 0
+            fi
+            echo "push rejected on attempt $attempt, retrying"
+            sleep 5
+          done
+          echo "could not push after 3 attempts"
+          exit 1
