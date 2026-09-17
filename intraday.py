@@ -19,6 +19,7 @@ buckets run 9:30-11:30, 11:30-13:30, ... in exchange time regardless of DST.
 
 import json
 import os
+import shutil
 import sys
 import time
 import urllib.request
@@ -33,6 +34,24 @@ YAHOO_30M = ("https://query1.finance.yahoo.com/v8/finance/chart/{sym}"
              "?interval=30m&range=60d&includePrePost=true")
 YAHOO_1M = ("https://query1.finance.yahoo.com/v8/finance/chart/{sym}"
             "?interval=1m&range=2d")
+# 1-MINUTE HISTORY BY SESSION (owner, 2026-09-17, on the Pine workbench chart:
+# "at 1 min it's only 1 days, should be like 2 weeks in bars amount, if not
+# more"). The live 1m file holds two sessions and is rewritten every run; each
+# FINISHED New York session is also written once to
+# bars_1m_days/SYM/YYYY-MM-DD.json and never touched again, so the Pages repo
+# grows by about one session of files a day (~13MB) instead of churning weeks of
+# bars every run. bars_1m_days/SYM.json lists the sessions kept (the newest
+# DAYS_1M_KEEP) and the chart stitches them to the live file. Yahoo keeps 30
+# days of 1m and serves up to 7 a request, so a symbol with no history yet is
+# backfilled once in 7-day windows, BACKFILL_1M_PER_RUN symbols a run to stay
+# inside the job's timeout.
+YAHOO_1M_WINDOW = ("https://query1.finance.yahoo.com/v8/finance/chart/{sym}"
+                   "?interval=1m&period1={p1}&period2={p2}")
+DAYS_1M_DIR = os.environ.get("DAYS_1M_DIR", "docs/iq/bars_1m_days")
+DAYS_1M_KEEP = int(os.environ.get("DAYS_1M_KEEP", "20"))
+BACKFILL_1M_PER_RUN = int(os.environ.get("BACKFILL_1M_PER_RUN", "100"))
+MIN_SESSION_1M = 150        # fewer minutes than this is a broken fetch, not a session
+STALE_1M_DAYS = 14          # history of a symbol out of coverage this long is pruned
 # 5-MINUTE HISTORY: Yahoo serves 60 days of 5m bars in one call. Written once
 # per session (after the close, New York) so the Pages repo does not churn;
 # the Quant backtester runs clock-driven scripts on these.
@@ -126,6 +145,23 @@ def fetch_30m(sym):
     return T, o, h, l, c, v, changes
 
 
+def _quote_rows(data):
+    """Yahoo chart JSON -> compact rows [t, o, h, l, c, v]; bars with a gap skipped."""
+    res = data["chart"]["result"][0]
+    ts = res.get("timestamp") or []
+    q = res["indicators"]["quote"][0]
+    oo, hh, ll, cc, vv = (q.get("open") or [], q.get("high") or [], q.get("low") or [],
+                          q.get("close") or [], q.get("volume") or [])
+    rows = []
+    for i in range(min(len(ts), len(oo), len(hh), len(ll), len(cc), len(vv))):
+        r = (oo[i], hh[i], ll[i], cc[i], vv[i])
+        if any(x is None for x in r):
+            continue
+        rows.append([int(ts[i]), round(float(r[0]), 4), round(float(r[1]), 4),
+                     round(float(r[2]), 4), round(float(r[3]), 4), int(r[4])])
+    return rows
+
+
 def fetch_1m(sym):
     """Confirmed 1m bars as compact rows [t, o, h, l, c, v], or None.
 
@@ -134,22 +170,10 @@ def fetch_1m(sym):
     """
     url = YAHOO_1M.format(sym=urllib.request.quote(sym))
     try:
-        data = _http_json(url)
-        res = data["chart"]["result"][0]
-        ts = res["timestamp"]
-        q = res["indicators"]["quote"][0]
-        oo, hh, ll, cc, vv = (q["open"], q["high"], q["low"],
-                              q["close"], q["volume"])
+        rows = _quote_rows(_http_json(url))
     except Exception as e:
         print("  %s: 1m fetch failed (%s)" % (sym, e), file=sys.stderr)
         return None
-    rows = []
-    for i in range(len(ts)):
-        r = (oo[i], hh[i], ll[i], cc[i], vv[i])
-        if any(x is None for x in r):
-            continue
-        rows.append([int(ts[i]), round(float(r[0]), 4), round(float(r[1]), 4),
-                     round(float(r[2]), 4), round(float(r[3]), 4), int(r[4])])
     # confirmed-bar guard: the newest minute may still be forming
     if rows and time.time() < rows[-1][0] + 60:
         rows.pop()
@@ -230,6 +254,108 @@ def write_5m_history(want, updated):
         print("5m history: %d symbols" % len(got))
     except Exception as e:
         print("5m history skipped (%s)" % e, file=sys.stderr)
+
+def _ny_day(ts):
+    try:
+        from zoneinfo import ZoneInfo
+        return datetime.fromtimestamp(ts, ZoneInfo("America/New_York")).strftime("%Y-%m-%d")
+    except Exception:
+        return datetime.utcfromtimestamp(ts - 4 * 3600).strftime("%Y-%m-%d")
+
+
+def _sessions_1m(rows, now_ny):
+    """1m rows grouped by New York date, finished sessions only, each sorted and de-duplicated."""
+    today = now_ny.strftime("%Y-%m-%d")
+    closed = (now_ny.hour, now_ny.minute) >= (16, 15)
+    by_day = {}
+    for r in rows:
+        by_day.setdefault(_ny_day(r[0]), {})[r[0]] = r
+    return {d: [by_t[t] for t in sorted(by_t)] for d, by_t in by_day.items()
+            if (d < today or (d == today and closed)) and len(by_t) >= MIN_SESSION_1M}
+
+
+def write_1m_days(want, live):
+    """Finished sessions' 1m bars, one file each, written once (see DAYS_1M_DIR).
+
+    live = this run's live 1m rows per symbol (two sessions, no extra fetch);
+    a symbol never backfilled gets its last four weeks from Yahoo first.
+    """
+    try:
+        now_ny = _ny_now()
+        now = int(time.time())
+        os.makedirs(DAYS_1M_DIR, exist_ok=True)
+        backfills = failures = written = 0
+        for sym in want:
+            man_path = os.path.join(DAYS_1M_DIR, "%s.json" % sym)
+            try:
+                with open(man_path) as fh:
+                    man = json.load(fh) or {}
+            except Exception:
+                man = {}
+            have = set(man.get("days") or [])
+            rows = list(live.get(sym) or [])
+            backfilled = bool(man.get("backfilled"))
+            # three failing symbols in a run means Yahoo is refusing: stop asking until next run
+            if not backfilled and backfills < BACKFILL_1M_PER_RUN and failures < 3:
+                backfills += 1
+                ok = True
+                for k in range(4):
+                    url = YAHOO_1M_WINDOW.format(sym=urllib.request.quote(sym),
+                                                 p1=now - (k + 1) * 7 * 86400,
+                                                 p2=now - k * 7 * 86400)
+                    try:
+                        rows.extend(_quote_rows(_http_json(url, timeout=15)))
+                    except Exception as e:
+                        ok = False
+                        print("  %s: 1m backfill window %d failed (%s)" % (sym, k, e), file=sys.stderr)
+                        break
+                    finally:
+                        time.sleep(FETCH_DELAY)
+                # the oldest window starts part-way into a day: that session is partial, never keep it
+                cut = _ny_day(now - 28 * 86400)
+                rows = [r for r in rows if _ny_day(r[0]) != cut]
+                if ok:
+                    backfilled = True
+                else:
+                    failures += 1
+            sess_dir = os.path.join(DAYS_1M_DIR, sym)
+            for day, rs in sorted(_sessions_1m(rows, now_ny).items()):
+                if day in have:
+                    continue
+                os.makedirs(sess_dir, exist_ok=True)
+                atomic_write(os.path.join(sess_dir, "%s.json" % day), rs)
+                have.add(day)
+                written += 1
+            keep = sorted(have)[-DAYS_1M_KEEP:]
+            for day in have - set(keep):
+                try:
+                    os.remove(os.path.join(sess_dir, "%s.json" % day))
+                except OSError:
+                    pass
+            if keep != (man.get("days") or []) or backfilled != bool(man.get("backfilled")):
+                atomic_write(man_path, {"days": keep, "backfilled": backfilled})
+        # a symbol out of coverage keeps its sessions for a while, then goes
+        pruned = 0
+        cutoff = datetime.utcfromtimestamp(now - STALE_1M_DAYS * 86400).strftime("%Y-%m-%d")
+        wanted = set(want)
+        for fn in os.listdir(DAYS_1M_DIR):
+            sym = fn[:-5] if fn.endswith(".json") else None
+            if not sym or sym in wanted:
+                continue
+            try:
+                with open(os.path.join(DAYS_1M_DIR, fn)) as fh:
+                    days = (json.load(fh) or {}).get("days") or []
+            except Exception:
+                days = []
+            if not days or days[-1] < cutoff:
+                shutil.rmtree(os.path.join(DAYS_1M_DIR, sym), ignore_errors=True)
+                os.remove(os.path.join(DAYS_1M_DIR, fn))
+                pruned += 1
+        print("1m sessions: %d files written, %d backfilled (%d failed), %d stale symbols pruned"
+              % (written, backfills - failures, failures, pruned))
+    except Exception as e:
+        print("1m sessions skipped (%s)" % e, file=sys.stderr)
+
 
 def resample_2h(T, o, h, l, c, v):
     """Session-anchored 2H bars from 30m bars.
@@ -457,12 +583,14 @@ def main(argv=None):
     bars_dir = os.path.join(os.path.dirname(BARS1M_PATH), "bars_1m")
     os.makedirs(bars_dir, exist_ok=True)
     got = []
+    live = {}
     for sym in want:
         rows = fetch_1m(sym)
         time.sleep(FETCH_DELAY)
         if rows:
             atomic_write(os.path.join(bars_dir, "%s.json" % sym), rows)
             got.append(sym)
+            live[sym] = rows
     keep = {"%s.json" % s for s in got}
     for fn in os.listdir(bars_dir):
         if fn.endswith(".json") and fn not in keep:
@@ -475,6 +603,7 @@ def main(argv=None):
         "count": len(got),
         "syms": got,
     })
+    write_1m_days(got, live)
     write_5m_history(want, updated)
 
     print("signals: %d intraday triples (%d bull / %d bear), %d swing "
