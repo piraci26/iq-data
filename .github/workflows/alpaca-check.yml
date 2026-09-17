@@ -1,0 +1,25 @@
+name: Alpaca check
+
+# One-minute smoke test of the Alpaca keys and data (run by hand): fetches NVDA
+# 1-minute, 5-minute and daily bars and prints counts and first/last times.
+# Writes nothing. Separate from the scan so it does not queue behind it.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Fetch NVDA bars from Alpaca
+        env:
+          ALPACA_KEY_ID: ${{ secrets.ALPACA_KEY_ID }}
+          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+        run: python alpaca.py NVDA
