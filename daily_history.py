@@ -1,22 +1,30 @@
 #!/usr/bin/env python3
-"""Deep daily history for the charts, one file per calendar year.
+"""Deep daily history for the charts, one file per calendar year, from 2016.
 
 Owner, 2026-09-17, on the Backtest and Pine copilot charts: "2 weeks to the
 left, minimum, for a 1-minute chart and then an equivalent amount of bars for
-other timeframes". Two weeks of 1-minute bars is ~3,900; the charts get about
-KEEP_BARS on every timeframe (12 sessions of 1m, 60 of 5m, and here roughly
-18 years of daily bars; weekly bars are resampled from these in the client).
+other timeframes"; then, on the source: "we can skip 2016 and older, but
+indexes no". So:
+
+- stocks and ETFs come from Alpaca (the free plan's consolidated-tape history
+  starts in 2016). Alpaca's own daily bars include pre- and post-market trades,
+  so each day is built from its regular-session 30-minute bars instead: open of
+  the first, high and low over the session, close of the last, volume summed.
+- indices (SPX, NDX, VIX, the global ones) are calculated values, not traded,
+  so they are not on Alpaca; they come from Yahoo, the only free source with
+  their history.
+- without Alpaca keys, everything comes from Yahoo.
 
 docs/iq/bars_1d_years/SYM/YYYY.json holds that year's confirmed daily rows
-[t, o, h, l, c, v] (t = Yahoo's session timestamp, split-adjusted prices);
-docs/iq/bars_1d_years/SYM.json lists the years kept. Past years never change,
-so the Pages repo only rewrites the current year once a day. A split re-adjusts
-the whole history: when the stored rows no longer match a fresh fetch, the
-symbol is fetched again in full and every year rewritten.
+[t, o, h, l, c, v] (t = 09:30 New York on the day, split-adjusted prices);
+docs/iq/bars_1d_years/SYM.json lists the years and the source. Past years
+never change, so the Pages repo only rewrites the current year once a day. A
+split re-adjusts the whole history: when stored closes no longer match a fresh
+fetch the symbol is marked for a full rebuild on the next run.
 
-A symbol without history is backfilled in full (BACKFILL_PER_RUN a run, the
-biggest names first). After the New York close each symbol is refreshed once
-a day. Never fatal: the workflow step continues on error.
+Backfill runs a batch of symbols a run, the markets and biggest names first;
+after the New York close every symbol is refreshed once. Never fatal: the
+workflow step continues on error.
 """
 
 import json
@@ -25,26 +33,27 @@ import shutil
 import sys
 import time
 import urllib.request
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from scanner import _http_json, atomic_write  # noqa: E402
+import alpaca  # noqa: E402
 
 SCAN_PATH = os.environ.get("SCAN_PATH", "docs/iq/scan.json")
 DIR = os.environ.get("DAILY_YEARS_DIR", "docs/iq/bars_1d_years")
-KEEP_BARS = int(os.environ.get("DAILY_KEEP_BARS", "4700"))
-BACKFILL_PER_RUN = int(os.environ.get("DAILY_BACKFILL_PER_RUN", "250"))
-# the once-a-day refresh is spread over the evening runs so no run nears the job timeout
-REFRESH_PER_RUN = int(os.environ.get("DAILY_REFRESH_PER_RUN", "400"))
+SINCE = os.environ.get("DAILY_SINCE", "2016-01-01")
+ALPACA_BACKFILL_PER_RUN = int(os.environ.get("DAILY_ALPACA_BACKFILL_PER_RUN", "100"))
+ALPACA_GROUP = 25            # symbols per history request set: ten years of 30-minute bars is a lot of rows
+YAHOO_BACKFILL_PER_RUN = int(os.environ.get("DAILY_BACKFILL_PER_RUN", "250"))
 FETCH_DELAY = float(os.environ.get("FETCH_DELAY", "0.15"))
 YAHOO_1D = "https://query1.finance.yahoo.com/v8/finance/chart/{sym}?interval=1d&range={rng}"
-# our names for the markets the scan covers, as Yahoo spells them (tht-data markets.py)
-MARKETS = {
+# our names for the indices the scan covers, as Yahoo spells them (tht-data markets.py)
+INDICES = {
     "SPX": "^GSPC", "NDX": "^NDX", "DJI": "^DJI", "RUT": "^RUT", "IXIC": "^IXIC", "VIX": "^VIX",
-    "SPY": "SPY", "QQQ": "QQQ", "IWM": "IWM", "DIA": "DIA", "VOO": "VOO", "VTI": "VTI",
     "UKX": "^FTSE", "DAX": "^GDAXI", "CAC": "^FCHI", "SX5E": "^STOXX50E", "NI225": "^N225",
     "HSI": "^HSI", "NIFTY": "^NSEI", "TSX": "^GSPTSE",
 }
+MARKET_ETFS = ["SPY", "QQQ", "IWM", "DIA", "VOO", "VTI"]
 MISMATCH = 0.005             # a close off by more than 0.5% means the history was re-adjusted
 
 
@@ -64,30 +73,54 @@ def _ny_date(ts):
         return datetime.utcfromtimestamp(ts - 4 * 3600).strftime("%Y-%m-%d")
 
 
-def fetch_daily(sym, rng):
-    """Confirmed daily rows for a Yahoo symbol, oldest first, or None."""
-    url = YAHOO_1D.format(sym=urllib.request.quote(sym), rng=rng)
+def _since_ts():
+    return int(datetime.strptime(SINCE, "%Y-%m-%d").replace(tzinfo=timezone.utc).timestamp())
+
+
+def _closed(now):
+    return (now.hour, now.minute) >= (16, 35) or now.weekday() >= 5
+
+
+def fetch_yahoo_daily(ysym, rng):
+    """Confirmed daily rows from Yahoo since SINCE, oldest first, or None."""
+    url = YAHOO_1D.format(sym=urllib.request.quote(ysym), rng=rng)
     try:
         res = _http_json(url, timeout=30)["chart"]["result"][0]
         ts = res.get("timestamp") or []
         q = res["indicators"]["quote"][0]
     except Exception as e:
-        print("  %s: daily fetch failed (%s)" % (sym, e), file=sys.stderr)
+        print("  %s: daily fetch failed (%s)" % (ysym, e), file=sys.stderr)
         return None
     oo, hh, ll, cc, vv = (q.get(k) or [] for k in ("open", "high", "low", "close", "volume"))
     now = _ny_now()
-    today = now.strftime("%Y-%m-%d")
-    closed = (now.hour, now.minute) >= (16, 35) or now.weekday() >= 5
+    today, closed, since = now.strftime("%Y-%m-%d"), _closed(now), _since_ts()
     rows = []
     for i in range(min(len(ts), len(oo), len(hh), len(ll), len(cc))):
         if None in (oo[i], hh[i], ll[i], cc[i]):
             continue
         t = int(ts[i])
-        if _ny_date(t) == today and not closed:
-            continue   # today's bar is still forming
+        if t < since or (_ny_date(t) == today and not closed):
+            continue
         v = vv[i] if i < len(vv) and vv[i] is not None else 0
         rows.append([t, round(float(oo[i]), 4), round(float(hh[i]), 4), round(float(ll[i]), 4), round(float(cc[i]), 4), int(v)])
     return rows or None
+
+
+def daily_from_session(rows):
+    """Regular-session daily bars from 30-minute rows (already regular hours only), stamped 09:30 New York."""
+    now = _ny_now()
+    today, closed = now.strftime("%Y-%m-%d"), _closed(now)
+    by_day = {}
+    for r in rows:
+        by_day.setdefault(_ny_date(r[0]), []).append(r)
+    out = []
+    for day in sorted(by_day):
+        if day == today and not closed:
+            continue
+        rs = sorted(by_day[day], key=lambda x: x[0])
+        out.append([alpaca.session_bounds(day)[0], rs[0][1], round(max(x[2] for x in rs), 4),
+                    round(min(x[3] for x in rs), 4), rs[-1][4], int(sum(x[5] for x in rs))])
+    return out
 
 
 def _load(path, default):
@@ -99,8 +132,8 @@ def _load(path, default):
 
 
 def _write_years(sym, rows):
-    """Merge these rows into their year files (a refresh covers only part of the previous year, so
-    what is stored stays and the fetched rows update it); returns (files changed, years touched)."""
+    """Merge these rows into their year files (a refresh covers only a few days, so what is stored
+    stays and the fetched days update it); returns (files changed, years touched)."""
     by_year = {}
     for r in rows:
         by_year.setdefault(_ny_date(r[0])[:4], []).append(r)
@@ -110,101 +143,157 @@ def _write_years(sym, rows):
     for year, yr in by_year.items():
         path = os.path.join(d, "%s.json" % year)
         old = _load(path, [])
-        merged = {r[0]: r for r in old}
+        merged = {_ny_date(r[0]): r for r in old}
         for r in yr:
-            merged[r[0]] = r
-        out = [merged[t] for t in sorted(merged)]
+            merged[_ny_date(r[0])] = r
+        out = [merged[k] for k in sorted(merged)]
         if out != old:
             atomic_write(path, out)
             changed += 1
     return changed, sorted(by_year)
 
 
-def _trim(sym, years):
-    """Keep the newest years that hold at least KEEP_BARS rows."""
+def _save(sym, man, years, source, today, after_close):
+    first_year = SINCE[:4]
     d = os.path.join(DIR, sym)
-    kept, total = [], 0
-    for year in sorted(years, reverse=True):
-        kept.append(year)
-        total += len(_load(os.path.join(d, "%s.json" % year), []))
-        if total >= KEEP_BARS:
-            break
-    for year in set(years) - set(kept):
+    for y in [y for y in years if y < first_year]:
         try:
-            os.remove(os.path.join(d, "%s.json" % year))
+            os.remove(os.path.join(d, "%s.json" % y))
         except OSError:
             pass
-    return sorted(kept)
+    kept = sorted(y for y in set(years) if y >= first_year and os.path.exists(os.path.join(d, "%s.json" % y)))
+    atomic_write(os.path.join(DIR, "%s.json" % sym), {
+        "years": kept, "backfilled": True, "source": source,
+        "checked": today if after_close else man.get("checked"),
+    })
+
+
+def _stale(sym, fresh_rows):
+    """True when stored closes disagree with freshly fetched ones: a split re-adjusted the history."""
+    stored = {}
+    for year in {_ny_date(r[0])[:4] for r in fresh_rows}:
+        for r in _load(os.path.join(DIR, sym, "%s.json" % year), []):
+            stored[_ny_date(r[0])] = r
+    for r in fresh_rows:
+        s = stored.get(_ny_date(r[0]))
+        if s and r[4] and abs(s[4] / r[4] - 1) > MISMATCH:
+            return True
+    return False
 
 
 def main():
     scan = _load(SCAN_PATH, {})
     tickers = scan.get("tickers") or {}
-    # the biggest names first: they are the ones charted most
+    # the markets and the biggest names first: they are the ones charted most
     stocks = sorted(tickers, key=lambda s: -((tickers.get(s) or {}).get("mcap") or 0))
-    universe = list(MARKETS) + [s for s in stocks if s not in MARKETS]
+    universe = list(INDICES) + MARKET_ETFS + [s for s in stocks if s not in INDICES and s not in MARKET_ETFS]
     os.makedirs(DIR, exist_ok=True)
     now = _ny_now()
-    today = now.strftime("%Y-%m-%d")
-    after_close = (now.hour, now.minute) >= (16, 35) or now.weekday() >= 5
-    backfilled = refreshed = rebuilt = failed = files = attempts = 0
-    streak = 0   # failures in a row: ten means Yahoo is refusing, stop asking this run
-    for sym in universe:
-        ysym = MARKETS.get(sym, sym.replace(".", "-"))
-        man_path = os.path.join(DIR, "%s.json" % sym)
-        man = _load(man_path, {}) or {}
-        years = man.get("years") or []
-        rows = None
-        if streak >= 10:
-            break
-        if not man.get("backfilled"):
-            if attempts >= BACKFILL_PER_RUN:
-                continue
-            attempts += 1
-            rows = fetch_daily(ysym, "max")
-            time.sleep(FETCH_DELAY)
-            if not rows:
-                failed += 1
-                streak += 1
-                continue
-            streak = 0
-            rows = rows[-(KEEP_BARS + 260):]
-            backfilled += 1
-        elif after_close and man.get("checked") != today and refreshed + rebuilt < REFRESH_PER_RUN:
-            recent = fetch_daily(ysym, "1y")
-            time.sleep(FETCH_DELAY)
-            if not recent:
-                failed += 1
-                streak += 1
-                continue
-            streak = 0
-            stored = {}
-            for year in {_ny_date(recent[0][0])[:4], _ny_date(recent[-1][0])[:4]}:
-                for r in _load(os.path.join(DIR, sym, "%s.json" % year), []):
-                    stored[r[0]] = r
-            off = [r for r in recent if r[0] in stored and abs(stored[r[0]][4] / r[4] - 1) > MISMATCH] if stored else []
-            if off:
-                # a split or dividend re-adjustment: everything stored is on the old scale
-                full = fetch_daily(ysym, "max")
-                time.sleep(FETCH_DELAY)
-                if not full:
-                    failed += 1
+    today, after_close = now.strftime("%Y-%m-%d"), _closed(now)
+    use_alpaca = alpaca.enabled()
+    manifests = {s: (_load(os.path.join(DIR, "%s.json" % s), {}) or {}) for s in universe}
+    stats = {"backfilled": 0, "refreshed": 0, "marked": 0, "failed": 0, "files": 0}
+
+    def wants_backfill(sym):
+        m = manifests[sym]
+        if not m.get("backfilled"):
+            return True
+        # the first version stored Yahoo history for stocks: rebuild those from Alpaca
+        return use_alpaca and sym not in INDICES and m.get("source") != "alpaca"
+
+    # 1. Alpaca: stocks and ETFs, the whole history since SINCE for a batch, then the last days for the rest
+    if use_alpaca:
+        pending = [s for s in universe if s not in INDICES and wants_backfill(s)][:ALPACA_BACKFILL_PER_RUN]
+        for i in range(0, len(pending), ALPACA_GROUP):
+            group = pending[i:i + ALPACA_GROUP]
+            covered = set()
+            try:
+                got = alpaca.bars(group, "30Min", _since_ts(), covered=covered)
+            except Exception as e:
+                print("  alpaca daily history group failed (%s)" % e, file=sys.stderr)
+                got = None
+            if got is None:
+                break
+            for sym in group:
+                days = daily_from_session(got.get(sym) or []) if sym in covered else []
+                if len(days) < 2:
+                    stats["failed"] += 1
                     continue
                 shutil.rmtree(os.path.join(DIR, sym), ignore_errors=True)
-                years = []
-                rows = full[-(KEEP_BARS + 260):]
-                rebuilt += 1
-            else:
-                rows = recent
-                refreshed += 1
-        else:
+                changed, years = _write_years(sym, days)
+                stats["files"] += changed
+                _save(sym, manifests[sym], years, "alpaca", today, after_close)
+                manifests[sym] = _load(os.path.join(DIR, "%s.json" % sym), {})
+                stats["backfilled"] += 1
+        if after_close:
+            due = [s for s in universe if s not in INDICES and manifests[s].get("source") == "alpaca"
+                   and manifests[s].get("backfilled") and manifests[s].get("checked") != today]
+            covered = set()
+            got = None
+            if due:
+                try:
+                    got = alpaca.bars(due, "30Min", int(time.time()) - 8 * 86400, covered=covered)
+                except Exception as e:
+                    print("  alpaca daily refresh failed (%s)" % e, file=sys.stderr)
+            for sym in (due if got is not None else []):
+                days = daily_from_session(got.get(sym) or []) if sym in covered else []
+                if not days:
+                    continue
+                if _stale(sym, days):
+                    atomic_write(os.path.join(DIR, "%s.json" % sym), dict(manifests[sym], backfilled=False))
+                    stats["marked"] += 1
+                    continue
+                changed, years = _write_years(sym, days)
+                stats["files"] += changed
+                _save(sym, manifests[sym], sorted(set(manifests[sym].get("years") or []) | set(years)), "alpaca", today, after_close)
+                stats["refreshed"] += 1
+
+    # 2. Yahoo: the indices always; everything when Alpaca is not configured
+    streak = attempts = 0
+    for sym in universe:
+        if use_alpaca and sym not in INDICES:
             continue
-        changed, touched = _write_years(sym, rows)
-        files += changed
-        kept = _trim(sym, sorted(set(years) | set(touched)))
-        atomic_write(man_path, {"years": kept, "backfilled": True, "checked": today if after_close else man.get("checked")})
-    print("daily history: %d backfilled, %d refreshed, %d rebuilt after a re-adjustment, %d failed, %d year files written"
-          % (backfilled, refreshed, rebuilt, failed, files))
+        if streak >= 10:
+            break
+        ysym = INDICES.get(sym, sym.replace(".", "-"))
+        man = manifests[sym]
+        if not man.get("backfilled"):
+            if attempts >= YAHOO_BACKFILL_PER_RUN:
+                continue
+            attempts += 1
+            rows = fetch_yahoo_daily(ysym, "max")
+            time.sleep(FETCH_DELAY)
+            if not rows:
+                stats["failed"] += 1
+                streak += 1
+                continue
+            streak = 0
+            shutil.rmtree(os.path.join(DIR, sym), ignore_errors=True)
+            changed, years = _write_years(sym, rows)
+            stats["files"] += changed
+            _save(sym, man, years, "yahoo", today, after_close)
+            stats["backfilled"] += 1
+        elif after_close and man.get("checked") != today:
+            rows = fetch_yahoo_daily(ysym, "1mo")
+            time.sleep(FETCH_DELAY)
+            if not rows:
+                stats["failed"] += 1
+                streak += 1
+                continue
+            streak = 0
+            if _stale(sym, rows):
+                atomic_write(os.path.join(DIR, "%s.json" % sym), dict(man, backfilled=False))
+                stats["marked"] += 1
+                continue
+            changed, years = _write_years(sym, rows)
+            stats["files"] += changed
+            _save(sym, man, sorted(set(man.get("years") or []) | set(years)), "yahoo", today, after_close)
+            stats["refreshed"] += 1
+
+    print("daily history (since %s, %s): %d backfilled, %d refreshed, %d marked for a rebuild after a re-adjustment, "
+          "%d failed, %d year files written"
+          % (SINCE, "Alpaca for stocks and ETFs, Yahoo for indices" if use_alpaca else "Yahoo only",
+             stats["backfilled"], stats["refreshed"], stats["marked"], stats["failed"], stats["files"]))
     return 0
 
 
