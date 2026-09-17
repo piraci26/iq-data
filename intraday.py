@@ -49,7 +49,7 @@ YAHOO_1M_WINDOW = ("https://query1.finance.yahoo.com/v8/finance/chart/{sym}"
                    "?interval=1m&period1={p1}&period2={p2}")
 DAYS_1M_DIR = os.environ.get("DAYS_1M_DIR", "docs/iq/bars_1m_days")
 DAYS_1M_KEEP = int(os.environ.get("DAYS_1M_KEEP", "20"))
-BACKFILL_1M_PER_RUN = int(os.environ.get("BACKFILL_1M_PER_RUN", "100"))
+BACKFILL_1M_PER_RUN = int(os.environ.get("BACKFILL_1M_PER_RUN", "60"))
 MIN_SESSION_1M = 150        # fewer minutes than this is a broken fetch, not a session
 STALE_1M_DAYS = 14          # history of a symbol out of coverage this long is pruned
 # 5-MINUTE HISTORY: Yahoo serves 60 days of 5m bars in one call. Written once
@@ -603,8 +603,9 @@ def main(argv=None):
         "count": len(got),
         "syms": got,
     })
-    write_1m_days(got, live)
     write_5m_history(want, updated)
+    # after the 5m write: backfill calls must not be what throttles that once-a-day fetch
+    write_1m_days(got, live)
 
     print("signals: %d intraday triples (%d bull / %d bear), %d swing "
           "triples (%d bull / %d bear) from %d checked, %d failed; "
