@@ -31,40 +31,22 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Fill the chart history (1-minute sessions, daily years)
+      - name: 1-minute sessions (docs/hist/bars_1m_days)
         env:
           ALPACA_KEY_ID: ${{ secrets.ALPACA_KEY_ID }}
           ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
-        run: python history.py
+        run: python history.py sessions
 
-      - name: Commit + push if anything changed
-        run: |
-          git config user.name  "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          OUT="docs/hist"
-          if [[ -z "$(git status --porcelain $OUT)" ]]; then
-            echo "no changes"
-            exit 0
-          fi
-          # the same snapshot-and-lay-back move as the scan job, on docs/hist only
-          SNAP="$RUNNER_TEMP/hist-snapshot"
-          rm -rf "$SNAP" && mkdir -p "$SNAP/docs" && cp -a docs/hist "$SNAP/docs/hist"
-          for attempt in 1 2 3; do
-            git fetch -q origin main
-            git reset -q --hard origin/main
-            rm -rf docs/hist && mkdir -p docs && cp -a "$SNAP/docs/hist" docs/hist
-            git add -A docs/hist
-            if git diff --cached --quiet; then
-              echo "no changes against the newest main"
-              exit 0
-            fi
-            git commit -q -m "chart history @ $(date -u +'%Y-%m-%d %H:%M UTC') [actions]"
-            if git push -q origin HEAD:main; then
-              echo "pushed on attempt $attempt"
-              exit 0
-            fi
-            echo "push rejected on attempt $attempt, retrying"
-            sleep 5
-          done
-          echo "could not push after 3 attempts"
-          exit 1
+      # committed before the slow daily backfill, so the 1-minute charts get their weeks in minutes
+      - name: Commit the sessions
+        run: bash .github/scripts/commit-hist.sh "chart history: 1-minute sessions"
+
+      - name: Daily years (docs/hist/bars_1d_years)
+        env:
+          ALPACA_KEY_ID: ${{ secrets.ALPACA_KEY_ID }}
+          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+          HIST_DAILY_BUDGET_S: "1200"
+        run: python history.py daily
+
+      - name: Commit the daily years
+        run: bash .github/scripts/commit-hist.sh "chart history: daily years"

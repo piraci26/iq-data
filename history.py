@@ -114,29 +114,29 @@ def sessions_1m(cover, deadline):
     return written
 
 
-def main():
+def main(parts):
     if not alpaca.enabled():
         print("history: no Alpaca keys, nothing to do")
         return 0
     t0 = time.time()
-    deadline = t0 + BUDGET_S
-    scan = _load(SCAN_PATH, {})
-    tickers = scan.get("tickers") or {}
-    mcap = lambda s: -((tickers.get(s) or {}).get("mcap") or 0)
-    live = (_load(LIVE_INDEX, {}) or {}).get("syms") or []
-    cover = ETFS + sorted((s for s in set(live) if s not in ETFS), key=mcap)
-    n1 = sessions_1m(cover, deadline)
-    print("history: %d one-minute session files written for %d symbols in %.0fs (%s)" % (n1, len(cover), time.time() - t0, alpaca.stats))
-    # the daily years get whatever time is left
-    daily_history.ALPACA_BACKFILL_PER_RUN = int(os.environ.get("DAILY_ALPACA_BACKFILL_PER_RUN", "150"))
-    daily_history.main()
-    print("history: done in %.0fs (%s)" % (time.time() - t0, alpaca.stats))
+    if "sessions" in parts:
+        scan = _load(SCAN_PATH, {})
+        tickers = scan.get("tickers") or {}
+        mcap = lambda s: -((tickers.get(s) or {}).get("mcap") or 0)
+        live = (_load(LIVE_INDEX, {}) or {}).get("syms") or []
+        cover = ETFS + sorted((s for s in set(live) if s not in ETFS), key=mcap)
+        n1 = sessions_1m(cover, t0 + BUDGET_S)
+        print("history: %d one-minute session files written for %d symbols in %.0fs (%s)" % (n1, len(cover), time.time() - t0, alpaca.stats))
+    if "daily" in parts:
+        daily_history.ALPACA_BACKFILL_PER_RUN = int(os.environ.get("DAILY_ALPACA_BACKFILL_PER_RUN", "150"))
+        daily_history.main(deadline=time.time() + int(os.environ.get("HIST_DAILY_BUDGET_S", "1200")))
+        print("history: daily years done in %.0fs (%s)" % (time.time() - t0, alpaca.stats))
     return 0
 
 
 if __name__ == "__main__":
     try:
-        sys.exit(main())
+        sys.exit(main(sys.argv[1:] or ["sessions", "daily"]))
     except Exception as e:
         print("history failed (%s)" % e, file=sys.stderr)
         sys.exit(0)

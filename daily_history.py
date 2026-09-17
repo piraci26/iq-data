@@ -177,7 +177,7 @@ def _stale(sym, fresh_rows):
     return False
 
 
-def main():
+def main(deadline=None):
     scan = _load(SCAN_PATH, {})
     tickers = scan.get("tickers") or {}
     # the markets and the biggest names first: they are the ones charted most
@@ -201,6 +201,9 @@ def main():
     if use_alpaca:
         pending = [s for s in universe if s not in INDICES and wants_backfill(s)][:ALPACA_BACKFILL_PER_RUN]
         for i in range(0, len(pending), ALPACA_GROUP):
+            if deadline and time.time() > deadline:
+                print("daily history: time budget reached, the rest continues next run")
+                break
             group = pending[i:i + ALPACA_GROUP]
             covered = set()
             try:
