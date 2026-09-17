@@ -668,8 +668,9 @@ def main(argv=None):
     # covered today", never "stale bars from last week".
     top = sorted(syms, key=lambda s: (tickers.get(s) or {}).get("mcap") or 0,
                  reverse=True)[:TOP_1M]
+    # the index ETFs chart like any stock now that Alpaca carries them (owner: "let's do ETFs no indexes")
     want = sorted({t["sym"] for t in triples}
-                  | {t["sym"] for t in swing} | set(top))
+                  | {t["sym"] for t in swing} | set(top) | {"SPY", "QQQ", "IWM", "DIA", "VOO", "VTI"})
     bars_dir = os.path.join(os.path.dirname(BARS1M_PATH), "bars_1m")
     os.makedirs(bars_dir, exist_ok=True)
     got = []

@@ -10,10 +10,10 @@ indexes no". So:
   starts in 2016). Alpaca's own daily bars include pre- and post-market trades,
   so each day is built from its regular-session 30-minute bars instead: open of
   the first, high and low over the session, close of the last, volume summed.
-- indices (SPX, NDX, VIX, the global ones) are calculated values, not traded,
-  so they are not on Alpaca; they come from Yahoo, the only free source with
-  their history.
-- without Alpaca keys, everything comes from Yahoo.
+- no indices (owner: "let's do ETFs no indexes"): SPX, NDX and the rest are
+  calculated values Alpaca does not carry, so the charts use the index ETFs
+  (SPY, QQQ, IWM, DIA, VOO, VTI) instead and nothing here asks Yahoo.
+- without Alpaca keys, stocks and ETFs fall back to Yahoo.
 
 docs/iq/bars_1d_years/SYM/YYYY.json holds that year's confirmed daily rows
 [t, o, h, l, c, v] (t = 09:30 New York on the day, split-adjusted prices);
@@ -47,12 +47,8 @@ ALPACA_GROUP = 25            # symbols per history request set: ten years of 30-
 YAHOO_BACKFILL_PER_RUN = int(os.environ.get("DAILY_BACKFILL_PER_RUN", "250"))
 FETCH_DELAY = float(os.environ.get("FETCH_DELAY", "0.15"))
 YAHOO_1D = "https://query1.finance.yahoo.com/v8/finance/chart/{sym}?interval=1d&range={rng}"
-# our names for the indices the scan covers, as Yahoo spells them (tht-data markets.py)
-INDICES = {
-    "SPX": "^GSPC", "NDX": "^NDX", "DJI": "^DJI", "RUT": "^RUT", "IXIC": "^IXIC", "VIX": "^VIX",
-    "UKX": "^FTSE", "DAX": "^GDAXI", "CAC": "^FCHI", "SX5E": "^STOXX50E", "NI225": "^N225",
-    "HSI": "^HSI", "NIFTY": "^NSEI", "TSX": "^GSPTSE",
-}
+# no indices (owner, 2026-09-17: "let's do ETFs no indexes"); kept as an empty map so the Yahoo path stays generic
+INDICES = {}
 MARKET_ETFS = ["SPY", "QQQ", "IWM", "DIA", "VOO", "VTI"]
 MISMATCH = 0.005             # a close off by more than 0.5% means the history was re-adjusted
 
@@ -292,7 +288,7 @@ def main():
 
     print("daily history (since %s, %s): %d backfilled, %d refreshed, %d marked for a rebuild after a re-adjustment, "
           "%d failed, %d year files written"
-          % (SINCE, "Alpaca for stocks and ETFs, Yahoo for indices" if use_alpaca else "Yahoo only",
+          % (SINCE, "Alpaca" if use_alpaca else "Yahoo, no Alpaca keys",
              stats["backfilled"], stats["refreshed"], stats["marked"], stats["failed"], stats["files"]))
     return 0
 
