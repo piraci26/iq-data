@@ -344,7 +344,7 @@ def _sessions_1m(rows, now_ny):
             if (d < today or (d == today and closed)) and len(by_t) >= MIN_SESSION_1M}
 
 
-def write_1m_days(want, live):
+def write_1m_days(want, live, first=()):
     """Finished sessions' 1m bars, one file each, written once (see DAYS_1M_DIR).
 
     live = this run's live 1m rows per symbol (two sessions, no extra fetch);
@@ -364,7 +364,9 @@ def write_1m_days(want, live):
                 manifests[sym] = {}
         # Alpaca first: whole regular sessions for a batch of symbols never backfilled
         alp_back, alp_done = {}, set()
-        pending = [s for s in want if not manifests[s].get("backfilled")][:BACKFILL_1M_ALPACA_PER_RUN]
+        # the most-charted names first (the top caps), then the rest
+        lead = set(first)
+        pending = sorted((s for s in want if not manifests[s].get("backfilled")), key=lambda s: (s not in lead, s))[:BACKFILL_1M_ALPACA_PER_RUN]
         if pending and alpaca.enabled():
             try:
                 alp_back = alpaca.session_bars(pending, "1Min", alpaca.recent_weekdays(DAYS_1M_KEEP + 3, include_today=False), covered=alp_done) or {}
@@ -699,7 +701,7 @@ def main(argv=None):
     })
     write_5m_history(want, updated)
     # after the 5m write: backfill calls must not be what throttles that once-a-day fetch
-    write_1m_days(got, live)
+    write_1m_days(got, live, first=top)
 
     print("signals: %d intraday triples (%d bull / %d bear), %d swing "
           "triples (%d bull / %d bear) from %d checked, %d failed; "
