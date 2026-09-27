@@ -1,0 +1,38 @@
+name: Earnings calendar
+
+# The terminal's Earnings tool: Nasdaq's public calendar, 100 days back and 75 ahead,
+# kept to the tht-data universe, written to docs/earn only (its own folder and commit
+# script, so the scan's wholesale replace of docs/iq never touches it). Weekdays
+# before the US open; the calendar rarely moves during the day.
+on:
+  schedule:
+    - cron: "35 9 * * 1-5"
+  workflow_dispatch:
+
+concurrency:
+  group: earnings
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  earnings:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: true
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Earnings calendar (docs/earn/earnings.json)
+        run: python earnings.py
+
+      - name: Commit the calendar
+        run: |
+          bash .github/scripts/commit-earn.sh "earnings calendar"

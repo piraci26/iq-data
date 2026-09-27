@@ -32,6 +32,11 @@ static JSON on GitHub Pages (`https://piraci26.github.io/iq-data`).
   an OpenAI-compatible LLM. `whats_changed.py` answers "what changed for
   TICKER since T?" from the same log. See `ai/worker/README.md`.
 - `ai/prompts/` — prompt pack + vocabulary glossary.
+- `earnings.py` — the earnings calendar for the terminal's Earnings tool:
+  Nasdaq's public calendar per weekday (100 days back, 75 ahead), kept to the
+  tht-data universe, written to `docs/earn/earnings.json` (`next` and `last`
+  per name, the rows per day). Its own cron (`earnings.yml`) and commit
+  script, like `docs/hist`, so the scan's commit never removes it.
 - `.github/workflows/reads.yml` — the cron: scan (top 500 by mcap) →
   reads → commit `docs/`.
 
