@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Company logos for the stock and ETF heatmaps.
+"""Company logos for the stock and ETF heatmaps and the earnings calendar.
 
-For every symbol in docs/iq/screener.json and docs/iq/etf.json that has no
+For every symbol in docs/iq/screener.json, docs/iq/etf.json and docs/earn/earnings.json that has no
 file under docs/logos/ yet, fetch a square PNG (nvstly/icons via jsDelivr,
 then FMP, then Parqet), keep it only when it is at least 100px, and record
 it in docs/iq/logos.json {updated_at, count, syms: {SYM: [w, h, light]}}.
@@ -126,16 +126,32 @@ def get_logo(sym):
     return None, None
 
 
+def clean(sym):
+    s = str(sym or "").upper()
+    return s if s and all(c.isalnum() or c in "-." for c in s) else None
+
+
 def load_symbols():
     syms = set()
     for rel in ("docs/iq/screener.json", "docs/iq/etf.json"):
         try:
             for r in json.load(open(os.path.join(HERE, rel)))["rows"]:
-                s = str(r.get("sym") or "").upper()
-                if s and all(c.isalnum() or c in "-." for c in s):
+                s = clean(r.get("sym"))
+                if s:
                     syms.add(s)
         except Exception as e:
             print("skip %s: %s" % (rel, e), file=sys.stderr)
+    # every name on the earnings calendar too (owner, 2026-09-27: "logos! I asked for
+    # them"): the terminal's Earnings tool lists all of them, not only the universe
+    try:
+        earn = json.load(open(os.path.join(HERE, "docs", "earn", "earnings.json")))
+        for rows in earn.get("days", {}).values():
+            for r in rows:
+                s = clean(r.get("sym"))
+                if s:
+                    syms.add(s)
+    except Exception as e:
+        print("skip earnings: %s" % e, file=sys.stderr)
     return sorted(syms)
 
 
