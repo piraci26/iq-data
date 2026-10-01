@@ -13,7 +13,7 @@ Vocabulary sheet embedded by the IQ Analyst prompts. Use these terms exactly; do
 - **Signal** — the oscillator's smoothed line; the wave crossing its signal marks a momentum shift before a full flip.
 - **Confluence n/4** — how many of the four checks (trend regime, momentum, money flow, structure) currently agree with the bullish side; 4/4 = fully aligned bullish, 0/4 = fully bearish, 2/4 = mixed.
 - **Stretched / extreme** — a reading far outside its normal range (oscillator at an extreme, or price far beyond the bands); flags exhaustion risk, not a signal by itself.
-- **Money flow** — whether volume-weighted pressure is buying or selling; phrase as "money flow on the buy side / sell side".
+- **Money flow** — whether volume-weighted pressure is flowing in or out; phrase as "money flow in inflow / outflow" (the data says BUYING or SELLING; never write buy side, sell side, buying or selling).
 - **BOS (break of structure)** — price closing through the last swing high (bullish BOS) or swing low (bearish BOS) in the direction of the current trend; a continuation event.
 - **CHoCH (change of character)** — price breaking the last swing against the current trend; the first warning of a reversal. **CHoCH+** is the stronger variant, confirmed by a deeper break.
 - **EQH / EQL sweep** — price wicking through equal highs (EQH) or equal lows (EQL) to take resting liquidity, then closing back inside; often precedes a move the other way.
