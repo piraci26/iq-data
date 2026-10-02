@@ -145,7 +145,12 @@ def fetch_day(d):
             "q": (r.get("fiscalQuarterEnding") or "").strip() or None,
             "n_est": int(r["noOfEsts"]) if str(r.get("noOfEsts") or "").isdigit() else None,
             "mcap_b": mcap_b(r.get("marketCap")),
-            "eps_act": money(r.get("eps")),
+            # Nasdaq repeats the year-ago EPS in `eps` until a new report is processed,
+            # and only then fills `surprise` (2026-10-02: ACN's "Aug/2026 $3.03" and
+            # NKE's "$0.49" were their Aug/2025 figures). A reported EPS is kept only
+            # when the surprise is there; where it is, it matches Nasdaq's per-company
+            # surprise table.
+            "eps_act": money(r.get("eps")) if pct(r.get("surprise")) is not None else None,
             "surprise": pct(r.get("surprise")),
         })
     return out
@@ -192,7 +197,8 @@ def update_history(days, today, out_root, back, pause):
             per.setdefault(r["sym"], {})[ds] = [ds, r.get("q"), r.get("eps_est"), r["eps_act"], r.get("surprise")]
     out = {}
     for s, by_date in per.items():
-        keep = sorted((e for d, e in by_date.items() if d >= start.isoformat()), key=lambda e: e[0], reverse=True)[:HIST_KEEP]
+        keep = sorted((e for d, e in by_date.items() if d >= start.isoformat() and e[4] is not None),
+                      key=lambda e: e[0], reverse=True)[:HIST_KEEP]
         if keep:
             out[s] = keep
     doc = {
