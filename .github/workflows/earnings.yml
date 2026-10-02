@@ -1,6 +1,7 @@
 name: Earnings calendar
 
-# The terminal's Earnings tool: Nasdaq's public calendar, 100 days back and 75 ahead,
+# The terminal's Earnings and Economy tools: Nasdaq's public calendars (earnings 100 days
+# back and 75 ahead; economic events 7 back and 21 ahead),
 # kept to the tht-data universe, written to docs/earn only (its own folder and commit
 # script, so the scan's wholesale replace of docs/iq never touches it). Weekdays
 # before the US open; the calendar rarely moves during the day.
@@ -33,6 +34,11 @@ jobs:
       - name: Earnings calendar (docs/earn/earnings.json)
         run: python earnings.py
 
-      - name: Commit the calendar
+      # the terminal's Economy tool rides the same run; a refused feed keeps
+      # yesterday's file and never blocks the earnings commit
+      - name: Economic calendar (docs/earn/economic.json)
+        run: python economic.py || echo "economic calendar not refreshed (exit $?)"
+
+      - name: Commit the calendars
         run: |
-          bash .github/scripts/commit-earn.sh "earnings calendar"
+          bash .github/scripts/commit-earn.sh "earnings and economic calendars"
