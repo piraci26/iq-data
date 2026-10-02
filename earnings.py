@@ -9,9 +9,17 @@ DAYS_AHEAD ahead (New York's today), every US-listed name (owner, 2026-09-27:
 
   {updated_at, today, days_back, days_ahead, universe_size, count, days_fetched,
    days_failed, failed_days: ["YYYY-MM-DD", ...],
-   days: {"YYYY-MM-DD": [{sym, name, time, eps_est, eps_last, q, n_est, mcap_b}, ...]},
+   days: {"YYYY-MM-DD": [{sym, name, time, eps_est, eps_last, q, n_est, mcap_b, eps_act, surprise}, ...]},
    next: {SYM: {date, time, eps_est, eps_last, q, n_est}},   # first date on or after today
-   last: {SYM: {date, time, eps_est, eps_last, q}}}          # latest date before today
+   last: {SYM: {date, time, eps_est, eps_last, q, eps_act, surprise}}}   # latest before today
+
+eps_act is the EPS the company reported and surprise its distance from the estimate in
+per cent (Nasdaq fills both once a report is out; owner, 2026-10-02: "can you do
+estimate vs. reality"). The history behind the details panel is a second file,
+<out>/earn/earnings_hist.json, kept incrementally (see update_history):
+
+  {updated_at, from, fetched: ["YYYY-MM-DD", ...],
+   sym: {SYM: [[date, quarter, estimate, actual, surprise], ...]}}   # newest first, 8 at most
 
 time is "pre" (before the open), "post" (after the close) or "na" (not supplied).
 Days the source refuses are retried in a second pass after a rest; the ones still
@@ -88,6 +96,15 @@ def money(s):
     return -v if neg else v
 
 
+def pct(s):
+    """'5.67' -> 5.67, 'N/A' or '' -> None"""
+    try:
+        v = float(str(s).replace("%", "").replace(",", "").strip())
+    except (TypeError, ValueError):
+        return None
+    return v if v == v else None
+
+
 def mcap_b(s):
     v = money(s)
     return round(v / 1e9, 2) if v is not None and v > 0 else None
@@ -128,8 +145,64 @@ def fetch_day(d):
             "q": (r.get("fiscalQuarterEnding") or "").strip() or None,
             "n_est": int(r["noOfEsts"]) if str(r.get("noOfEsts") or "").isdigit() else None,
             "mcap_b": mcap_b(r.get("marketCap")),
+            "eps_act": money(r.get("eps")),
+            "surprise": pct(r.get("surprise")),
         })
     return out
+
+
+HIST_DAYS = 400      # about four quarters of reports behind today
+HIST_KEEP = 8        # reports kept per name
+
+
+def update_history(days, today, out_root, back, pause):
+    """Estimate vs actual per name, kept across runs in <out>/earn/earnings_hist.json.
+
+    The days this run fetched (the last `back` days) are merged every time, since a
+    report's actual can land a day late. Older weekdays inside HIST_DAYS are fetched
+    once and remembered in `fetched`, so the first run backfills and later runs ask
+    for nothing new."""
+    path = os.path.join(out_root, "earn", "earnings_hist.json")
+    try:
+        with open(path) as f:
+            hist = json.load(f)
+    except (OSError, ValueError):
+        hist = {}
+    start = today - timedelta(days=HIST_DAYS)
+    fetched = {d for d in hist.get("fetched", []) if d >= start.isoformat()}
+    per = {s: {e[0]: e for e in v} for s, v in (hist.get("sym") or {}).items()}
+
+    pool = {ds: rows for ds, rows in days.items() if ds < today.isoformat()}
+    older_end = today - timedelta(days=back + 1)
+    todo = [d for d in weekdays(start, 0, (older_end - start).days) if d.isoformat() not in fetched]
+    got = 0
+    for d in todo:
+        try:
+            pool[d.isoformat()] = fetch_day(d)
+            fetched.add(d.isoformat())
+            got += 1
+        except Exception as e:
+            print("history day %s failed: %s" % (d, e), file=sys.stderr)
+        time.sleep(pause)
+
+    for ds, rows in pool.items():
+        for r in rows:
+            if r.get("eps_act") is None:
+                continue
+            per.setdefault(r["sym"], {})[ds] = [ds, r.get("q"), r.get("eps_est"), r["eps_act"], r.get("surprise")]
+    out = {}
+    for s, by_date in per.items():
+        keep = sorted((e for d, e in by_date.items() if d >= start.isoformat()), key=lambda e: e[0], reverse=True)[:HIST_KEEP]
+        if keep:
+            out[s] = keep
+    doc = {
+        "updated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "from": start.isoformat(),
+        "fetched": sorted(fetched),
+        "sym": out,
+    }
+    atomic_write(path, doc)
+    print("wrote %s: %d names, %d older days fetched this run" % (path, len(out), got))
 
 
 def atomic_write(path, obj):
@@ -148,6 +221,7 @@ def main(argv=None):
     ap.add_argument("--pause", type=float, default=0.8, help="seconds between requests")
     ap.add_argument("--rest", type=float, default=45.0, help="seconds before the second pass over refused days")
     ap.add_argument("--universe-only", action="store_true", help="keep only the tht-data universe's names")
+    ap.add_argument("--no-history", action="store_true", help="skip earnings_hist.json")
     args = ap.parse_args(argv)
 
     today = datetime.now(NY).date()
@@ -194,7 +268,8 @@ def main(argv=None):
                 if r["sym"] not in nxt:
                     nxt[r["sym"]] = dict(rec, n_est=r["n_est"])
             else:
-                last[r["sym"]] = rec          # later dates overwrite: the latest wins
+                # later dates overwrite: the latest wins
+                last[r["sym"]] = dict(rec, eps_act=r.get("eps_act"), surprise=r.get("surprise"))
     total = sum(len(v) for v in days.values())
     out_path = os.path.join(args.out, "earn", "earnings.json")
     if total < args.min_ok:
@@ -213,6 +288,12 @@ def main(argv=None):
     atomic_write(out_path, doc)
     print("wrote %s: %d rows over %d days (%d failed), next for %d names, last for %d"
           % (out_path, total, len(days), failed, len(nxt), len(last)))
+    if not args.no_history:
+        try:
+            update_history(days, today, args.out, args.back, args.pause)
+        except Exception as e:
+            # the calendar is written; a history failure keeps yesterday's file
+            print("history not updated: %s" % e, file=sys.stderr)
     return 0
 
 

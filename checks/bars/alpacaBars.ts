@@ -9,7 +9,11 @@
    Plain TypeScript on fetch and Date: the bars edge function runs it on Deno,
    and a check runs the same file on Node against the real API. */
 
-export type Tf = "1Min" | "5Min";
+/* 30Min feeds the daily bars of names outside the scan (owner, 2026-10-02: "we're
+   missing a lot of data feed"): Alpaca's own daily bars carry pre- and post-market
+   trades, so a day is built from its regular session's 30-minute bars, as the
+   pipeline's year files are */
+export type Tf = "1Min" | "5Min" | "30Min";
 /** [unix seconds, open, high, low, close, volume] — the rows the iq-data files use */
 export type Row = [number, number, number, number, number, number];
 export type Stats = { requests: number; pages: number; raw: number; bars: number; sessions: number; ms: number; cachedMonths?: number };
@@ -27,7 +31,7 @@ const DATA = "https://data.alpaca.markets/v2/stocks";
 /* one page a request either way, so the requests run side by side: a 1-minute
    page holds 10,000 bars, ten weekdays with pre-market and after-hours; a
    5-minute page holds about 1,900 (Alpaca counts the minutes under them), nine */
-const CHUNK_DAYS: Record<Tf, number> = { "1Min": 10, "5Min": 9 };
+const CHUNK_DAYS: Record<Tf, number> = { "1Min": 10, "5Min": 9, "30Min": 25 };
 const PARALLEL = 12;
 /* the free plan refuses the newest 15 minutes of the consolidated tape */
 export const DELAY_MS = 16 * 60_000;
@@ -135,6 +139,27 @@ export async function fetchDays(days: number[], o: FetchOpts): Promise<Row[]> {
   };
   for (let i = 0; i < chunks.length; i += PARALLEL) await Promise.all(chunks.slice(i, i + PARALLEL).map(fetchChunk));
   return [...byTime.values()].sort((a, b) => a[0] - b[0]);
+}
+
+/** one regular-session day per row: open of the first bar, high and low over the
+    session, close of the last, volume summed, stamped 09:30 New York */
+export function dailyFrom30(rows: Row[]): Row[] {
+  const out: Row[] = [];
+  let day = -1;
+  for (const r of rows) {
+    const d = rowDay(r);
+    if (d !== day) {
+      out.push([r[0], r[1], r[2], r[3], r[4], r[5]]);
+      day = d;
+      continue;
+    }
+    const cur = out[out.length - 1];
+    cur[2] = Math.max(cur[2], r[2]);
+    cur[3] = Math.min(cur[3], r[3]);
+    cur[4] = r[4];
+    cur[5] += r[5];
+  }
+  return out;
 }
 
 /** the newest `sessions` days that traded */
