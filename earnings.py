@@ -22,6 +22,9 @@ estimate vs. reality"). The history behind the details panel is a second file,
    sym: {SYM: [[date, quarter, estimate, actual, surprise], ...]}}   # newest first, 8 at most
 
 time is "pre" (before the open), "post" (after the close) or "na" (not supplied).
+Nasdaq also gives a date to companies its vendor has none for, a guess from last year's
+report day; the time-not-set names of the next --check-days are looked up on Nasdaq's
+per-company page and dropped when it has no date (see drop_guesses).
 Days the source refuses are retried in a second pass after a rest; the ones still
 missing are listed in failed_days. A MIN_OK guard keeps the previous file when the
 source returns too little.
@@ -34,6 +37,7 @@ import os
 import sys
 import time
 import urllib.error
+import urllib.parse
 import urllib.request
 from datetime import date, datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
@@ -156,6 +160,45 @@ def fetch_day(d):
     return out
 
 
+ED_URL = "https://api.nasdaq.com/api/analyst/%s/earnings-date"
+
+
+def drop_guesses(days, today, horizon, pause):
+    """Nasdaq's calendar lists a date even for a company its vendor has no date for: a
+    guess from last year's report day (owner, 2026-10-05, beside Earnings Whispers' week:
+    "idk how you got the other companies"). AEHR sat on Monday 5 Oct while Nasdaq's own
+    AEHR page said "Our vendor, Zacks Investment Research, hasn't provided us with the
+    upcoming earnings report date". That week every name with a time had a date on its
+    page (22 of 22) and the five without one were all time-not-set names, so the
+    time-not-set names of the next `horizon` days are looked up, one request each, and
+    dropped when their page has no date. A lookup that fails keeps the name. Answers
+    the dropped names, "YYYY-MM-DD SYM"."""
+    end = (today + timedelta(days=horizon)).isoformat()
+    dropped = []
+    for ds in sorted(days):
+        if not (today.isoformat() <= ds <= end):
+            continue
+        keep = []
+        for r in days[ds]:
+            if r["time"] == "na":
+                try:
+                    doc = _http_json(ED_URL % urllib.parse.quote(r["sym"], safe=""), tries=2)
+                    text = (((doc or {}).get("data") or {}).get("reportText") or "")
+                    if "hasn't provided" in text:
+                        dropped.append("%s %s" % (ds, r["sym"]))
+                        time.sleep(pause)
+                        continue
+                except Exception as e:
+                    print("date check %s failed: %s" % (r["sym"], e), file=sys.stderr)
+                time.sleep(pause)
+            keep.append(r)
+        if keep:
+            days[ds] = keep
+        else:
+            del days[ds]
+    return dropped
+
+
 HIST_DAYS = 400      # about four quarters of reports behind today
 HIST_KEEP = 8        # reports kept per name
 
@@ -228,6 +271,8 @@ def main(argv=None):
     ap.add_argument("--rest", type=float, default=45.0, help="seconds before the second pass over refused days")
     ap.add_argument("--universe-only", action="store_true", help="keep only the tht-data universe's names")
     ap.add_argument("--no-history", action="store_true", help="skip earnings_hist.json")
+    ap.add_argument("--check-days", type=int, default=14,
+                    help="look up the time-not-set names this many days ahead; 0 skips")
     args = ap.parse_args(argv)
 
     today = datetime.now(NY).date()
@@ -265,6 +310,10 @@ def main(argv=None):
     if not fetched:
         print("FATAL: nothing fetched", file=sys.stderr)
         return 3
+
+    if args.check_days > 0:
+        dropped = drop_guesses(days, today, args.check_days, min(args.pause, 0.5))
+        print("dropped %d guessed dates: %s" % (len(dropped), ", ".join(dropped[:40]) or "none"))
 
     nxt, last = {}, {}
     for ds in sorted(days):
