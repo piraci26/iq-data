@@ -8,7 +8,13 @@
                        ($B), price, 24h volume ($B) and the 1h/24h/7d/14d/30d/1y
                        changes
 
-ETF universe and assets come from the stockanalysis.com ETF list; prices
+ETF universe (owner, 2026-10-05, "I like it, do it"): Nasdaq's public ETF
+list says which symbols are funds; they are ranked and sized by the dollars
+traded a day over the last 20 sessions (Alpaca's daily bars), the top
+ETF_TOP kept, once a New York day (docs/iq/etf_universe.json); the groups
+come from the fund's name (classify). stockanalysis.com's list, which carried
+assets under management, now returns only its top 20 and is the fallback
+when Nasdaq or Alpaca cannot answer. Prices
 from Alpaca (owner, 2026-10-05: "screener and heatmap should be taken from
 alpaca"): daily_history.py's files for the history and today's session so far
 in one batch, with Yahoo's chart API only for a fund Alpaca has no history for
@@ -17,6 +23,7 @@ yet (the log counts them); coins from CoinGecko's public markets endpoint
 keeps the previous file.
 """
 import argparse
+import gzip
 import html
 import json
 import os
@@ -134,6 +141,99 @@ def etf_universe_data():
     return out
 
 
+NASDAQ_ETF_URL = "https://api.nasdaq.com/api/screener/etf?download=true"
+UNIVERSE_FILE = "etf_universe.json"
+
+# the heatmap's groups, read from a fund's name, in this order (a 3x gold miners fund is leveraged)
+LEVERAGED = re.compile(
+    r"\b[1-9](\.\d+)?x\b|\bleveraged\b|\binverse\b|\bbull\b|\bbear\b|\bultrapro\b"
+    r"|\bultra\b(?!-?\s*short[\s-]*(income|duration|bond|term|municipal|treasury|government|maturity))"
+    r"|\bshort\b(?!-?\s*(term|duration|maturity|dated|treasury|bond|municipal|muni|corporate|government|high yield|income))",
+    re.I)
+CRYPTO = re.compile(r"bitcoin|\bether(eum)?\b|\bcrypto|\bsolana\b|\bxrp\b|digital asset", re.I)
+MINERS = re.compile(r"\bminers?\b|\bmining\b|\bproducers?\b|\bequit", re.I)
+COMMODITY = re.compile(r"\bgold\b|\bsilver\b|platinum|palladium|\boil\b|crude|natural gas|commodit|\bcopper\b|agricultur", re.I)
+CURRENCY = re.compile(r"\bdollar\b|currenc|\byen\b|\beuro\b|\bfranc\b|\byuan\b", re.I)
+FIXED = re.compile(r"\bbonds?\b|treasur|t-bill|\bbills?\b|\bmuni|municipal|aggregate|corporate|high yield|\btips\b"
+                   r"|mortgage|\bmbs\b|fixed income|floating rate|preferred|\bcredit\b|\bloans?\b|ultra-?\s*short|short[\s-]+(term|duration|maturity)", re.I)
+
+
+def classify(name):
+    """The heatmap group of a fund, from its name."""
+    if LEVERAGED.search(name):
+        return "Leveraged & inverse"
+    if CRYPTO.search(name):
+        return "Crypto"
+    if COMMODITY.search(name) and not MINERS.search(name):
+        return "Commodities"
+    if CURRENCY.search(name):
+        return "Currency"
+    if FIXED.search(name):
+        return "Fixed income"
+    return "Equity"
+
+
+def nasdaq_etfs():
+    """Every US-listed ETF on Nasdaq's public screener: [{sym, name}]."""
+    req = urllib.request.Request(NASDAQ_ETF_URL, headers={
+        "User-Agent": UA, "Accept": "application/json, text/plain, */*", "Accept-Encoding": "gzip",
+        "Referer": "https://www.nasdaq.com/", "Origin": "https://www.nasdaq.com"})
+    with urllib.request.urlopen(req, timeout=60) as r:
+        body = r.read()
+        if (r.headers.get("Content-Encoding") or "").lower() == "gzip":
+            body = gzip.decompress(body)
+    doc = json.loads(body.decode("utf-8"))
+    rows = ((doc.get("data") or {}).get("data") or {}).get("rows") or []
+    out = []
+    for r in rows:
+        sym = str(r.get("symbol") or "").strip().upper()
+        if re.fullmatch(r"[A-Z]{1,5}", sym):
+            out.append({"sym": sym, "name": html.unescape(str(r.get("companyName") or sym)).strip()})
+    return out
+
+
+def dollar_volume(syms):
+    """{sym: dollars traded a day, the mean of the last 20 sessions} from Alpaca's daily bars, or None."""
+    res = alpaca.bars(syms, "1Day", time.time() - 45 * 86400, regular_only=False)
+    if res is None:
+        return None
+    out = {}
+    for sym, rows in res.items():
+        rows = rows[-20:]
+        if rows:
+            out[sym] = sum(r[4] * r[5] for r in rows) / len(rows)
+    return out
+
+
+def ranked_universe(out_dir, top):
+    """Nasdaq's ETFs, the top `top` by dollars traded a day, with name, group and that figure
+    ($B, `dv`). Ranked once a New York day and kept in etf_universe.json; None when it cannot be
+    ranked today and no earlier ranking exists."""
+    path = os.path.join(out_dir, UNIVERSE_FILE)
+    today = datetime.now(alpaca._NY).strftime("%Y-%m-%d") if alpaca._NY else datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    try:
+        with open(path) as fh:
+            kept = json.load(fh) or {}
+    except Exception:
+        kept = {}
+    if kept.get("date") == today and len(kept.get("rows") or []) >= 50:
+        return kept["rows"]
+    try:
+        funds = nasdaq_etfs() if alpaca.enabled() else []
+    except Exception as e:
+        print("etf: Nasdaq's ETF list failed (%s)" % e, file=sys.stderr)
+        funds = []
+    dv = dollar_volume([f["sym"] for f in funds]) if len(funds) >= 500 else None
+    if not dv:
+        return kept.get("rows") or None
+    rows = [dict(f, cls=classify(f["name"]), dv=round(dv[f["sym"]] / 1e9, 4)) for f in funds if dv.get(f["sym"])]
+    rows.sort(key=lambda r: -r["dv"])
+    rows = rows[:top]
+    atomic_write(path, {"date": today, "source": "nasdaq list, alpaca dollar volume", "count": len(rows), "rows": rows})
+    print("etf: ranked %d of Nasdaq's %d ETFs by dollars traded a day (%d priced by Alpaca)" % (len(rows), len(funds), len(dv)))
+    return rows
+
+
 def etf_universe():
     try:
         rows = etf_universe_data()
@@ -208,7 +308,10 @@ def price_block(sym, live=None):
 
 
 def build_etf(out_dir, top, delay):
-    universe = etf_universe()
+    universe = ranked_universe(out_dir, top)
+    if not universe:
+        print("etf: no Nasdaq/Alpaca ranking, falling back to stockanalysis.com", file=sys.stderr)
+        universe = etf_universe()
     if len(universe) < 50:
         print("etf: universe too small (%d), keeping the previous file" % len(universe), file=sys.stderr)
         return False
