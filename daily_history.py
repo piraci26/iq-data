@@ -42,6 +42,11 @@ import alpaca  # noqa: E402
 SCAN_PATH = os.environ.get("SCAN_PATH", "docs/iq/scan.json")
 DIR = os.environ.get("DAILY_YEARS_DIR", "docs/iq/bars_1d_years")
 SINCE = os.environ.get("DAILY_SINCE", "2016-01-01")
+# the ETF heatmap's funds outside the scan (owner, 2026-10-05: "screener and heatmap should be
+# taken from alpaca"): a year of stats and two of charts, not ten, to keep the Pages site small
+ETF_PATH = os.environ.get("ETF_PATH", "docs/iq/etf.json")
+ETF_SINCE = os.environ.get("DAILY_ETF_SINCE", "2024-01-01")
+_SHORT = set()               # the symbols kept from ETF_SINCE
 ALPACA_BACKFILL_PER_RUN = int(os.environ.get("DAILY_ALPACA_BACKFILL_PER_RUN", "100"))
 ALPACA_GROUP = 25            # symbols per history request set: ten years of 30-minute bars is a lot of rows
 YAHOO_BACKFILL_PER_RUN = int(os.environ.get("DAILY_BACKFILL_PER_RUN", "250"))
@@ -69,8 +74,12 @@ def _ny_date(ts):
         return datetime.utcfromtimestamp(ts - 4 * 3600).strftime("%Y-%m-%d")
 
 
-def _since_ts():
-    return int(datetime.strptime(SINCE, "%Y-%m-%d").replace(tzinfo=timezone.utc).timestamp())
+def _since_of(sym=None):
+    return ETF_SINCE if sym in _SHORT else SINCE
+
+
+def _since_ts(sym=None):
+    return int(datetime.strptime(_since_of(sym), "%Y-%m-%d").replace(tzinfo=timezone.utc).timestamp())
 
 
 def _closed(now):
@@ -150,7 +159,7 @@ def _write_years(sym, rows):
 
 
 def _save(sym, man, years, source, today, after_close):
-    first_year = SINCE[:4]
+    first_year = _since_of(sym)[:4]
     d = os.path.join(DIR, sym)
     for y in [y for y in years if y < first_year]:
         try:
@@ -183,6 +192,13 @@ def main(deadline=None):
     # the markets and the biggest names first: they are the ones charted most
     stocks = sorted(tickers, key=lambda s: -((tickers.get(s) or {}).get("mcap") or 0))
     universe = list(INDICES) + MARKET_ETFS + [s for s in stocks if s not in INDICES and s not in MARKET_ETFS]
+    # then the ETF heatmap's funds the scan does not carry, from ETF_SINCE
+    have = set(universe)
+    etfs = [r.get("sym") for r in ((_load(ETF_PATH, {}) or {}).get("rows") or []) if r.get("sym")]
+    extra = [e for e in etfs if e not in have and e.replace(".", "").isalnum()]
+    _SHORT.clear()
+    _SHORT.update(extra)
+    universe += extra
     os.makedirs(DIR, exist_ok=True)
     now = _ny_now()
     today, after_close = now.strftime("%Y-%m-%d"), _closed(now)
@@ -207,7 +223,7 @@ def main(deadline=None):
             group = pending[i:i + ALPACA_GROUP]
             covered = set()
             try:
-                got = alpaca.bars(group, "30Min", _since_ts(), covered=covered)
+                got = alpaca.bars(group, "30Min", min(_since_ts(s) for s in group), covered=covered)
             except Exception as e:
                 print("  alpaca daily history group failed (%s)" % e, file=sys.stderr)
                 got = None
@@ -215,6 +231,7 @@ def main(deadline=None):
                 break
             for sym in group:
                 days = daily_from_session(got.get(sym) or []) if sym in covered else []
+                days = [d for d in days if d[0] >= _since_ts(sym)]
                 if len(days) < 2:
                     stats["failed"] += 1
                     continue

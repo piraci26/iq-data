@@ -2,8 +2,10 @@
 """Alpaca market data, Basic (free) plan: consolidated-tape stock bars, 15 minutes delayed.
 
 Owner, 2026-09-17: "go with alpaca free for now". The chart feeds (1m live,
-1m sessions, 5m history) come from here; the engines' 30m bars and the daily
-scan still come from Yahoo. Keys are the ALPACA_KEY_ID / ALPACA_SECRET_KEY
+1m sessions, 5m history) come from here, and since 2026-10-05 ("screener and
+heatmap should be taken from alpaca") the daily scan and the ETF heatmap too:
+their history is daily_history.py's files, their live day today_bars().
+The engines' 30m bars still come from Yahoo. Keys are the ALPACA_KEY_ID / ALPACA_SECRET_KEY
 environment (GitHub secrets passed by the workflow). Without them, or when
 Alpaca refuses the keys, bars() returns None and every caller keeps Yahoo.
 
@@ -184,6 +186,35 @@ def session_bars(symbols, timeframe, days, covered=None):
     if covered is not None:
         covered.update(keep)
     return out
+
+
+def today_bars(symbols):
+    """Today's regular session so far, one row [t, o, h, l, c, v] a symbol (t = 09:30 New York),
+    folded from 5-minute bars that end 16 minutes ago: the live day behind the scan's change and
+    the heatmaps. {} on a weekend, a holiday or before 09:46; None when Alpaca is off or refuses."""
+    if not enabled():
+        return None
+    now = datetime.now(_NY)
+    if now.weekday() >= 5:
+        return {}
+    start, end = session_bounds(now.strftime("%Y-%m-%d"))
+    if time.time() - DELAY_S <= start:
+        return {}
+    res = bars(symbols, "5Min", start, end)
+    if res is None:
+        return None
+    out = {}
+    for sym, rows in res.items():
+        rows = [r for r in rows if start <= r[0] < end]
+        if rows:
+            out[sym] = [start, rows[0][1], round(max(r[2] for r in rows), 4), round(min(r[3] for r in rows), 4),
+                        rows[-1][4], int(sum(r[5] for r in rows))]
+    return out
+
+
+def session_over(start_ts):
+    """True once the session that opened at start_ts has closed and its last bars are past the delay."""
+    return time.time() >= start_ts + 390 * 60 + DELAY_S
 
 
 if __name__ == "__main__":

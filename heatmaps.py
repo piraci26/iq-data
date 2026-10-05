@@ -9,8 +9,12 @@
                        changes
 
 ETF universe and assets come from the stockanalysis.com ETF list; prices
-from Yahoo's chart API (the scanner's helpers); coins from CoinGecko's
-public markets endpoint. Either half failing keeps the previous file.
+from Alpaca (owner, 2026-10-05: "screener and heatmap should be taken from
+alpaca"): daily_history.py's files for the history and today's session so far
+in one batch, with Yahoo's chart API only for a fund Alpaca has no history for
+yet (the log counts them); coins from CoinGecko's public markets endpoint
+(Alpaca carries a few dozen coins and no market caps). Either half failing
+keeps the previous file.
 """
 import argparse
 import html
@@ -23,7 +27,8 @@ import urllib.request
 from datetime import datetime, timezone
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from scanner import _http_json, atomic_write, market_stats  # noqa: E402
+from scanner import _http_json, atomic_write, load_years, market_stats  # noqa: E402
+import alpaca  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 UA = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
@@ -168,8 +173,20 @@ def etf_universe():
     return []
 
 
-def price_block(sym):
-    """price, chg1d and the market stats from a year of daily bars."""
+def price_block(sym, live=None):
+    """(price, chg1d and the market stats from a year of daily bars, where they came from)."""
+    hist = load_years(sym)
+    if hist:
+        raw = hist[-300:]
+        if live and live[0] > raw[-1][0]:
+            raw = raw + [live]
+        if len(raw) < 2:
+            return None, "alpaca"
+        dates = [datetime.fromtimestamp(r[0], timezone.utc).date() for r in raw]
+        o, h, l, c, v = ([float(r[k]) for r in raw] for k in range(1, 6))
+        return {"price": round(c[-1], 4),
+                "chg1d": round((c[-1] / c[-2] - 1) * 100, 2) if c[-2] else None,
+                "mkt": market_stats(dates, o, h, l, c, v)}, "alpaca"
     data = _http_json(YAHOO_1Y.format(sym=urllib.request.quote(sym)))
     res = data["chart"]["result"][0]
     ts = res["timestamp"]
@@ -182,10 +199,10 @@ def price_block(sym):
         dates.append(datetime.fromtimestamp(ts[i], timezone.utc).date())
         o.append(float(row[0])); h.append(float(row[1])); l.append(float(row[2])); c.append(float(row[3])); v.append(float(row[4]))
     if len(c) < 2:
-        return None
+        return None, "yahoo"
     return {"price": round(c[-1], 4),
             "chg1d": round((c[-1] / c[-2] - 1) * 100, 2) if c[-2] else None,
-            "mkt": market_stats(dates, o, h, l, c, v)}
+            "mkt": market_stats(dates, o, h, l, c, v)}, "yahoo"
 
 
 def build_etf(out_dir, top, delay):
@@ -195,15 +212,22 @@ def build_etf(out_dir, top, delay):
         return False
     rows = []
     t0 = time.time()
-    for i, e in enumerate(universe[:top]):
+    funds = universe[:top]
+    live = alpaca.today_bars([e["sym"] for e in funds]) if alpaca.enabled() else None
+    live = live or {}
+    source = {"alpaca": 0, "yahoo": 0}
+    for i, e in enumerate(funds):
+        src = None
         try:
-            pb = price_block(e["sym"])
+            pb, src = price_block(e["sym"], live.get(e["sym"]))
         except Exception as ex:
             print("  %s: %s" % (e["sym"], ex), file=sys.stderr)
             pb = None
-        time.sleep(delay)
+        if src != "alpaca":
+            time.sleep(delay)
         if not pb:
             continue
+        source[src] += 1
         rows.append({**e, **pb})
         if (i + 1) % 100 == 0:
             print("[etf %d/%d] %.0fs" % (i + 1, min(top, len(universe)), time.time() - t0))
@@ -213,7 +237,8 @@ def build_etf(out_dir, top, delay):
     atomic_write(os.path.join(out_dir, "etf.json"), {
         "updated_at": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
         "count": len(rows), "rows": rows})
-    print("etf: %d funds, %d classes" % (len(rows), len({r["cls"] for r in rows})))
+    print("etf: %d funds, %d classes; prices %d from Alpaca (%d with today's session), %d from Yahoo (no Alpaca history yet)"
+          % (len(rows), len({r["cls"] for r in rows}), source["alpaca"], len(live), source["yahoo"]))
     return True
 
 

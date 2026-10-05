@@ -36,11 +36,15 @@ jobs:
           pip install -q -r ai/worker/requirements.txt
           if [[ -f requirements.txt ]]; then pip install -q -r requirements.txt; fi
 
-      - name: Run scanner (writes docs/iq/scan.json; no API key needed)
+      - name: Run scanner (writes docs/iq/scan.json; Alpaca daily history + today's session)
         env:
           UNIVERSE_TOP: "1200"
-          # 10y so monthly bands/oscillator clear their 33-bar warm-up.
+          # the daily bars are daily_history.py's Alpaca files (since 2016) plus today's
+          # session from Alpaca (owner, 2026-10-05: "screener and heatmap should be taken
+          # from alpaca"); BAR_RANGE is only for a name with no Alpaca history yet
           BAR_RANGE: "10y"
+          ALPACA_KEY_ID: ${{ secrets.ALPACA_KEY_ID }}
+          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
         run: |
           python scanner.py --top "${UNIVERSE_TOP:-500}"
 
@@ -62,6 +66,9 @@ jobs:
         continue-on-error: true
         env:
           ETF_TOP: "500"
+          # ETF prices from Alpaca, as the scan's
+          ALPACA_KEY_ID: ${{ secrets.ALPACA_KEY_ID }}
+          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
         run: |
           python heatmaps.py
 

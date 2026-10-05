@@ -8,11 +8,17 @@ Pipeline:
      /mcap_cache.json for USD market caps. READ-ONLY public fetches —
      this project never writes to tht-data. Keep top N by mcap
      (UNIVERSE_TOP env / --top, default 500).
-  2. Bars: daily OHLCV per ticker from the Yahoo Finance v8 chart API
-     (query1.finance.yahoo.com/v8/finance/chart/SYM?range=<BAR_RANGE>&
-     interval=1d), pure urllib, ~0.15s spacing, retry-once, skip-on-fail.
-     The last daily bar is dropped when it belongs to a still-open
-     regular session (confirmed bars only — the engines assume it).
+  2. Bars: daily OHLCV per ticker from Alpaca (owner, 2026-10-05: "screener
+     and heatmap should be taken from alpaca"): the confirmed history is
+     daily_history.py's year files (docs/hist/bars_1d_years, regular-session
+     days built from Alpaca's 30-minute bars since 2016), today's session so
+     far one batch request (alpaca.today_bars, 15 minutes delayed). A name
+     those files do not have yet (new to the universe; daily_history.py
+     backfills it within a run or two) still comes from the Yahoo Finance v8
+     chart API (query1.finance.yahoo.com/v8/finance/chart/SYM?range=<BAR_RANGE>&
+     interval=1d), and the log counts them. The live day is dropped for the
+     engines until its session is over (confirmed bars only — the engines
+     assume it); the change and the market stats read it.
      Weekly (ISO week) and monthly (calendar month) bars are resampled
      in code from the dailies; the current, still-running week/month is
      dropped so only confirmed periods are fed.
@@ -50,6 +56,7 @@ from datetime import datetime, timezone
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                 "engines"))
+import alpaca           # noqa: E402
 import bands            # noqa: E402
 import oscillator       # noqa: E402
 import structure        # noqa: E402
@@ -62,6 +69,9 @@ YAHOO_URL = ("https://query1.finance.yahoo.com/v8/finance/chart/"
 UA = "Mozilla/5.0"
 
 MIN_BARS = 50          # skip tickers with fewer confirmed daily bars
+# daily_history.py's Alpaca history, one file a year a symbol (history.py writes it)
+YEARS_DIR = os.environ.get("DAILY_YEARS_DIR") or os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), "docs", "hist", "bars_1d_years")
 LOG_EVERY = 50
 
 # checked in order: whole-word hints first ("long" before "_lo", else
@@ -204,6 +214,51 @@ def fetch_daily(sym, rng, delay, retries=1):
     if len(c) < MIN_BARS:
         print("  %s: only %d confirmed bars, skipped" % (sym, len(c)),
               file=sys.stderr)
+        return None
+    return name, dates, o, h, l, c, v, chg1d, mkt
+
+
+def load_years(sym):
+    """daily_history.py's Alpaca history for sym: confirmed regular-session rows [t, o, h, l, c, v],
+    oldest first, or None when it has none from Alpaca (yet)."""
+    try:
+        with open(os.path.join(YEARS_DIR, "%s.json" % sym)) as fh:
+            man = json.load(fh) or {}
+    except Exception:
+        return None
+    if man.get("source") != "alpaca" or not man.get("backfilled"):
+        return None
+    rows = {}
+    for y in man.get("years") or []:
+        try:
+            with open(os.path.join(YEARS_DIR, sym, "%s.json" % y)) as fh:
+                for r in json.load(fh):
+                    rows[int(r[0])] = r
+        except Exception:
+            continue
+    return [rows[t] for t in sorted(rows)] or None
+
+
+def alpaca_daily(name, hist, live=None):
+    """fetch_daily's answer from Alpaca: the history rows plus today's live row when the history
+    does not have it yet. The change and the market stats read the raw series, the live day in;
+    the engines get that day only once its session is over."""
+    raw = list(hist)
+    if live and (not raw or live[0] > raw[-1][0]):
+        raw.append(live)
+    dates = [datetime.fromtimestamp(r[0], timezone.utc).date() for r in raw]
+    o = [float(r[1]) for r in raw]
+    h = [float(r[2]) for r in raw]
+    l = [float(r[3]) for r in raw]
+    c = [float(r[4]) for r in raw]
+    v = [float(r[5]) for r in raw]
+    chg1d = (round((c[-1] / c[-2] - 1) * 100, 2)
+             if len(c) >= 2 and c[-2] else None)
+    mkt = market_stats(dates, o, h, l, c, v)
+    if raw and raw[-1] is live and not alpaca.session_over(live[0]):
+        for series in (dates, o, h, l, c, v):
+            series.pop()
+    if len(c) < MIN_BARS:
         return None
     return name, dates, o, h, l, c, v, chg1d, mkt
 
@@ -453,13 +508,36 @@ def main(argv=None):
     now_utc = datetime.now(timezone.utc).date()
     cur_week, cur_month = _week_key(now_utc), _month_key(now_utc)
 
+    # Alpaca: today's session so far for every name, one batch; names as the last scan had them
+    live = alpaca.today_bars(syms) if alpaca.enabled() else None
+    if live is None:
+        print("alpaca: no live day this run (no keys, or refused): changes are as of the last close",
+              file=sys.stderr)
+        live = {}
+    prev_names = {}
+    try:
+        with open(os.path.join(args.out, "iq", "scan.json")) as fh:
+            prev_names = {s: (r or {}).get("name") for s, r in
+                          ((json.load(fh) or {}).get("tickers") or {}).items()}
+    except Exception:
+        pass
+    source = {"alpaca": 0, "yahoo": 0}
+
     tickers = {}
     events = []
     skipped = []
     for idx, sym in enumerate(syms):
-        if idx:
-            time.sleep(delay)
-        fetched = fetch_daily(sym, rng, delay)
+        hist = load_years(sym)
+        if hist:
+            fetched = alpaca_daily(prev_names.get(sym) or sym, hist, live.get(sym))
+            if fetched is not None:
+                source["alpaca"] += 1
+        else:
+            if source["yahoo"]:
+                time.sleep(delay)
+            fetched = fetch_daily(sym, rng, delay)
+            if fetched is not None:
+                source["yahoo"] += 1
         if fetched is None:
             skipped.append(sym)
             continue
@@ -510,6 +588,8 @@ def main(argv=None):
                 "scanned": len(tickers),
                 "skipped": skipped,
                 "bar_range": rng,
+                # where the daily bars came from: Alpaca, or Yahoo for names it has no history for yet
+                "bars_source": dict(source, live_day=len(live)),
                 "tickers": tickers}
     events_doc = {"updated_at": updated,
                   "count": len(events),
@@ -524,6 +604,8 @@ def main(argv=None):
     atomic_write(scan_path, scan_doc)
     atomic_write(events_path, events_doc)
     atomic_write(screener_path, screener_doc)
+    print("bars: %d from Alpaca (%d with today's session), %d from Yahoo (no Alpaca history yet)"
+          % (source["alpaca"], len(live), source["yahoo"]))
     print("wrote %s (%d tickers, %.1f KB) and %s (%d events) in %.0fs"
           % (scan_path, len(tickers),
              os.path.getsize(scan_path) / 1024.0,
