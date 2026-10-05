@@ -186,6 +186,7 @@ def price_block(sym, live=None):
         o, h, l, c, v = ([float(r[k]) for r in raw] for k in range(1, 6))
         return {"price": round(c[-1], 4),
                 "chg1d": round((c[-1] / c[-2] - 1) * 100, 2) if c[-2] else None,
+                "base": round(c[-2], 4),
                 "mkt": market_stats(dates, o, h, l, c, v)}, "alpaca"
     data = _http_json(YAHOO_1Y.format(sym=urllib.request.quote(sym)))
     res = data["chart"]["result"][0]
@@ -202,6 +203,7 @@ def price_block(sym, live=None):
         return None, "yahoo"
     return {"price": round(c[-1], 4),
             "chg1d": round((c[-1] / c[-2] - 1) * 100, 2) if c[-2] else None,
+            "base": round(c[-2], 4),
             "mkt": market_stats(dates, o, h, l, c, v)}, "yahoo"
 
 

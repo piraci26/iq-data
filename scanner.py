@@ -193,6 +193,7 @@ def fetch_daily(sym, rng, delay, retries=1):
     # bar — only chg1d and the market stats read it.
     chg1d = (round((c[-1] / c[-2] - 1) * 100, 2)
              if len(c) >= 2 and c[-2] else None)
+    base = round(c[-2], 4) if len(c) >= 2 else None
     mkt = market_stats(dates, o, h, l, c, v)
 
     # confirmed-bar guard: drop today's bar if the session is still open
@@ -215,7 +216,7 @@ def fetch_daily(sym, rng, delay, retries=1):
         print("  %s: only %d confirmed bars, skipped" % (sym, len(c)),
               file=sys.stderr)
         return None
-    return name, dates, o, h, l, c, v, chg1d, mkt
+    return name, dates, o, h, l, c, v, chg1d, mkt, base
 
 
 def load_years(sym):
@@ -254,13 +255,16 @@ def alpaca_daily(name, hist, live=None):
     v = [float(r[5]) for r in raw]
     chg1d = (round((c[-1] / c[-2] - 1) * 100, 2)
              if len(c) >= 2 and c[-2] else None)
+    # the close the change is measured from: the site's live prices (the quotes
+    # function) are set against it between scans
+    base = round(c[-2], 4) if len(c) >= 2 else None
     mkt = market_stats(dates, o, h, l, c, v)
     if raw and raw[-1] is live and not alpaca.session_over(live[0]):
         for series in (dates, o, h, l, c, v):
             series.pop()
     if len(c) < MIN_BARS:
         return None
-    return name, dates, o, h, l, c, v, chg1d, mkt
+    return name, dates, o, h, l, c, v, chg1d, mkt, base
 
 
 def market_stats(dates, o, h, l, c, v):
@@ -427,7 +431,7 @@ def screener_row(sym, rec):
     """
     row = {"sym": sym, "name": rec.get("name"),
            "mcap": rec.get("mcap"), "price": rec.get("price"),
-           "chg1d": rec.get("chg1d")}
+           "chg1d": rec.get("chg1d"), "base": rec.get("base")}
     if rec.get("mkt"):
         row["mkt"] = rec["mkt"]
     for tf in ("d", "w", "m"):
@@ -541,7 +545,7 @@ def main(argv=None):
         if fetched is None:
             skipped.append(sym)
             continue
-        name, dates, o, h, l, c, v, chg1d, mkt = fetched
+        name, dates, o, h, l, c, v, chg1d, mkt, base = fetched
 
         rec = {"name": name,
                "mcap": round(mcaps.get(sym, 0.0), 3),
@@ -549,6 +553,8 @@ def main(argv=None):
                # 1-day % change, computed pre-drop in fetch_daily: Friday's
                # move on weekends, the live move during sessions
                "chg1d": chg1d,
+               # the close that change is measured from
+               "base": base,
                # the heatmap's size and colour fields, same raw series
                "mkt": mkt,
                "bars_daily": len(c)}
