@@ -1,0 +1,39 @@
+name: GEX check
+
+# Run by hand: reads an option chain from Alpaca with the repo's keys through the
+# same TypeScript the site's gex edge function uses (checks/gex), prints what the
+# rows carry and what one read costs, and keeps the chain for a day as an artifact.
+# Writes nothing to the repo.
+on:
+  workflow_dispatch:
+    inputs:
+      symbols:
+        description: "Symbols, space separated"
+        default: "NVDA"
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: checks/gex
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Option chain from Alpaca
+        env:
+          ALPACA_KEY_ID: ${{ secrets.ALPACA_KEY_ID }}
+          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+          SYMBOLS: ${{ inputs.symbols }}
+        run: node checks/gex/check.ts
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: option-chain
+          path: out/
+          retention-days: 1
