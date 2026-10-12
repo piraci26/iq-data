@@ -1,0 +1,43 @@
+name: Flow check
+
+# Run by hand: folds one session of trades from Alpaca into one-minute slices of
+# volume at price through the same TypeScript the site's flow edge function uses
+# (checks/flow), prints the cost, and keeps the session for a day as an artifact.
+# Writes nothing to the repo.
+on:
+  workflow_dispatch:
+    inputs:
+      symbols:
+        description: "Symbols, space separated"
+        default: "NVDA"
+      day:
+        description: "New York day, YYYY-MM-DD"
+        default: "2026-10-09"
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: checks/flow
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Trades from Alpaca
+        env:
+          ALPACA_KEY_ID: ${{ secrets.ALPACA_KEY_ID }}
+          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+          SYMBOLS: ${{ inputs.symbols }}
+          DAY: ${{ inputs.day }}
+        run: node checks/flow/check.ts
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: flow-session
+          path: out/
+          retention-days: 1
