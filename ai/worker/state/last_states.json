@@ -5494,10 +5494,12 @@
    "daily": {
     "bands": "bear",
     "osc": "bull",
-    "osc_hi": false,
+    "osc_hi": true,
     "osc_lo": false,
     "struct": "bear",
-    "struct_events": [],
+    "struct_events": [
+     "bos_dn"
+    ],
     "struct_major": "bear"
    },
    "monthly": {
@@ -5519,8 +5521,8 @@
     "struct_major": null
    }
   },
-  "hash": "fc98d5253cc88244",
-  "updated_at": "2026-10-12T19:33:06+00:00"
+  "hash": "d284a1bf0ee90381",
+  "updated_at": "2026-10-13T02:08:41+00:00"
  },
  "BRX": {
   "fingerprint": {
