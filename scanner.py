@@ -62,6 +62,15 @@ import oscillator       # noqa: E402
 import structure        # noqa: E402
 
 THT_BASE = "https://piraci26.github.io/tht-data"
+# Tickers the exchange changed while the tht-data list still carries the old one (owner,
+# 2026-10-14, checking the week's earnings: Bank of New York Mellon was missing from the
+# screener). The old symbol has no bars any more, so the name fell out of every scan. Each
+# old symbol is read as its new one, its market cap with it. Checked against Nasdaq's
+# symbol directory (nasdaqtrader.com, nasdaqlisted + otherlisted) on 2026-10-14.
+RENAMED = {
+    "BK": "BNY",     # The Bank of New York Mellon, NYSE
+    "SATS": "ECHO",  # EchoStar, Nasdaq
+}
 YAHOO_URL = ("https://query1.finance.yahoo.com/v8/finance/chart/"
              "{sym}?range={rng}&interval=1d")
 # Keep the UA SHORT: Yahoo 429-blocks the long Chrome-impersonating UA
@@ -112,6 +121,17 @@ def _http_json(url, timeout=30):
             return json.loads(resp.read().decode("utf-8"))
 
 
+def _renamed(syms):
+    """The list with each renamed ticker under its new symbol, once, in order."""
+    out, seen = [], set()
+    for s in syms:
+        s = RENAMED.get(s, s)
+        if s and s not in seen:
+            seen.add(s)
+            out.append(s)
+    return out
+
+
 def fetch_universe():
     """Return ordered ticker list from tht-data (read-only)."""
     for path in ("/universe_filtered.json", "/universe.json"):
@@ -121,10 +141,10 @@ def fetch_universe():
             print("universe fetch failed %s: %s" % (path, e), file=sys.stderr)
             continue
         if isinstance(data, dict) and "tickers" in data:
-            return list(data["tickers"])
+            return _renamed(data["tickers"])
         if isinstance(data, list):    # plain list format
-            return [x if isinstance(x, str) else x.get("ticker")
-                    for x in data if x]
+            return _renamed([x if isinstance(x, str) else x.get("ticker")
+                             for x in data if x])
     return None
 
 
@@ -139,6 +159,9 @@ def fetch_mcaps():
     for sym, rec in data.items():
         if isinstance(rec, dict) and isinstance(rec.get("mcap_b"), (int, float)):
             out[sym] = float(rec["mcap_b"])
+    for old, new in RENAMED.items():
+        if old in out and new not in out:
+            out[new] = out[old]
     return out
 
 
